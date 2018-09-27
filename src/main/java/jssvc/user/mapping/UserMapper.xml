@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="jssvc.user.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="jssvc.user.model.User" >
+    <constructor >
+      <idArg column="dah" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="ygxm" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="mjkkh" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sex" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="mobile" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sfzh" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="gwdj" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="flag" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="bz" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pysx" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pyqp" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="px" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    dah, ygxm, mjkkh, sex, mobile, email, sfzh, password, gwdj, flag, bz, pysx, pyqp, 
+    px
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.user.model.UserExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where dah = #{dah,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_user
+    where dah = #{dah,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="jssvc.user.model.UserExample" >
+    delete from t_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jssvc.user.model.User" >
+    insert into t_user (dah, ygxm, mjkkh, 
+      sex, mobile, email, 
+      sfzh, password, gwdj, 
+      flag, bz, pysx, pyqp, 
+      px)
+    values (#{dah,jdbcType=VARCHAR}, #{ygxm,jdbcType=VARCHAR}, #{mjkkh,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{sfzh,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{gwdj,jdbcType=VARCHAR}, 
+      #{flag,jdbcType=VARCHAR}, #{bz,jdbcType=VARCHAR}, #{pysx,jdbcType=VARCHAR}, #{pyqp,jdbcType=VARCHAR}, 
+      #{px,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.user.model.User" >
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dah != null" >
+        dah,
+      </if>
+      <if test="ygxm != null" >
+        ygxm,
+      </if>
+      <if test="mjkkh != null" >
+        mjkkh,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="sfzh != null" >
+        sfzh,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="gwdj != null" >
+        gwdj,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="bz != null" >
+        bz,
+      </if>
+      <if test="pysx != null" >
+        pysx,
+      </if>
+      <if test="pyqp != null" >
+        pyqp,
+      </if>
+      <if test="px != null" >
+        px,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dah != null" >
+        #{dah,jdbcType=VARCHAR},
+      </if>
+      <if test="ygxm != null" >
+        #{ygxm,jdbcType=VARCHAR},
+      </if>
+      <if test="mjkkh != null" >
+        #{mjkkh,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sfzh != null" >
+        #{sfzh,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="gwdj != null" >
+        #{gwdj,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="bz != null" >
+        #{bz,jdbcType=VARCHAR},
+      </if>
+      <if test="pysx != null" >
+        #{pysx,jdbcType=VARCHAR},
+      </if>
+      <if test="pyqp != null" >
+        #{pyqp,jdbcType=VARCHAR},
+      </if>
+      <if test="px != null" >
+        #{px,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jssvc.user.model.UserExample" resultType="java.lang.Integer" >
+    select count(*) from t_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_user
+    <set >
+      <if test="record.dah != null" >
+        dah = #{record.dah,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ygxm != null" >
+        ygxm = #{record.ygxm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mjkkh != null" >
+        mjkkh = #{record.mjkkh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sfzh != null" >
+        sfzh = #{record.sfzh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gwdj != null" >
+        gwdj = #{record.gwdj,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flag != null" >
+        flag = #{record.flag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bz != null" >
+        bz = #{record.bz,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pysx != null" >
+        pysx = #{record.pysx,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pyqp != null" >
+        pyqp = #{record.pyqp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.px != null" >
+        px = #{record.px,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_user
+    set dah = #{record.dah,jdbcType=VARCHAR},
+      ygxm = #{record.ygxm,jdbcType=VARCHAR},
+      mjkkh = #{record.mjkkh,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      sfzh = #{record.sfzh,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      gwdj = #{record.gwdj,jdbcType=VARCHAR},
+      flag = #{record.flag,jdbcType=VARCHAR},
+      bz = #{record.bz,jdbcType=VARCHAR},
+      pysx = #{record.pysx,jdbcType=VARCHAR},
+      pyqp = #{record.pyqp,jdbcType=VARCHAR},
+      px = #{record.px,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.user.model.User" >
+    update t_user
+    <set >
+      <if test="ygxm != null" >
+        ygxm = #{ygxm,jdbcType=VARCHAR},
+      </if>
+      <if test="mjkkh != null" >
+        mjkkh = #{mjkkh,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sfzh != null" >
+        sfzh = #{sfzh,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="gwdj != null" >
+        gwdj = #{gwdj,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="bz != null" >
+        bz = #{bz,jdbcType=VARCHAR},
+      </if>
+      <if test="pysx != null" >
+        pysx = #{pysx,jdbcType=VARCHAR},
+      </if>
+      <if test="pyqp != null" >
+        pyqp = #{pyqp,jdbcType=VARCHAR},
+      </if>
+      <if test="px != null" >
+        px = #{px,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where dah = #{dah,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.user.model.User" >
+    update t_user
+    set ygxm = #{ygxm,jdbcType=VARCHAR},
+      mjkkh = #{mjkkh,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      sfzh = #{sfzh,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      gwdj = #{gwdj,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
+      bz = #{bz,jdbcType=VARCHAR},
+      pysx = #{pysx,jdbcType=VARCHAR},
+      pyqp = #{pyqp,jdbcType=VARCHAR},
+      px = #{px,jdbcType=VARCHAR}
+    where dah = #{dah,jdbcType=VARCHAR}
+  </update>
+</mapper>

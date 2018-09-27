@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybaits.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <plugins>
+        <!-- SQL性能拦截器 -->
+        <plugin interceptor="jssvc.base.interceptor.MybatisInterceptor" />
+    </plugins>
+</configuration>

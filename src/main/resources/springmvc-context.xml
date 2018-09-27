@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                http://www.springframework.org/schema/mvc
+                http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+                http://www.springframework.org/schema/context
+                http://www.springframework.org/schema/context/spring-context-4.1.xsd
+                http://www.springframework.org/schema/task
+                http://www.springframework.org/schema/task/spring-task-4.1.xsd"
+       default-lazy-init="false">
+
+    <!-- 通过mvc:resources设置静态资源，这样servlet就会处理这些静态资源，而不通过控制器 -->
+    <!-- 设置不过滤内容，比如:css,jquery,img 等资源文件 -->
+    <mvc:resources location="/resources/" mapping="/resources/**" />
+    <mvc:resources location="/upload/" mapping="/upload/**" />
+    <mvc:resources location="/img/" mapping="/img/**" />
+    <mvc:resources location="/workflow/" mapping="/workflow/**"/>
+    <mvc:resources location="/" mapping="/favicon.ico"/>
+
+    <!-- 添加注解驱动 -->
+    <mvc:annotation-driven />
+    <task:annotation-driven />
+
+    <!-- 默认扫描的包路径 -->
+    <context:component-scan base-package="jssvc.**" >
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+    </context:component-scan>
+
+    <!-- mvc:view-controller可以在不需要Controller处理request的情况，转向到设置的View -->
+    <!-- 像下面这样设置，如果请求为/，则不通过controller，而直接解析为/index.jsp -->
+    <mvc:view-controller path="/" view-name="index" />
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+        <!-- 配置jsp路径前缀 -->
+        <property name="prefix" value="WEB-INF/jsp/"></property>
+        <!-- 配置URl后缀 -->
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!-- 配置拦截器 -->
+
+    <!-- 配置异常映射路径，ajax提示-->
+
+    <!-- 文件上传-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="20971520"></property>
+        <property name="defaultEncoding" value="UTF-8"></property>
+    </bean>
+    <!-- 文件下载  -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <!-- 配置下载返回类型 -->
+                <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"></bean>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <!--    配置编码方式  -->
+                    <property name="supportedMediaTypes" value="application/json;charset=UTF-8"></property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>
