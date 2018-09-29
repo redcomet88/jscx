@@ -7,7 +7,7 @@ public class User {
 
     private String mjkkh;
 
-    private String sex;
+    private String sex; //性别
 
     private String mobile;
 
