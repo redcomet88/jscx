@@ -32,8 +32,7 @@
             <div class="user-wrap wrap">
                 <span class="account"></span>
                 <span class="split"></span>
-       <!--         <input type="text" id="loginName" name="loginName" value="${loginName}" placeholder="输入用户名" onblur="" onchange=""/>  -->
-                         <input type="text" id="loginName" name="loginName" value="" placeholder="输入用户名" onblur="" onchange=""/>
+                <input type="text" id="loginName" name="loginName" value="${loginName}" placeholder="输入用户名" onblur="" onchange=""/>
 
             </div>
 

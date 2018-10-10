@@ -1,8 +1,10 @@
 package jssvc.user.service;
 
+import jssvc.user.model.DeptUserVo;
 import jssvc.user.model.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Description: 用户相关的服务
@@ -21,5 +23,15 @@ public interface UserService {
      * @create: 2018/10/2
      **/
     User getUserByDah(String dah) throws SQLException;
+
+    /**
+     * @description: 获取用户的所属机构列表
+     *
+     * @author: redcomet
+     * @param: [dah]
+     * @return: java.util.List<jssvc.user.model.DeptUserVo>
+     * @create: 2018/10/10
+     **/
+    List<DeptUserVo> getDeptUserList(String dah) throws SQLException;
 
 }
