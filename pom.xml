@@ -132,7 +132,24 @@
           <artifactId>spring-test</artifactId>
           <version>${spring.version}</version>
       </dependency>
-
+      <!-- jstl依赖 jstl=JSP标准标签库，不引入会报500错误-->
+      <dependency>
+          <groupId>javax.servlet.jsp.jstl</groupId>
+          <artifactId>jstl</artifactId>
+          <version>1.2</version>
+      </dependency>
+      <!-- jstl-api -->
+      <dependency>
+          <groupId>javax.servlet.jsp.jstl</groupId>
+          <artifactId>jstl-api</artifactId>
+          <version>1.2</version>
+      </dependency>
+      <!-- jstl-impl -->
+      <dependency>
+          <groupId>org.glassfish.web</groupId>
+          <artifactId>jstl-impl</artifactId>
+          <version>1.2</version>
+      </dependency>
 </dependencies>
 
   <build>

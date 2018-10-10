@@ -44,6 +44,13 @@
         <property name="suffix" value=".jsp"></property>
     </bean>
 
+    <!-- 配置message -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="message"></property>
+        <property name="useCodeAsDefaultMessage" value="true"></property>
+    </bean>
+
     <!-- 配置拦截器 -->
 
     <!-- 配置异常映射路径，ajax提示-->
