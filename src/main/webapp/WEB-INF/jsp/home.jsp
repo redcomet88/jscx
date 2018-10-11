@@ -144,7 +144,9 @@
 
        <jsp:include page="head.jsp"></jsp:include>
         <div class="container">
-        <div class="belong-to">Copyright©苏州市职业大学版权所有</div>
+        <jsp:include page="menuBar.jsp"></jsp:include>
+
+            <div class="belong-to">Copyright©苏州市职业大学版权所有</div>
         <%-- </div>--%>>
         </div>
         <script type="text/javascript">

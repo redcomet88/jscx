@@ -1,10 +1,12 @@
 package jssvc.user.service;
 
 import jssvc.user.model.DeptUserVo;
+import jssvc.user.model.Menu;
 import jssvc.user.model.User;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 用户相关的服务
@@ -33,5 +35,18 @@ public interface UserService {
      * @create: 2018/10/10
      **/
     List<DeptUserVo> getDeptUserList(String dah) throws SQLException;
+
+    /**
+     * @description:根据员工号来获取菜单的列表数据
+     *
+     * @author: redcomet
+     * @param: [dah]
+     * @return: java.util.List<java.util.Map<java.lang.String,java.lang.Object>>
+     * @create: 2018/10/11
+     **/
+    List<Map<String, Object>> getMenusTree(String dah) throws SQLException;
+
+    List<Menu> getMenus(String dah, String name) throws SQLException;
+
 
 }

@@ -6,6 +6,7 @@ import jssvc.base.constant.SystemConstant;
 import jssvc.base.controller.BaseController;
 import jssvc.base.exception.BusinessException;
 import jssvc.base.listener.LoginListener;
+import jssvc.base.util.JSON;
 import jssvc.base.util.MD5;
 import jssvc.user.enums.UserStatus;
 import jssvc.user.model.DeptUserVo;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 用户类控制器
@@ -67,21 +70,19 @@ public class UserController extends BaseController {
              // 机构-部门的处理
              // TODO
              List<DeptUserVo> depts = userService.getDeptUserList(dah);
-             boolean jgFlag = false;
              String jgmc = null;
-             for (int i = 0; i < depts.size(); i++) {
-                 if (depts.get(i).getJgh().equals(jgh)) {
-                     jgFlag = true;
-                     jgmc = depts.get(i).getJgmc();
-                     break;
-                 }
+             if(depts.size()>0)
+             {
+                 jgmc = depts.get(0).getJgmc();
              }
-             // 如果界面没输入机构或者登录员工不属于该机构，则提示机构不存在或机构不正确
-             if (jgFlag == false) {
+             else
+             {
+                 // 如果界面没输入机构或者登录员工不属于该机构，则提示机构不存在或机构不正确
                  mv.setViewName(ConstantKey.INDEX);
                  mv.addObject("loginName", dah);
                  mv.addObject("jgh", jgh);
                  mv.addObject(ConstantKey.KEY_MESSAGE, ConstantMessage.INF00002);
+                 logger.info("机构号不存在");
                  return mv;
              }
 
@@ -133,4 +134,26 @@ public class UserController extends BaseController {
         return mv;
     }
 
+    /**
+     * @description: 获取树形的菜单，主页左侧的菜单栏的
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: void
+     * @create: 2018/10/11
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_getMenusTree.do")
+    private void getMenus() throws BusinessException {
+        try {
+            // 根据档案号取得相应的菜单
+            User user = (User) httpSession.getAttribute(ConstantKey.KEY_USER);
+            List<Map<String, Object>> menus = userService.getMenusTree(user.getDah());
+            response.getWriter().write(JSON.Encode(menus));
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
 }
