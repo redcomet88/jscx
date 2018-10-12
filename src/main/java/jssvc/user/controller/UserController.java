@@ -1,5 +1,6 @@
 package jssvc.user.controller;
 
+import flexjson.JSONException;
 import jssvc.base.constant.ConstantKey;
 import jssvc.base.constant.ConstantMessage;
 import jssvc.base.constant.SystemConstant;
@@ -10,6 +11,7 @@ import jssvc.base.enums.Sex;
 import jssvc.base.model.Constant;
 import jssvc.base.util.JSON;
 import jssvc.base.util.MD5;
+import jssvc.base.util.TreeUtil;
 import jssvc.user.enums.UserStatus;
 import jssvc.user.model.*;
 import jssvc.user.model.filter.UserSearchFilter;
@@ -233,43 +235,7 @@ public class UserController extends BaseController {
         return mv;
     }
 
-    /**
-     * @description:获取机构列表
-     *
-     * @author: redcomet
-     * @param: []
-     * @return: void        
-     * @create: 2018/10/12 
-     **/
-    @ResponseBody
-    @RequestMapping("ajax/user_getJgList.do")
-    private void getJgList() throws BusinessException {
-        try {
-            // 取得机构列表
-            List<InstitutionInfo> jgxx = getJgxxList();
-            List<HashMap<String, Object>> maps = new ArrayList<>();
-            HashMap<String, Object> map = new HashMap<>();
-            // 把机构列表放到hashmap中
-            for (int i = 0; i < jgxx.size(); i++) {
-                map = new HashMap<>();
-                map.put(ConstantKey.KEY_JGH, jgxx.get(i).getJgh());
-                map.put(ConstantKey.KEY_JGMC, jgxx.get(i).getJgmc());
-                map.put(ConstantKey.KEY_SJJG, jgxx.get(i).getSjjg());
-                map.put(ConstantKey.KEY_SFYDZH, jgxx.get(i).getSfydzh());
-                map.put(ConstantKey.KEY_FLAG, jgxx.get(i).getFlag());
-                map.put(ConstantKey.KEY_NUM, jgxx.get(i).getNum());
-                maps.add(map);
-            }
-            String json = JSON.Encode(maps);
-            response.getWriter().write(json);
-        } catch (SQLException e) {
-            throw new BusinessException(ConstantMessage.ERR00003, e);
-        } catch (NullPointerException e) {
-            throw new BusinessException(ConstantMessage.ERR00004, e);
-        } catch (IOException e) {
-            throw new BusinessException(ConstantMessage.ERR00005, e);
-        }
-    }
+
 
     /**
      * @description:新增用户
@@ -553,5 +519,118 @@ public class UserController extends BaseController {
             throw new BusinessException(ConstantMessage.ERR00005, e);
         }
 
+    }
+    
+    /**
+     * @description:转入机构管理页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("showJgList.do")
+    private ModelAndView showJgList() {
+        // 机构维护页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.INSTITUTION_LIST);
+        return mv;
+    }
+
+    /**
+     * @description:获取机构列表
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: void
+     * @create: 2018/10/12
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_getJgList.do")
+    private void getJgList() throws BusinessException {
+        try {
+            // 取得机构列表
+            List<InstitutionInfo> jgxx = getJgxxList();
+            List<HashMap<String, Object>> maps = new ArrayList<>();
+            HashMap<String, Object> map = new HashMap<>();
+            // 把机构列表放到hashmap中
+            for (int i = 0; i < jgxx.size(); i++) {
+                map = new HashMap<>();
+                map.put(ConstantKey.KEY_JGH, jgxx.get(i).getJgh());
+                map.put(ConstantKey.KEY_JGMC, jgxx.get(i).getJgmc());
+                map.put(ConstantKey.KEY_SJJG, jgxx.get(i).getSjjg());
+                map.put(ConstantKey.KEY_SFYDZH, jgxx.get(i).getSfydzh());
+                map.put(ConstantKey.KEY_FLAG, jgxx.get(i).getFlag());
+                map.put(ConstantKey.KEY_NUM, jgxx.get(i).getNum());
+                maps.add(map);
+            }
+            String json = JSON.Encode(maps);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:检查机构是否重复
+     *
+     * @author: redcomet
+     * @param: [jgh]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/jg_checkJgsfcf.do")
+    private void checkJgsfcf(String jgh) throws BusinessException {
+        try {
+            // 取得机构数目
+            int jgCount = userService.getJgCountByJgh(jgh);
+            if (jgCount > 0) {
+                response.getWriter().write(ConstantKey.FAIL);
+            } else {
+                response.getWriter().write(ConstantKey.SUCCESS);
+            }
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:保存机构数据
+     *
+     * @author: redcomet
+     * @param: [data, removedJSON]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/jg_saveJgData.do")
+    private void saveJgData(String data, @RequestParam(value = "removed", required = false) String removedJSON) throws BusinessException {
+        try {
+            ArrayList jgData = (ArrayList) JSON.Decode(data);
+            ArrayList removedData = (ArrayList) JSON.Decode(removedJSON);
+            // 树形转换为列表
+            ArrayList jgList = TreeUtil.ToList(jgData, ConstantKey.KEY_ROOT_ID, ConstantKey.KEY_CHILDREN, ConstantKey.KEY_JGH, ConstantKey.KEY_SJJG);
+            // 生成num
+            for (int i = 0, l = jgList.size(); i < l; i++) {
+                HashMap node = (HashMap) jgList.get(i);
+                node.put(ConstantKey.KEY_NUM, i);
+            }
+
+            // 生成pid
+            jgList = TreeUtil.ToList(jgData, ConstantKey.KEY_ROOT_ID, ConstantKey.KEY_CHILDREN, ConstantKey.KEY_JGH, ConstantKey.KEY_SJJG);
+            userService.updateJg(jgList, removedData);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (JSONException e) {
+            throw new BusinessException(ConstantMessage.ERR00006, e);
+        }
     }
 }

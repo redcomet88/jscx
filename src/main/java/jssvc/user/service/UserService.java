@@ -5,6 +5,7 @@ import jssvc.user.model.filter.UserSearchFilter;
 import jssvc.base.exception.BusinessException;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -102,4 +103,25 @@ public interface UserService {
      * @create: 2018/10/12 
      **/
     boolean resetUserPwd(User user) throws BusinessException;
+
+    /**
+     * @description:获取机构数目
+     *
+     * @author: redcomet
+     * @param: [jgh]
+     * @return: int        
+     * @create: 2018/10/12 
+     **/
+    int getJgCountByJgh(String jgh) throws SQLException;
+
+    /**
+     * @description:更新机构
+     *
+     * @author: redcomet
+     * @param: [jgList, removedData]
+     * @return: boolean        
+     * @create: 2018/10/12 
+     **/
+    boolean updateJg(ArrayList<?> jgList, ArrayList<?> removedData) throws BusinessException;
+
 }

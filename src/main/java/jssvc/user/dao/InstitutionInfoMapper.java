@@ -2,29 +2,19 @@ package jssvc.user.dao;
 
 import java.util.List;
 
-import jssvc.user.model.DataAuthority;
-import jssvc.user.model.InstitutionInfo;
-import jssvc.user.model.InstitutionInfoExample;
 import org.apache.ibatis.annotations.Param;
 
+import jssvc.user.model.DataAuthority;
+import jssvc.user.model.InstitutionInfo;
+
 public interface InstitutionInfoMapper {
-    int countByExample(InstitutionInfoExample example);
-
-    int deleteByExample(InstitutionInfoExample example);
-
     int deleteByPrimaryKey(String jgh);
 
     int insert(InstitutionInfo record);
 
     int insertSelective(InstitutionInfo record);
 
-    List<InstitutionInfo> selectByExample(InstitutionInfoExample example);
-
     InstitutionInfo selectByPrimaryKey(String jgh);
-
-    int updateByExampleSelective(@Param("record") InstitutionInfo record, @Param("example") InstitutionInfoExample example);
-
-    int updateByExample(@Param("record") InstitutionInfo record, @Param("example") InstitutionInfoExample example);
 
     int updateByPrimaryKeySelective(InstitutionInfo record);
 
@@ -32,6 +22,19 @@ public interface InstitutionInfoMapper {
 
     List<InstitutionInfo> selectJgList();
 
+    List<InstitutionInfo> selectSubBranchList();
+
+    int selectCountByJgh(String jgh);
+
+    String selectJgmcByJgh(String jgh);
+
     List<InstitutionInfo> selectJgListByAuth(List<DataAuthority> dataAuth);
 
+    List<InstitutionInfo> selectJgListByJgh(String jgh);
+
+    int selectKjCountByJgh(String jgh);
+
+    List<InstitutionInfo> selectJgListByDah(@Param(value = "dah") String dah);
+
+    List<InstitutionInfo> selectHeadBankList();
 }

@@ -270,4 +270,54 @@ public class UserServiceImpl implements UserService {
         return flag;
     }
 
+    @Override
+    public int getJgCountByJgh(String jgh) {
+        logger.info(String.valueOf(new StringBuffer("getJgCountByJgh  机构号：").append(jgh)));
+        int count = institutionInfoDao.selectCountByJgh(jgh);
+        return count;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateJg(ArrayList<?> jgList, ArrayList<?> removedData) throws BusinessException {
+        logger.info(String.valueOf(new StringBuffer("updateJg  新增/修改机构：").append(JSON.Encode(jgList)).append("  删除机构：").append(JSON.Encode(removedData))));
+        try {
+            InstitutionInfo jg = new InstitutionInfo();
+            // 新增/修改机构
+            for (int i = 0, l = jgList.size(); i < l; i++) {
+                HashMap node = (HashMap) jgList.get(i);
+                String state = node.get(ConstantKey.KEY_STATE) == null ? "" : node.get(ConstantKey.KEY_STATE).toString();
+                jg = new InstitutionInfo();
+                if (state.equals(ConstantKey.KEY_ADDED)) {
+                    // 新增机构
+                    jg.setJgh(node.get(ConstantKey.KEY_JGH).toString());
+                    jg.setJgmc(node.get(ConstantKey.KEY_JGMC).toString());
+                    jg.setSjjg(node.get(ConstantKey.KEY_SJJG).toString());
+                    jg.setFlag(String.valueOf(UserStatus.start.getId()));
+                    jg.setNum(Integer.parseInt(node.get(ConstantKey.KEY_NUM).toString()));
+                    institutionInfoDao.insert(jg);
+                } else {
+                    // 修改机构
+                    jg.setJgh(node.get(ConstantKey.KEY_JGH).toString());
+                    jg.setJgmc(node.get(ConstantKey.KEY_JGMC).toString());
+                    jg.setNum(Integer.parseInt(node.get(ConstantKey.KEY_NUM).toString()));
+                    institutionInfoDao.updateByPrimaryKeySelective(jg);
+                }
+            }
+            // 删除机构
+            if (removedData != null) {
+                for (int j = 0, len = removedData.size(); j < len; j++) {
+                    jg = new InstitutionInfo();
+                    HashMap removedNode = (HashMap) removedData.get(j);
+                    jg.setJgh(removedNode.get(ConstantKey.KEY_JGH).toString());
+                    jg.setFlag(String.valueOf(UserStatus.stop.getId()));
+                    institutionInfoDao.updateByPrimaryKeySelective(jg);
+                }
+            }
+        } catch (RuntimeException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new BusinessException(ConstantMessage.ERR00013, e);
+        }
+        return true;
+    }
 }
