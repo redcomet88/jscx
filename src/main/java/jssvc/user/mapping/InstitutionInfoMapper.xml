@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="jssvc.user.dao.InstitutionInfoMapper" >
+  <resultMap id="BaseResultMap" type="jssvc.user.model.InstitutionInfo" >
+    <id column="jgh" property="jgh" jdbcType="VARCHAR" />
+    <result column="jgmc" property="jgmc" jdbcType="VARCHAR" />
+    <result column="sjjg" property="sjjg" jdbcType="VARCHAR" />
+    <result column="sfydzh" property="sfydzh" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="jgjp" property="jgjp" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    jgh, jgmc, sjjg, sfydzh, flag, num, jgjp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_dept_info
+    where jgh = #{jgh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_dept_info
+    where jgh = #{jgh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="jssvc.user.model.InstitutionInfo" >
+    insert into t_dept_info (jgh, jgmc, sjjg, 
+      sfydzh, flag, num, jgjp)
+    values (#{jgh,jdbcType=VARCHAR}, #{jgmc,jdbcType=VARCHAR}, #{sjjg,jdbcType=VARCHAR}, 
+      #{sfydzh,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR}, #{num,jdbcType=INTEGER}, #{jgjp,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.user.model.InstitutionInfo" >
+    insert into t_dept_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="jgh != null" >
+        jgh,
+      </if>
+      <if test="jgmc != null" >
+        jgmc,
+      </if>
+      <if test="sjjg != null" >
+        sjjg,
+      </if>
+      <if test="sfydzh != null" >
+        sfydzh,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+      <if test="jgjp != null" >
+        jgjp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="jgh != null" >
+        #{jgh,jdbcType=VARCHAR},
+      </if>
+      <if test="jgmc != null" >
+        #{jgmc,jdbcType=VARCHAR},
+      </if>
+      <if test="sjjg != null" >
+        #{sjjg,jdbcType=VARCHAR},
+      </if>
+      <if test="sfydzh != null" >
+        #{sfydzh,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="jgjp != null" >
+        #{jgjp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.user.model.InstitutionInfo" >
+    update t_dept_info
+    <set >
+      <if test="jgmc != null" >
+        jgmc = #{jgmc,jdbcType=VARCHAR},
+      </if>
+      <if test="sjjg != null" >
+        sjjg = #{sjjg,jdbcType=VARCHAR},
+      </if>
+      <if test="sfydzh != null" >
+        sfydzh = #{sfydzh,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="jgjp != null" >
+        #{jgjp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where jgh = #{jgh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.user.model.InstitutionInfo" >
+    update t_dept_info
+    set jgmc = #{jgmc,jdbcType=VARCHAR},
+      sjjg = #{sjjg,jdbcType=VARCHAR},
+      sfydzh = #{sfydzh,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
+      num = #{num,jdbcType=INTEGER},
+      jgjp = #{jgjp,jdbcType=VARCHAR}
+    where jgh = #{jgh,jdbcType=VARCHAR}
+  </update>
+  <select id="selectJgList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_dept_info
+    where flag = '0'
+    order by num
+  </select>
+  <select id="selectSubBranchList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_dept_info
+    where flag = '0'
+    order by num
+  </select>
+  <select id="selectCountByJgh" resultType="int" parameterType="java.lang.String">
+    select 
+    count(1)
+    from t_dept_info
+    where jgh = #{jgh,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectJgmcByJgh" resultType="java.lang.String" parameterType="java.lang.String">
+    select
+    jgmc
+    from t_dept_info
+    where jgh = #{jgh,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectJgListByAuth" resultMap="BaseResultMap" parameterType="jssvc.user.model.DataAuthority">
+    select 
+    <include refid="Base_Column_List" />
+    from t_dept_info
+    where flag = '0' and jgh in 
+    <foreach collection="list" item="auth" open="(" close=")" separator=",">
+        #{auth.jgh}
+    </foreach>
+    order by num
+  </select>
+  <select id="selectJgListByJgh" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from t_dept_info
+    where flag = '0'
+    and sjjg = #{jgh,jdbcType=VARCHAR}
+    order by num
+  </select>
+  <select id="selectKjCountByJgh" resultType="int" parameterType="java.lang.String">
+    select count(1) from t_dept_info where (jgh = '0706678KJ' or sjjg = '0706678KJ')
+     and jgh =#{jgh,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectJgListByDah" resultMap="BaseResultMap" parameterType="java.lang.String">
+     select distinct i.* from t_dept_info i left join t_yhjg yj on i.jgh=yj.jgh 
+     where 1=1 
+     <if test=" dah!=null and ''!=dah" >
+        and yj.dah=#{dah,jdbcType=VARCHAR}
+     </if>
+  </select>
+  <select id="selectHeadBankList" resultMap="BaseResultMap">
+     select 
+    <include refid="Base_Column_List" />
+    from t_dept_info
+    where sfydzh = 'N'
+    and flag = '0'
+    order by num
+  </select>
+  
+</mapper>

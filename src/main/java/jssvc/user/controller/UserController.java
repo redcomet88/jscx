@@ -6,11 +6,13 @@ import jssvc.base.constant.SystemConstant;
 import jssvc.base.controller.BaseController;
 import jssvc.base.exception.BusinessException;
 import jssvc.base.listener.LoginListener;
+import jssvc.base.enums.Sex;
+import jssvc.base.model.Constant;
 import jssvc.base.util.JSON;
 import jssvc.base.util.MD5;
 import jssvc.user.enums.UserStatus;
-import jssvc.user.model.DeptUserVo;
-import jssvc.user.model.User;
+import jssvc.user.model.*;
+import jssvc.user.model.filter.UserSearchFilter;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -143,15 +147,334 @@ public class UserController extends BaseController {
      * @create: 2018/10/11
      **/
     @ResponseBody
-    @RequestMapping("ajax/user_getMenusTree.do")
+    @RequestMapping(value = "ajax/user_getMenusTree.do")
     private void getMenus() throws BusinessException {
         try {
             // 根据档案号取得相应的菜单
             User user = (User) httpSession.getAttribute(ConstantKey.KEY_USER);
             List<Map<String, Object>> menus = userService.getMenusTree(user.getDah());
+
             response.getWriter().write(JSON.Encode(menus));
+            //response.getWriter().write("我这个是中文你可以收到吗");
+
+            //嘛呢难道是我这个JSON有问题吗
+            logger.info(JSON.Encode(menus));
         } catch (SQLException e) {
             throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:显示用户管理页面
+     *
+     * @author: redcomet
+     * @param: [id]
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/11 
+     **/
+    @ResponseBody
+    @RequestMapping("showUserList.do")
+    private ModelAndView showUserList(String id) {
+        // 跳转到用户管理页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.USER_LIST);
+        mv.addObject(ConstantKey.KEY_MENU_ID, id);
+        return mv;
+    }
+
+    /**
+     * @description:获取用户列表
+     *
+     * @author: redcomet
+     * @param: [filter]
+     * @return: void        
+     * @create: 2018/10/11 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_getUsers.do")
+    private void getUsers(UserSearchFilter filter) throws BusinessException {
+        try {
+            // 用户查询条件
+            filter.setOffset();
+            filter.setLimit();
+            filter.setLoginDah(getSessionUser().getDah());
+            // 取得用户列表
+            List<UserVo> userVos = userService.getUsers(filter);
+            // 取得用户总件数
+            long count = userService.getUsersCount(filter);
+            logger.info("用户的总数是："+ count);
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_DATA, userVos);
+            hashmap.put(ConstantKey.KEY_TOTAL, count);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:用户新增/修改页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("showUserUpdPop.do")
+    private ModelAndView showUserUpdPop() {
+        // 跳转到用户更新页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.USER_UPD);
+        return mv;
+    }
+
+    /**
+     * @description:获取机构列表
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_getJgList.do")
+    private void getJgList() throws BusinessException {
+        try {
+            // 取得机构列表
+            List<InstitutionInfo> jgxx = getJgxxList();
+            List<HashMap<String, Object>> maps = new ArrayList<>();
+            HashMap<String, Object> map = new HashMap<>();
+            // 把机构列表放到hashmap中
+            for (int i = 0; i < jgxx.size(); i++) {
+                map = new HashMap<>();
+                map.put(ConstantKey.KEY_JGH, jgxx.get(i).getJgh());
+                map.put(ConstantKey.KEY_JGMC, jgxx.get(i).getJgmc());
+                map.put(ConstantKey.KEY_SJJG, jgxx.get(i).getSjjg());
+                map.put(ConstantKey.KEY_SFYDZH, jgxx.get(i).getSfydzh());
+                map.put(ConstantKey.KEY_FLAG, jgxx.get(i).getFlag());
+                map.put(ConstantKey.KEY_NUM, jgxx.get(i).getNum());
+                maps.add(map);
+            }
+            String json = JSON.Encode(maps);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:新增用户
+     *
+     * @author: redcomet
+     * @param: [user, jgh]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_addUser.do")
+    private void addUser(User user, String jgh) throws BusinessException {
+        try {
+            // 用户状态、密码设定
+            user.setFlag(String.valueOf(UserStatus.start.getId()));
+            user.setPassword(MD5.crypt(SystemConstant.PWD_DEFAULT));
+            // 机构拆分
+            String[] arrJgh = jgh.split(SystemConstant.COMMA);
+            List<DeptUser> yhjgList = new ArrayList<DeptUser>();
+            for (int i = 0; i < arrJgh.length; i++) {
+                DeptUser yhjg = new DeptUser();
+                yhjg.setDah(user.getDah());
+                yhjg.setJgh(arrJgh[i]);
+                yhjgList.add(yhjg);
+            }
+            // 新增用户
+            if (userService.getUserByDah(user.getDah()) != null) {
+                response.getWriter().write(ConstantKey.FAIL);
+            } else {
+                userService.createUser(user, yhjgList);
+                response.getWriter().write(ConstantKey.SUCCESS);
+            }
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:更新员工的信息
+     *
+     * @author: redcomet
+     * @param: [user, jgh, action]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_updateUser.do")
+    private void updateUser(User user, String jgh, String action) throws BusinessException {
+        try {
+            // 机构拆分
+            // String[] arrJgh = jgh.split(SystemConstant.COMMA);
+            List<DeptUser> yhjgList = new ArrayList<DeptUser>();
+            // for (int i = 0; i < arrJgh.length; i++) {
+            // Yhjg yhjg = new Yhjg();
+            // yhjg.setDah(user.getDah());
+            // yhjg.setJgh(arrJgh[i]);
+            // yhjgList.add(yhjg);
+            // }
+            // 用户状态设为启用
+            user.setFlag(String.valueOf(UserStatus.start.getId()));
+            // 更新用户
+            userService.updateUser(user, yhjgList);
+            // 如果是自己修改信息操作，则更新session
+            if (ConstantKey.KEY_EDIT.equals(action)) {
+                User userSession = userService.getUserByDah(user.getDah());
+                httpSession.setAttribute(ConstantKey.KEY_USER, userSession);
+            }
+            response.getWriter().write(ConstantKey.SUCCESS);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:获取用户
+     *
+     * @author: redcomet
+     * @param: [dah]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_getUser.do")
+    private void getUser(String dah) throws BusinessException {
+        try {
+            // 取得用户
+            User user = userService.getUserByDah(dah);
+            List<DeptUserVo> yhjg = userService.getDeptUserList(dah);
+            StringBuffer jgh = new StringBuffer();
+            String jgxx = SystemConstant.BLANK;
+            for (int j = 0; j < yhjg.size(); j++) {
+                jgh.append(yhjg.get(j).getJgh()).append(",");
+            }
+            // 机构
+            if (jgh.length() > 0) {
+                jgxx = jgh.substring(0, jgh.length() - 1);
+            }
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_USER, user);
+            hashmap.put(ConstantKey.KEY_JGH_LIST, jgxx);
+            hashmap.put(ConstantKey.KEY_JGH, getSessionJgh());
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:修改密码
+     *
+     * @author: redcomet
+     * @param: [dah]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_resetPwd.do")
+    public void resetPwd(String dah) throws BusinessException {
+        try {
+            User user = new User();
+            user.setPassword(MD5.crypt(StringUtils.trimToEmpty(SystemConstant.PWD_DEFAULT)));
+            user.setDah(dah);
+            // 重置用户密码
+            userService.resetUserPwd(user);
+            response.getWriter().write(ConstantKey.SUCCESS);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+    
+    /**
+     * @description:获取岗位列表
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_getGwList.do")
+    private void getGwList() throws BusinessException {
+        try {
+            // 取得岗位列表
+            List<Constant> gwList = getConstantList(ConstantKey.KEY_POSITION);
+            String json = JSON.Encode(gwList);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:获取性别列表
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_getSexList.do")
+    private void getSexList() throws BusinessException {
+        try {
+            // 取得性别列表
+            List<HashMap<String, String>> sexList = Sex.getSexList();
+            String json = JSON.Encode(sexList);
+            response.getWriter().write(json);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:停用用户
+     *
+     * @author: redcomet
+     * @param: [dah]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_deleteUser.do")
+    private void deleteUser(String dah) throws BusinessException {
+        try {
+            // 停用用户
+            userService.deleteUser(dah);
+            response.getWriter().write(ConstantKey.SUCCESS);
         } catch (IOException e) {
             throw new BusinessException(ConstantMessage.ERR00005, e);
         }

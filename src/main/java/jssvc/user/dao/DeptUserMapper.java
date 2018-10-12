@@ -13,8 +13,6 @@ public interface DeptUserMapper {
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(DeptUser record);
-
     int insertSelective(DeptUser record);
 
     List<DeptUser> selectByExample(DeptUserExample example);
@@ -28,6 +26,10 @@ public interface DeptUserMapper {
     int updateByPrimaryKeySelective(DeptUser record);
 
     int updateByPrimaryKey(DeptUser record);
+
+    int insert(DeptUser record);
+
+    int deleteByDah(String dah);
 
     //增加一个接口
     List<DeptUserVo> selectDeptUserByDah(String dah);

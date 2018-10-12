@@ -1,8 +1,8 @@
 package jssvc.user.service;
 
-import jssvc.user.model.DeptUserVo;
-import jssvc.user.model.Menu;
-import jssvc.user.model.User;
+import jssvc.user.model.*;
+import jssvc.user.model.filter.UserSearchFilter;
+import jssvc.base.exception.BusinessException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -48,5 +48,58 @@ public interface UserService {
 
     List<Menu> getMenus(String dah, String name) throws SQLException;
 
+    List<UserVo> getUsers(UserSearchFilter filter) throws SQLException;
 
+    int getUsersCount(UserSearchFilter filter) throws SQLException;
+
+    /**
+     * @description:根据档案号、机构号获取有权限的机构列表
+     *
+     * @author: redcomet
+     * @param: [dah, jgh]
+     * @return: java.util.List<InstitutionInfo>        
+     * @create: 2018/10/12 
+     **/
+    List<InstitutionInfo> getInstitutionInfos(String dah, String jgh) throws SQLException;
+
+    /**
+     * @description:创建用户服务
+     *
+     * @author: redcomet
+     * @param: [user, yhjgList]
+     * @return: boolean
+     * @create: 2018/10/12
+     **/
+    boolean createUser(User user, List<DeptUser> yhjgList) throws BusinessException;
+
+    /**
+     * @description:停用用户
+     *
+     * @author: redcomet
+     * @param: [dah]
+     * @return: boolean        
+     * @create: 2018/10/12 
+     **/
+    boolean deleteUser(String dah) throws BusinessException;
+
+
+    /**
+     * @description: 更新用户
+     *
+     * @author: redcomet
+     * @param: [user, yhjgList]
+     * @return: boolean        
+     * @create: 2018/10/12 
+     **/
+    boolean updateUser(User user, List<DeptUser> yhjgList) throws BusinessException;
+
+    /**
+     * @description:修改密码
+     *
+     * @author: redcomet
+     * @param: [user]
+     * @return: boolean        
+     * @create: 2018/10/12 
+     **/
+    boolean resetUserPwd(User user) throws BusinessException;
 }

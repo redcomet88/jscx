@@ -3,6 +3,7 @@ package jssvc.user.dao;
 import java.util.List;
 import jssvc.user.model.User;
 import jssvc.user.model.UserExample;
+import jssvc.user.model.filter.UserSearchFilter;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
@@ -27,4 +28,8 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    List<User> selectUsers(UserSearchFilter filter);
+
+    int selectUsersCount(UserSearchFilter filter);
 }

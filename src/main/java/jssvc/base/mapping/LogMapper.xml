@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="jssvc.user.dao.DeptUserMapper" >
-  <resultMap id="BaseResultMap" type="jssvc.user.model.DeptUser">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="dah" jdbcType="VARCHAR" property="dah" />
-    <result column="jgh" jdbcType="VARCHAR" property="jgh" />
-  </resultMap>
-  <resultMap id="DeptUserResultMap" type="jssvc.user.model.DeptUserVo" extends="BaseResultMap">
-    <result column="jgmc" jdbcType="VARCHAR" property="jgmc" />
+<mapper namespace="jssvc.base.dao.LogMapper" >
+  <resultMap id="BaseResultMap" type="jssvc.base.model.Log" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="DATETIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="dah" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="jgh" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="ip" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="type" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="object" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="flag" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -68,15 +72,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, dah, jgh
+    id, DATETIME, dah, jgh, ip, type, object, flag
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.user.model.DeptUserExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.base.model.LogExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_dept_user
+    from t_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,28 +91,35 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_dept_user
+    from t_log
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_dept_user
+    delete from t_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="jssvc.user.model.DeptUserExample" >
-    delete from t_dept_user
+  <delete id="deleteByExample" parameterType="jssvc.base.model.LogExample" >
+    delete from t_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="jssvc.user.model.DeptUser" >
-    insert into t_dept_user (id, dah, jgh)
-    values (#{id,jdbcType=INTEGER}, #{dah,jdbcType=VARCHAR}, #{jgh,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="jssvc.base.model.Log" >
+    insert into t_log (id, DATETIME, dah, 
+      jgh, ip, type, object, 
+      flag)
+    values (#{id,jdbcType=INTEGER}, #{datetime,jdbcType=TIMESTAMP}, #{dah,jdbcType=VARCHAR}, 
+      #{jgh,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{object,jdbcType=VARCHAR}, 
+      #{flag,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="jssvc.user.model.DeptUser" >
-    insert into t_dept_user
+  <insert id="insertSelective" parameterType="jssvc.base.model.Log" >
+    insert into t_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="datetime != null" >
+        DATETIME,
       </if>
       <if test="dah != null" >
         dah,
@@ -116,10 +127,25 @@
       <if test="jgh != null" >
         jgh,
       </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="object != null" >
+        object,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
+      </if>
+      <if test="datetime != null" >
+        #{datetime,jdbcType=TIMESTAMP},
       </if>
       <if test="dah != null" >
         #{dah,jdbcType=VARCHAR},
@@ -127,19 +153,34 @@
       <if test="jgh != null" >
         #{jgh,jdbcType=VARCHAR},
       </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="object != null" >
+        #{object,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="jssvc.user.model.DeptUserExample" resultType="java.lang.Integer" >
-    select count(*) from t_dept_user
+  <select id="countByExample" parameterType="jssvc.base.model.LogExample" resultType="java.lang.Integer" >
+    select count(*) from t_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update t_dept_user
+    update t_log
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.datetime != null" >
+        DATETIME = #{record.datetime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.dah != null" >
         dah = #{record.dah,jdbcType=VARCHAR},
@@ -147,47 +188,73 @@
       <if test="record.jgh != null" >
         jgh = #{record.jgh,jdbcType=VARCHAR},
       </if>
+      <if test="record.ip != null" >
+        ip = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.object != null" >
+        object = #{record.object,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flag != null" >
+        flag = #{record.flag,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update t_dept_user
+    update t_log
     set id = #{record.id,jdbcType=INTEGER},
+      DATETIME = #{record.datetime,jdbcType=TIMESTAMP},
       dah = #{record.dah,jdbcType=VARCHAR},
-      jgh = #{record.jgh,jdbcType=VARCHAR}
+      jgh = #{record.jgh,jdbcType=VARCHAR},
+      ip = #{record.ip,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      object = #{record.object,jdbcType=VARCHAR},
+      flag = #{record.flag,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="jssvc.user.model.DeptUser" >
-    update t_dept_user
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.base.model.Log" >
+    update t_log
     <set >
+      <if test="datetime != null" >
+        DATETIME = #{datetime,jdbcType=TIMESTAMP},
+      </if>
       <if test="dah != null" >
         dah = #{dah,jdbcType=VARCHAR},
       </if>
       <if test="jgh != null" >
         jgh = #{jgh,jdbcType=VARCHAR},
       </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="object != null" >
+        object = #{object,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="jssvc.user.model.DeptUser" >
-    update t_dept_user
-    set dah = #{dah,jdbcType=VARCHAR},
-      jgh = #{jgh,jdbcType=VARCHAR}
+  <update id="updateByPrimaryKey" parameterType="jssvc.base.model.Log" >
+    update t_log
+    set DATETIME = #{datetime,jdbcType=TIMESTAMP},
+      dah = #{dah,jdbcType=VARCHAR},
+      jgh = #{jgh,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      object = #{object,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectDeptUserByDah" parameterType="java.lang.String" resultMap="DeptUserResultMap">
-    select a.id,a.dah,a.jgh,b.jgmc
-    from t_dept_user a
-    inner join t_dept_info b
-    on a.jgh = b.jgh
-    where a.dah = #{dah,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByDah" parameterType="java.lang.String">
-    delete from t_dept_user
-    where dah = #{dah,jdbcType=VARCHAR}
-  </delete>
 </mapper>

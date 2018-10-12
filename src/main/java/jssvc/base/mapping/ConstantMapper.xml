@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="jssvc.base.dao.ConstantMapper" >
+  <resultMap id="BaseResultMap" type="jssvc.base.model.Constant" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="en_key" property="enKey" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type, en_key, name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_constant
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_constant
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="jssvc.base.model.Constant" >
+    insert into t_constant (id, type, en_key,
+      name)
+    values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{enKey,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.base.model.Constant" >
+    insert into t_constant
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="enKey != null" >
+        en_key,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="enKey != null" >
+        #{enKey,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.base.model.Constant" >
+    update t_constant
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="enKey != null" >
+        en_key = #{enKey,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.base.model.Constant" >
+    update t_constant
+    set type = #{type,jdbcType=VARCHAR},
+      en_key = #{enKey,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_constant
+    where type = #{type,jdbcType=VARCHAR}
+  </select>
+  <select id="selectValueByTypeAndKey" resultType="java.lang.String" parameterType="java.lang.String" >
+    select
+    name
+    from t_constant
+    where type = #{0,jdbcType=VARCHAR}
+    and en_key = #{1,jdbcType=VARCHAR}
+  </select>
+  <select id="selectValueByTypeAndName" resultType="java.lang.String" parameterType="java.lang.String" >
+    select
+    en_key
+    from t_constant
+    where type = #{0,jdbcType=VARCHAR}
+    and name = #{1,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateNameByTypeAndEnKey" parameterType="jssvc.base.model.Constant" >
+      update t_constant
+    set  name = #{name,jdbcType=VARCHAR}
+    where type = #{type,jdbcType=VARCHAR}
+      and en_key=#{enKey,jdbcType=VARCHAR}
+  </update>
+</mapper>

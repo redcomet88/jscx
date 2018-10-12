@@ -23,6 +23,8 @@
     <mvc:resources location="/workflow/" mapping="/workflow/**"/>
     <mvc:resources location="/" mapping="/favicon.ico"/>
 
+
+
     <!-- 添加注解驱动 -->
     <mvc:annotation-driven />
     <task:annotation-driven />
@@ -53,10 +55,24 @@
 
     <!-- 配置拦截器 -->
 
+
     <!-- 配置异常映射路径，ajax提示-->
 
     <!-- 文件上传-->
 
     <!-- 文件下载  -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <!-- 配置下载返回类型 -->
+                <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"></bean>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+
+                    <!--    配置编码方式  -->
+                    <property name="supportedMediaTypes" value="application/json;charset=UTF-8"></property>
+                </bean>
+            </list>
+        </property>
+    </bean>
 
 </beans>

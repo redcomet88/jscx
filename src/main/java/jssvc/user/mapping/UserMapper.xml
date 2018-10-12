@@ -101,6 +101,79 @@
     from t_user
     where dah = #{dah,jdbcType=VARCHAR}
   </select>
+  <select id="selectUsersByJgh" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select distinct
+    a.dah, a.ygxm
+    from t_user a
+    inner join t_dept_user b on a.dah = b.dah
+    where b.jgh = #{jgh,jdbcType=VARCHAR}
+    and a.flag = '0'
+    order by a.px,a.dah
+  </select>
+  <select id="selectUsers" resultMap="BaseResultMap" parameterType="jssvc.user.model.filter.UserSearchFilter" >
+    select distinct
+    a.*
+    from t_user a
+    inner join t_dept_user b on a.dah = b.dah
+    inner join t_dept_info d on b.jgh = d.jgh
+    <where>
+      <if test="dah != null and dah != ''" >
+        a.dah like CONCAT('%',#{dah,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="ygxm != null and ygxm != ''" >
+        and a.ygxm like CONCAT('%',#{ygxm,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="flag != null and flag != ''" >
+        and a.flag = #{flag,jdbcType=VARCHAR}
+      </if>
+      <if test="jgh != null and jgh != ''" >
+        and (b.jgh = #{jgh,jdbcType=VARCHAR}
+        or d.sjjg =#{jgh,jdbcType=VARCHAR})
+      </if>
+      <if test="loginDah != 'admin'" >
+        and (a.dah in
+        (select distinct o.dah
+        from t_dept_user o, t_data_authority p
+        where o.jgh = p.jgh and p.dah = #{loginDah,jdbcType=VARCHAR}) or a.dah = #{loginDah,jdbcType=VARCHAR})
+      </if>
+    </where>
+    <if test="sortField != null" >
+      order by a.${sortField} ${sortOrder}
+    </if>
+    <if test="limit != 0" >
+      limit #{offset},#{limit}
+    </if>
+  </select>
+  <select id="selectUsersCount" resultType="int" parameterType="jssvc.user.model.filter.UserSearchFilter" >
+    select count(1) from (
+    select distinct
+    a.*
+    from t_user a
+    inner join t_dept_user b on a.dah = b.dah
+    inner join t_dept_info d on b.jgh = d.jgh
+    <where>
+      <if test="dah != null and dah != ''" >
+        a.dah like CONCAT('%',#{dah,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="ygxm != null and ygxm != ''" >
+        and a.ygxm like CONCAT('%',#{ygxm,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="flag != null and flag != ''" >
+        and a.flag = #{flag,jdbcType=VARCHAR}
+      </if>
+      <if test="jgh != null and jgh != ''" >
+        and (b.jgh = #{jgh,jdbcType=VARCHAR}
+        or d.sjjg =#{jgh,jdbcType=VARCHAR})
+      </if>
+      <if test="loginDah != 'admin'" >
+        and (a.dah in
+        (select distinct o.dah
+        from t_dept_user o, t_data_authority p
+        where o.jgh = p.jgh and p.dah = #{loginDah,jdbcType=VARCHAR}) or a.dah = #{loginDah,jdbcType=VARCHAR})
+      </if>
+    </where>
+    ) as c
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from t_user
     where dah = #{dah,jdbcType=VARCHAR}

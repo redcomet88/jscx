@@ -25,4 +25,14 @@ public interface BaseService {
     * @create: 2018/9/29 
     **/
     String getConstantByName(String type, String name) throws SQLException;
+
+    /**
+     * @description:根据类型获取常量列表
+     *
+     * @author: redcomet
+     * @param: [type]
+     * @return: java.util.List<jssvc.base.model.Constant>        
+     * @create: 2018/10/12 
+     **/
+    List<Constant> getConstantList(String type) throws SQLException;
 }
