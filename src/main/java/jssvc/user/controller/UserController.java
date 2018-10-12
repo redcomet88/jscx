@@ -155,10 +155,7 @@ public class UserController extends BaseController {
             List<Map<String, Object>> menus = userService.getMenusTree(user.getDah());
 
             response.getWriter().write(JSON.Encode(menus));
-            //response.getWriter().write("我这个是中文你可以收到吗");
 
-            //嘛呢难道是我这个JSON有问题吗
-            logger.info(JSON.Encode(menus));
         } catch (SQLException e) {
             throw new BusinessException(ConstantMessage.ERR00003, e);
         } catch (IOException e) {
@@ -478,5 +475,83 @@ public class UserController extends BaseController {
         } catch (IOException e) {
             throw new BusinessException(ConstantMessage.ERR00005, e);
         }
+    }
+
+    /**
+     * @description:转入用户更新页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("showUserUpd.do")
+    private ModelAndView showUserUpd() throws BusinessException {
+        try {
+            User user = getSessionUser();
+            // 跳转到用户更新页面
+            ModelAndView mv = new ModelAndView();
+            mv.setViewName(ConstantKey.USER_UPD);
+            // 设置回显的用户信息、机构号
+            mv.addObject(ConstantKey.KEY_USER_INFO, user);
+            mv.addObject(ConstantKey.KEY_JGH_LIST, getSessionJgh());
+            mv.addObject(ConstantKey.KEY_ACTION, ConstantKey.KEY_EDIT);
+            return mv;
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        }
+    }
+
+    /**
+     * @description:转入修改密码页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView
+     * @create: 2018/10/12
+     **/
+    @ResponseBody
+    @RequestMapping("showPwdUpd.do")
+    private ModelAndView showPwdUpd() {
+        // 密码修改页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.PWD_UPD);
+        return mv;
+    }
+
+    /**
+     * @description:用户修改密码
+     *
+     * @author: redcomet
+     * @param: [oldPwd, newPwd, dah]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/user_updatePwd.do")
+    public void updatePwd(String oldPwd, String newPwd, String dah) throws BusinessException {
+        try {
+            User user = (User) httpSession.getAttribute(ConstantKey.KEY_USER);
+            // 判断密码是否相等
+            if (user.getPassword().equals(MD5.crypt(oldPwd))) {
+                // 修改用户密码
+                User userUpd = new User();
+                userUpd.setPassword(MD5.crypt(newPwd));
+                userUpd.setDah(user.getDah());
+                userService.resetUserPwd(userUpd);
+                // 密码更新到session中
+                user.setPassword(MD5.crypt(newPwd));
+                httpSession.setAttribute(ConstantKey.KEY_USER, user);
+                response.getWriter().write(ConstantKey.SUCCESS);
+            } else {
+                response.getWriter().write(ConstantKey.FAIL);
+            }
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+
     }
 }
