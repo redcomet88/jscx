@@ -5,6 +5,7 @@ import jssvc.base.constant.ConstantKey;
 import jssvc.base.constant.ConstantMessage;
 import jssvc.base.constant.SystemConstant;
 import jssvc.base.controller.BaseController;
+import jssvc.base.enums.ActionType;
 import jssvc.base.exception.BusinessException;
 import jssvc.base.listener.LoginListener;
 import jssvc.base.enums.Sex;
@@ -12,6 +13,8 @@ import jssvc.base.model.Constant;
 import jssvc.base.util.JSON;
 import jssvc.base.util.MD5;
 import jssvc.base.util.TreeUtil;
+import jssvc.base.util.StringUtil;
+
 import jssvc.user.enums.UserStatus;
 import jssvc.user.model.*;
 import jssvc.user.model.filter.UserSearchFilter;
@@ -25,11 +28,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static jssvc.base.enums.ActionType.role_deleteRole;
+import static jssvc.base.enums.ActionType.role_saveRole;
 
 /**
  * @Description: 用户类控制器
@@ -631,6 +636,612 @@ public class UserController extends BaseController {
             throw new BusinessException(ConstantMessage.ERR00004, e);
         } catch (JSONException e) {
             throw new BusinessException(ConstantMessage.ERR00006, e);
+        }
+    }
+
+    /**
+     * @description:转入角色管理页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("showRoleList.do")
+    private ModelAndView showRoleList() {
+        // 角色管理页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.ROLE_LIST);
+        return mv;
+    }
+
+
+    /**
+     * @description:获取角色列表
+     *
+     * @author: redcomet
+     * @param: [filter]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_getRoleList.do")
+    private void getRoleList(UserSearchFilter filter) throws BusinessException {
+        try {
+            // 角色查询条件
+            filter.setOffset();
+            filter.setLimit();
+            // 取得角色列表
+            List<Role> roles = userService.getRoles(filter);
+            // 取得角色总件数
+            int count = userService.getRolesCount(filter);
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_DATA, roles);
+            hashmap.put(ConstantKey.KEY_TOTAL, count);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:初始化权限列表
+     *
+     * @author: redcomet
+     * @param: [id]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_initRoleList.do")
+    private void initRoleList(String id) throws Exception {
+        try {
+            // 取得功能权限列表
+            List<MenuFunction> menuFunctions = getMenuFunction(id);
+            // 删除角色权限
+            Boolean delFlag = false;
+            // 创建/修改角色和菜单功能权限
+            Boolean editFlag = false;
+            // 判断登录者是否具有删除角色权限、创建/修改角色和菜单功能权限
+            for (int i = 0; i < menuFunctions.size(); i++) {
+                switch (ActionType.valueOf(menuFunctions.get(i).getFunctionAction())) {
+                    case role_saveRole:
+                        editFlag = true;
+                        break;
+                    case role_deleteRole:
+                        delFlag = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.EDIT_FLAG, editFlag);
+            hashmap.put(ConstantKey.DEL_FLAG, delFlag);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:转入修改角色页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("showRoleUpd.do")
+    private ModelAndView showRoleUpd() {
+        // 角色修改页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.ROLE_UPD);
+        return mv;
+    }
+
+    /**
+     * @description:修改批量角色页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("showPiLiangRoleUpd.do")
+    private ModelAndView showPiLiangRoleUpd() {
+        // 角色修改页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.PILIANG_ROLE_UPD);
+        return mv;
+    }
+
+
+    /**
+     * @description:删除角色
+     *
+     * @author: redcomet
+     * @param: [roleId]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_deleteRole.do")
+    private void deleteRole(Integer roleId) throws BusinessException {
+        try {
+            // 检查角色id有没有被分配
+            int count = userService.getUserRoleCount(roleId);
+            if (count == 0) {
+                // 删除角色
+                userService.deleteRole(roleId);
+                response.getWriter().write(ConstantKey.SUCCESS);
+            } else {
+                response.getWriter().write(ConstantKey.FAIL);
+            }
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:获取菜单功能列表
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_getmenuFunctionList.do")
+    private void getmenuFunctionList() throws BusinessException {
+        try {
+            // 取得菜单和菜单功能列表
+            List<HashMap<String, Object>> result = userService.getmenuFunctionList();
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_DATA, result);
+            hashmap.put(ConstantKey.KEY_TOTAL, 1);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:保存角色
+     *
+     * @author: redcomet
+     * @param: [roleVo]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_saveRole.do")
+    private void saveRole(RoleVo roleVo) throws BusinessException {
+        try {
+            String editFlg = roleVo.getEditFlag();
+            String menu = roleVo.getMenu();
+
+            if (ConstantKey.ADD_FLAG_VALUE.equals(editFlg)) {
+                // 角色表数据
+                Role role = roleVo;
+                role.setFlag(0);
+                role.setCreateTime(new Date());
+                role.setUpdateTime(new Date());
+
+                // 更新任务类型基本信息
+                userService.createRole(role, menu);
+            } else if (ConstantKey.EDIT_FLAG_VALUE.equals(editFlg)) {
+                // 角色表数据
+                Role role = roleVo;
+                role.setUpdateTime(new Date());
+
+                // 更新任务类型基本信息
+                userService.updateRole(role, menu);
+            }
+
+            response.getWriter().write(ConstantKey.SUCCESS);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:获取角色菜单
+     *
+     * @author: redcomet
+     * @param: [roleId]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_getRoleMenu.do")
+    private void getRoleMenu(Integer roleId) throws BusinessException {
+        try {
+            // 取得角色的菜单和菜单功能
+            String result = userService.getRoleMenu(roleId);
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_DATA, result);
+            hashmap.put(ConstantKey.KEY_TOTAL, 1);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:转入员工角色管理页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("showUserRoleList.do")
+    private ModelAndView showUserRoleList() {
+        // 用户角色管理页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.USER_ROLE_LIST);
+        return mv;
+    }
+
+    /**
+     * @description:根据登录的用户获取机构列表
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @RequestMapping("ajax/cg_getJgList.do")
+    @ResponseBody
+    public void cg_getJgList() {
+        try {
+            String dah = getSessionUser().getDah();
+            String jgh = getSessionJgh();
+            List<InstitutionInfo> list = userService.getInstitutionInfos(dah, jgh);
+            response.getWriter().write(JSON.Encode(list));
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw, true));
+            String strs = sw.toString();
+            logger.error(strs);
+        }
+    }
+
+    /**
+     * @description:获取用户的角色
+     *
+     * @author: redcomet
+     * @param: [filter]
+     * @return: void
+     * @create: 2018/10/12
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_getUserRoles.do")
+    private void getUserRoles(UserSearchFilter filter) throws BusinessException {
+        try {
+            // 员工角色查询分页条件
+            filter.setOffset();
+            filter.setLimit();
+            filter.setLoginDah(getSessionUser().getDah());
+            String jgh = filter.getJgh();
+            // 获取子机构
+            if (!StringUtil.isEmpty(jgh)) {
+                List<InstitutionInfo> jgxx = null;
+                StringBuffer sb = new StringBuffer(jgh);
+                // 如果是总行，则获取全部
+                /*
+                if ("070667999".equals(jgh)) {
+                    jgxx = userService.getInstitutionInfosNew();
+                } else {
+                    jgxx = userService.getChildJgByJgh(jgh);
+                }*/
+                jgxx = userService.getChildJgByJgh(jgh);
+                int size = 0;
+                if (jgxx != null && (size = jgxx.size()) > 0) {
+                    sb.append(SystemConstant.COMMA);
+                    for (int i = 0; i < size; i++) {
+                        InstitutionInfo info = jgxx.get(i);
+                        sb.append(info.getJgh());
+                        if (i != size - 1) {
+                            sb.append(SystemConstant.COMMA);
+                        }
+                    }
+                }
+                filter.setJgh(sb.toString());
+            }
+            // 取得员工角色列表
+            List<UserRoleVo> roles = userService.getUserRoles(filter);
+            // 取得员工角色总件数
+            int count = userService.getUserRolesCount(filter);
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_DATA, roles);
+            hashmap.put(ConstantKey.KEY_TOTAL, count);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:初始化用户角色列表
+     *
+     * @author: redcomet
+     * @param: [id]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_initUserRoleList.do")
+    private void initUserRoleList(String id) throws BusinessException {
+        try {
+            // 取得功能权限列表
+            List<MenuFunction> menuFunctions = getMenuFunction(id);
+            // 员工角色分配权限
+            Boolean roleSetFlag = false;
+            // 数据权限分配权限
+            Boolean dataSetFlag = false;
+            // 判断登录者是否具有员工角色分配、数据权限分配权限
+            for (int i = 0; i < menuFunctions.size(); i++) {
+                switch (ActionType.valueOf(menuFunctions.get(i).getFunctionAction())) {
+                    case role_saveUserRole:
+                        roleSetFlag = true;
+                        break;
+                    case role_saveDataAuthority:
+                        dataSetFlag = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.ROLE_SET_FLAG, roleSetFlag);
+            hashmap.put(ConstantKey.DATA_SET_FLAG, dataSetFlag);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:显示角色分配页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("showRoleSet.do")
+    private ModelAndView showRoleSet() {
+        // 角色分配页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.ROLE_SET);
+        return mv;
+    }
+
+   /**
+    * @description:显示分配数据权限页面
+    *
+    * @author: redcomet
+    * @param: []
+    * @return: org.springframework.web.servlet.ModelAndView        
+    * @create: 2018/10/12 
+    **/
+    @ResponseBody
+    @RequestMapping("showDataAuthoritySet.do")
+    private ModelAndView showDataAuthoritySet() {
+        // 数据权限分配页面
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.DATA_AUTHORITY_SET);
+        return mv;
+    }
+
+    /**
+     * @description:初始化数据分配权限页面
+     *
+     * @author: redcomet
+     * @param: [dah]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_initDataAuthoritySet.do")
+    private void initDataAuthoritySet(String dah) throws BusinessException {
+        try {
+            // 取得机构列表
+            List<InstitutionInfo> jgxx = getJgxxList();
+            List<HashMap<String, Object>> jgMaps = new ArrayList<>();
+            // 把机构列表放到hashmap中
+            for (int i = 0; i < jgxx.size(); i++) {
+                HashMap<String, Object> temp = new HashMap<>();
+                temp.put(ConstantKey.KEY_JGH, jgxx.get(i).getJgh());
+                temp.put(ConstantKey.KEY_JGMC, jgxx.get(i).getJgmc());
+                temp.put(ConstantKey.KEY_SJJG, jgxx.get(i).getSjjg());
+                jgMaps.add(temp);
+            }
+
+            // 取得已有的数据权限
+            String dataAuthority = userService.getDataAuthority(dah);
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+
+            hashmap.put(ConstantKey.KEY_DATA, jgMaps);
+            hashmap.put(ConstantKey.KEY_DATA_AUTHORITY, dataAuthority);
+            hashmap.put(ConstantKey.KEY_TOTAL, jgxx.size());
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+
+    }
+
+    /**
+     * @description:保存数据权限
+     *
+     * @author: redcomet
+     * @param: [dah, jg]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_saveDataAuthority.do")
+    private void saveDataAuthority(String dah, String jg) throws BusinessException {
+        try {
+            List<DataAuthority> dataAuthoritys = new ArrayList<DataAuthority>();
+            DataAuthority dataAuthority = new DataAuthority();
+            // 给数据权限表表的entity赋值
+            String[] jgs = jg.split(SystemConstant.COMMA);
+            for (int i = 0; i < jgs.length; i++) {
+                dataAuthority = new DataAuthority();
+                dataAuthority.setDah(dah);
+                dataAuthority.setJgh(jgs[i]);
+                dataAuthority.setCreateTime(new Date());
+                dataAuthoritys.add(dataAuthority);
+            }
+
+            // 创建数据权限
+            userService.createDataAuthority(dataAuthoritys);
+            response.getWriter().write(ConstantKey.SUCCESS);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:初始化角色分配页面
+     *
+     * @author: redcomet
+     * @param: [dah]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_initRoleSet.do")
+    private void initRoleSet(String dah) throws BusinessException {
+        try {
+            // 取得所有角色列表
+            UserSearchFilter filter = new UserSearchFilter();
+            List<Role> roles = userService.getRoles(filter);
+
+            // 根据档案号取得用户角色
+            List<Role> userRoleVos = userService.getRolesByDah(dah);
+            Boolean flag = true;
+            List<HashMap<String, Object>> data = new ArrayList<>();
+            // 把用户已经分配的角色从所有角色列表中去除
+            for (int i = 0; i < roles.size(); i++) {
+                flag = true;
+                // flag是false时表示该角色已经分配给用户
+                for (int j = 0; j < userRoleVos.size(); j++) {
+                    if (roles.get(i).getId() == userRoleVos.get(j).getId()) {
+                        flag = false;
+                        break;
+                    }
+                }
+                // flag是true时，把未分配给该用户的角色增加到新的数组中
+                if (flag) {
+                    HashMap<String, Object> temp = new HashMap<>();
+                    temp.put(ConstantKey.KEY_ROLE_ID, roles.get(i).getId());
+                    temp.put(ConstantKey.KEY_ROLE_NAME, roles.get(i).getRoleName());
+                    data.add(temp);
+                }
+            }
+            List<HashMap<String, Object>> userRoles = new ArrayList<>();
+            // 把用户角色列表放到hashmap中
+            for (int k = 0; k < userRoleVos.size(); k++) {
+                HashMap<String, Object> temp = new HashMap<>();
+                temp.put(ConstantKey.KEY_ROLE_ID, userRoleVos.get(k).getId());
+                temp.put(ConstantKey.KEY_ROLE_NAME, userRoleVos.get(k).getRoleName());
+                userRoles.add(temp);
+            }
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_DATA, data);
+            hashmap.put(ConstantKey.KEY_USER_ROLES, userRoles);
+            hashmap.put(ConstantKey.KEY_TOTAL, roles.size());
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * @description:保存用户角色
+     *
+     * @author: redcomet
+     * @param: [dah, jsonRole]
+     * @return: void        
+     * @create: 2018/10/12 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/role_saveUserRole.do")
+    private void saveUserRole(String dah, String jsonRole) throws BusinessException {
+        try {
+            ArrayList arrRole = (ArrayList) JSON.Decode(jsonRole);
+            List<UserRole> userRoles = new ArrayList<UserRole>();
+            UserRole userRole = new UserRole();
+
+            for (int i = 0; i < arrRole.size(); i++) {
+                userRole = new UserRole();
+                Map objRole = (Map) arrRole.get(i);
+                userRole.setDah(dah);
+                userRole.setRoleId(Integer.valueOf(objRole.get(ConstantKey.KEY_ROLE_ID).toString()));
+                userRoles.add(userRole);
+            }
+
+            // 创建用户角色
+            userService.createUserRole(userRoles);
+            response.getWriter().write(ConstantKey.SUCCESS);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
         }
     }
 }

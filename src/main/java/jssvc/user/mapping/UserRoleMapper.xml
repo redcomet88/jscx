@@ -2,89 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="jssvc.user.dao.UserRoleMapper" >
   <resultMap id="BaseResultMap" type="jssvc.user.model.UserRole" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="dah" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="role_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-    </constructor>
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dah" property="dah" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
+  <resultMap id="userRoleVoMap" type="jssvc.user.model.UserRoleVo" extends="BaseResultMap">
+    <result column="ygxm" property="ygxm" jdbcType="VARCHAR" />
+    <result column="jgmc" property="jgmc" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="roleMap" type="jssvc.user.model.Role" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_description" property="roleDescription" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, dah, role_id
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.user.model.UserRoleExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from t_user_role
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_user_role
     where id = #{id,jdbcType=INTEGER}
@@ -92,12 +31,6 @@
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_user_role
     where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="jssvc.user.model.UserRoleExample" >
-    delete from t_user_role
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
   </delete>
   <insert id="insert" parameterType="jssvc.user.model.UserRole" >
     insert into t_user_role (id, dah, role_id
@@ -130,38 +63,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="jssvc.user.model.UserRoleExample" resultType="java.lang.Integer" >
-    select count(*) from t_user_role
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update t_user_role
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.dah != null" >
-        dah = #{record.dah,jdbcType=VARCHAR},
-      </if>
-      <if test="record.roleId != null" >
-        role_id = #{record.roleId,jdbcType=INTEGER},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update t_user_role
-    set id = #{record.id,jdbcType=INTEGER},
-      dah = #{record.dah,jdbcType=VARCHAR},
-      role_id = #{record.roleId,jdbcType=INTEGER}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="jssvc.user.model.UserRole" >
     update t_user_role
     <set >
@@ -180,4 +81,86 @@
       role_id = #{roleId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectCountByRoleId" resultType="int" parameterType="java.lang.Integer" >
+    select
+    count(1)
+    from t_user_role
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectUserRoles" resultMap="userRoleVoMap" parameterType="jssvc.user.model.filter.UserSearchFilter" >
+    select distinct
+    a.dah, a.ygxm
+    from t_user a
+    left join t_user_role b on a.dah = b.dah
+    left join t_role c on b.role_id = c.id
+    left join t_dept_user d on a.dah = d.dah
+    where a.flag = '0'
+    <if test="jgh != null and jgh != ''">
+      and find_in_set(d.jgh, #{jgh,jdbcType=VARCHAR})
+    </if>
+    <if test="roleName != null and roleName != ''">
+      and c.role_name like CONCAT('%',#{roleName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="ygxm != null and ygxm != ''" >
+      and a.ygxm like CONCAT('%',#{ygxm,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="loginDah != 'admin'" >
+      and (a.dah in
+      (select distinct o.dah
+      from t_dept_user o, t_data_authority p
+      where o.jgh = p.jgh and p.dah = #{loginDah,jdbcType=VARCHAR}) or a.dah = #{loginDah,jdbcType=VARCHAR})
+    </if>
+    <if test="sortField != null" >
+      order by a.${sortField} ${sortOrder}
+    </if>
+    <if test="limit != 0" >
+      limit #{offset},#{limit}
+    </if>
+  </select>
+
+  <select id="selectUserRolesCount" resultType="int" parameterType="jssvc.user.model.filter.UserSearchFilter" >
+    select
+    count(distinct a.dah)
+    from t_user a
+    left join t_user_role b on a.dah = b.dah
+    left join t_role c on b.role_id = c.id
+    left join t_dept_user d on a.dah = d.dah
+    where a.flag = '0'
+    <if test="jgh != null and jgh != ''">
+      and find_in_set(d.jgh, #{jgh,jdbcType=VARCHAR})
+    </if>
+    <if test="roleName != null and roleName != ''">
+      and c.role_name like CONCAT('%',#{roleName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="ygxm != null and ygxm != ''" >
+      and a.ygxm like CONCAT('%',#{ygxm,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="loginDah != 'admin'" >
+      and (a.dah in
+      (select distinct o.dah
+      from t_dept_user o, t_data_authority p
+      where o.jgh = p.jgh and p.dah = #{loginDah,jdbcType=VARCHAR}) or a.dah = #{loginDah,jdbcType=VARCHAR})
+    </if>
+  </select>
+  <delete id="deleteByDah" parameterType="java.lang.String" >
+    delete from t_user_role
+    where dah = #{dah,jdbcType=VARCHAR}
+  </delete>
+  <select id="selectRolesByDah" resultMap="roleMap" parameterType="java.lang.String" >
+    select
+    b.id, b.role_name
+    from t_user_role a
+    inner join t_role b on a.role_id = b.id
+    where a.dah = #{dah,jdbcType=VARCHAR}
+  </select>
+  <select id="selectCountByDahAndAction" resultType="int" parameterType="java.lang.String" >
+    select
+    count(1)
+    from t_user_role o, t_role_function p, t_menu_function q
+    where o.role_id = p.role_id
+    and p.function_id = q.id
+    and q.function_action = #{1,jdbcType=VARCHAR}
+    and o.dah = #{0,jdbcType=VARCHAR}
+  </select>
 </mapper>

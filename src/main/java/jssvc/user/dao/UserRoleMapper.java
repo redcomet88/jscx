@@ -1,30 +1,34 @@
 package jssvc.user.dao;
 
 import java.util.List;
+
+import jssvc.user.model.Role;
 import jssvc.user.model.UserRole;
-import jssvc.user.model.UserRoleExample;
-import org.apache.ibatis.annotations.Param;
+import jssvc.user.model.UserRoleVo;
+import jssvc.user.model.filter.UserSearchFilter;
 
 public interface UserRoleMapper {
-    int countByExample(UserRoleExample example);
-
-    int deleteByExample(UserRoleExample example);
-
     int deleteByPrimaryKey(Integer id);
 
     int insert(UserRole record);
 
     int insertSelective(UserRole record);
 
-    List<UserRole> selectByExample(UserRoleExample example);
-
     UserRole selectByPrimaryKey(Integer id);
-
-    int updateByExampleSelective(@Param("record") UserRole record, @Param("example") UserRoleExample example);
-
-    int updateByExample(@Param("record") UserRole record, @Param("example") UserRoleExample example);
 
     int updateByPrimaryKeySelective(UserRole record);
 
     int updateByPrimaryKey(UserRole record);
+
+    int selectCountByRoleId(Integer roleId);
+
+    List<UserRoleVo> selectUserRoles(UserSearchFilter filter);
+
+    int selectUserRolesCount(UserSearchFilter filter);
+
+    int deleteByDah(String dah);
+
+    List<Role> selectRolesByDah(String dah);
+
+    int selectCountByDahAndAction(String dah, String actionName);
 }

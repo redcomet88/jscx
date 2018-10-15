@@ -2,102 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="jssvc.user.dao.RoleFunctionMapper" >
   <resultMap id="BaseResultMap" type="jssvc.user.model.RoleFunction" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="role_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="function_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-    </constructor>
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="function_id" property="functionId" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List" >
     id, role_id, function_id
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.user.model.RoleFunctionExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from t_role_function
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_role_function
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getRoleFunctionByRoleFuncion" resultMap="BaseResultMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List" />
+    from t_role_function
+    where (role_id = #{role,jdbcType=INTEGER} and function_id = #{function,jdbcType=VARCHAR})
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_role_function
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="jssvc.user.model.RoleFunctionExample" >
+  <delete id="deleteByRoleFunction" parameterType="map" >
     delete from t_role_function
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
+    where role_id = #{role,jdbcType=INTEGER} and function_id not in
+    <foreach item="item" index="index" collection="function"
+             open="(" separator="," close=")">
+      #{item}
+    </foreach>
   </delete>
   <insert id="insert" parameterType="jssvc.user.model.RoleFunction" >
     insert into t_role_function (id, role_id, function_id
@@ -130,38 +64,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="jssvc.user.model.RoleFunctionExample" resultType="java.lang.Integer" >
-    select count(*) from t_role_function
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update t_role_function
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.roleId != null" >
-        role_id = #{record.roleId,jdbcType=INTEGER},
-      </if>
-      <if test="record.functionId != null" >
-        function_id = #{record.functionId,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update t_role_function
-    set id = #{record.id,jdbcType=INTEGER},
-      role_id = #{record.roleId,jdbcType=INTEGER},
-      function_id = #{record.functionId,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="jssvc.user.model.RoleFunction" >
     update t_role_function
     <set >
@@ -180,4 +82,14 @@
       function_id = #{functionId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <delete id="deleteByRoleId" parameterType="java.lang.Integer" >
+    delete from t_role_function
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+  <select id="selectByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_role_function
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
 </mapper>

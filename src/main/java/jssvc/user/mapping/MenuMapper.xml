@@ -173,7 +173,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <select id="selectMenusByDah" resultMap="BaseResultMap" parameterType="jssvc.user.model.filter.UserSearchFilter">
+  <select id="selectMenusByDah" resultMap="BaseResultMap" parameterType="com.wjrcb.jgj.user.vo.filter.UserSearchFilter">
     select distinct
     c.*
     from t_role_menu a

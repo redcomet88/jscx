@@ -78,7 +78,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    dah, ygxm, mjkkh, sex, mobile, email, sfzh, password, gwdj, flag, bz, pysx, pyqp, 
+    dah, ygxm, mjkkh, sex, mobile, email, sfzh, password, gwdj, flag, bz, pysx, pyqp,
     px
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.user.model.UserExample" >
@@ -96,7 +96,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_user
     where dah = #{dah,jdbcType=VARCHAR}
@@ -185,15 +185,15 @@
     </if>
   </delete>
   <insert id="insert" parameterType="jssvc.user.model.User" >
-    insert into t_user (dah, ygxm, mjkkh, 
-      sex, mobile, email, 
-      sfzh, password, gwdj, 
-      flag, bz, pysx, pyqp, 
+    insert into t_user (dah, ygxm, mjkkh,
+      sex, mobile, email,
+      sfzh, password, gwdj,
+      flag, bz, pysx, pyqp,
       px)
-    values (#{dah,jdbcType=VARCHAR}, #{ygxm,jdbcType=VARCHAR}, #{mjkkh,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{sfzh,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{gwdj,jdbcType=VARCHAR}, 
-      #{flag,jdbcType=VARCHAR}, #{bz,jdbcType=VARCHAR}, #{pysx,jdbcType=VARCHAR}, #{pyqp,jdbcType=VARCHAR}, 
+    values (#{dah,jdbcType=VARCHAR}, #{ygxm,jdbcType=VARCHAR}, #{mjkkh,jdbcType=VARCHAR},
+      #{sex,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+      #{sfzh,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{gwdj,jdbcType=VARCHAR},
+      #{flag,jdbcType=VARCHAR}, #{bz,jdbcType=VARCHAR}, #{pysx,jdbcType=VARCHAR}, #{pyqp,jdbcType=VARCHAR},
       #{px,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="jssvc.user.model.User" >
@@ -346,19 +346,19 @@
   <update id="updateByExample" parameterType="map" >
     update t_user
     set dah = #{record.dah,jdbcType=VARCHAR},
-      ygxm = #{record.ygxm,jdbcType=VARCHAR},
-      mjkkh = #{record.mjkkh,jdbcType=VARCHAR},
-      sex = #{record.sex,jdbcType=VARCHAR},
-      mobile = #{record.mobile,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
-      sfzh = #{record.sfzh,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=VARCHAR},
-      gwdj = #{record.gwdj,jdbcType=VARCHAR},
-      flag = #{record.flag,jdbcType=VARCHAR},
-      bz = #{record.bz,jdbcType=VARCHAR},
-      pysx = #{record.pysx,jdbcType=VARCHAR},
-      pyqp = #{record.pyqp,jdbcType=VARCHAR},
-      px = #{record.px,jdbcType=VARCHAR}
+    ygxm = #{record.ygxm,jdbcType=VARCHAR},
+    mjkkh = #{record.mjkkh,jdbcType=VARCHAR},
+    sex = #{record.sex,jdbcType=VARCHAR},
+    mobile = #{record.mobile,jdbcType=VARCHAR},
+    email = #{record.email,jdbcType=VARCHAR},
+    sfzh = #{record.sfzh,jdbcType=VARCHAR},
+    password = #{record.password,jdbcType=VARCHAR},
+    gwdj = #{record.gwdj,jdbcType=VARCHAR},
+    flag = #{record.flag,jdbcType=VARCHAR},
+    bz = #{record.bz,jdbcType=VARCHAR},
+    pysx = #{record.pysx,jdbcType=VARCHAR},
+    pyqp = #{record.pyqp,jdbcType=VARCHAR},
+    px = #{record.px,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>

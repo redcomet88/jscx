@@ -8,6 +8,7 @@ import jssvc.base.model.Constant;
 import jssvc.base.service.BaseService;
 import jssvc.base.util.JSON;
 import jssvc.user.model.InstitutionInfo;
+import jssvc.user.model.MenuFunction;
 import jssvc.user.model.User;
 import jssvc.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,5 +89,20 @@ public abstract class BaseController {
         // 根据类型取得常量列表
         List<Constant> constants = baseService.getConstantList(type);
         return constants;
+    }
+
+    /**
+     * @description:获得菜单列表
+     *
+     * @author: redcomet
+     * @param: [menuId]
+     * @return: java.util.List<MenuFunction>        
+     * @create: 2018/10/12 
+     **/
+    public List<MenuFunction> getMenuFunction(String menuId) throws SQLException {
+        User user = getSessionUser();
+        // 取得功能权限列表
+        List<MenuFunction> menuFunctions = userService.getMenuFunction(user.getDah(), menuId);
+        return menuFunctions;
     }
 }

@@ -2,90 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="jssvc.user.dao.MenuFunctionMapper" >
   <resultMap id="BaseResultMap" type="jssvc.user.model.MenuFunction" >
-    <constructor >
-      <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="menu_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="function_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="function_action" jdbcType="VARCHAR" javaType="java.lang.String" />
-    </constructor>
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
+    <result column="function_name" property="functionName" jdbcType="VARCHAR" />
+    <result column="function_action" property="functionAction" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List" >
     id, menu_id, function_name, function_action
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.user.model.MenuFunctionExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from t_menu_function
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_menu_function
     where id = #{id,jdbcType=VARCHAR}
@@ -94,16 +20,10 @@
     delete from t_menu_function
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="jssvc.user.model.MenuFunctionExample" >
-    delete from t_menu_function
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
   <insert id="insert" parameterType="jssvc.user.model.MenuFunction" >
-    insert into t_menu_function (id, menu_id, function_name, 
+    insert into t_menu_function (id, menu_id, function_name,
       function_action)
-    values (#{id,jdbcType=VARCHAR}, #{menuId,jdbcType=VARCHAR}, #{functionName,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=VARCHAR}, #{menuId,jdbcType=VARCHAR}, #{functionName,jdbcType=VARCHAR},
       #{functionAction,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="jssvc.user.model.MenuFunction" >
@@ -137,42 +57,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="jssvc.user.model.MenuFunctionExample" resultType="java.lang.Integer" >
-    select count(*) from t_menu_function
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update t_menu_function
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=VARCHAR},
-      </if>
-      <if test="record.menuId != null" >
-        menu_id = #{record.menuId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.functionName != null" >
-        function_name = #{record.functionName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.functionAction != null" >
-        function_action = #{record.functionAction,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update t_menu_function
-    set id = #{record.id,jdbcType=VARCHAR},
-      menu_id = #{record.menuId,jdbcType=VARCHAR},
-      function_name = #{record.functionName,jdbcType=VARCHAR},
-      function_action = #{record.functionAction,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="jssvc.user.model.MenuFunction" >
     update t_menu_function
     <set >
@@ -195,4 +79,33 @@
       function_action = #{functionAction,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectAllMenuFunctions" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_menu_function
+    order by id
+  </select>
+  <select id="selectMenuFunctionsByMenuId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from t_menu_function
+    where menu_id = #{menuId,jdbcType=VARCHAR}
+    order by id
+  </select>
+  <select id="selectMenuFunctionsByAuth" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select distinct
+    q.*
+    from t_role_function o, t_user_role p, t_menu_function q
+    where o.role_id = p.role_id
+    and o.function_id = q.id
+    and p.dah = #{0,jdbcType=VARCHAR}
+    and q.menu_id = #{1,jdbcType=VARCHAR}
+    order by q.id
+  </select>
+  <select id="selectCountByFunction" resultType="int" parameterType="java.lang.String">
+    select count(1)
+    from t_menu_function
+    where function_action = #{function,jdbcType=VARCHAR}
+  </select>
 </mapper>

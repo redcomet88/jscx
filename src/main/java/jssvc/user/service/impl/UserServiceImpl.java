@@ -49,6 +49,14 @@ public class UserServiceImpl implements UserService {
     private DataAuthorityMapper dataAuthorityDao;
     @Autowired
     private UserRoleMapper userRoleDao;
+    @Autowired
+    private RoleMapper roleDao;
+    @Autowired
+    private MenuFunctionMapper menuFunctionDao;
+    @Autowired
+    private RoleMenuMapper roleMenuDao;
+    @Autowired
+    private RoleFunctionMapper roleFunctionDao;
 
     private static  Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -319,5 +327,292 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ConstantMessage.ERR00013, e);
         }
         return true;
+    }
+
+    @Override
+    public List<Role> getRoles(UserSearchFilter filter) {
+        logger.info(String.valueOf(new StringBuffer("getRoles  查询条件：").append(JSON.Encode(filter))));
+        List<Role> roles = roleDao.selectRoles(filter);
+        return roles;
+    }
+
+    @Override
+    public int getRolesCount(UserSearchFilter filter) {
+        logger.info(String.valueOf(new StringBuffer("UserSearchFilter  查询条件：").append(JSON.Encode(filter))));
+        int rolesCount = roleDao.selectRolesCount(filter);
+
+        return rolesCount;
+    }
+
+    @Override
+    public List<MenuFunction> getMenuFunction(String dah, String menuId) {
+        logger.info(String.valueOf(new StringBuffer("getMenuFunction  员工号：").append(dah).append("  菜单ID").append(menuId)));
+        List<MenuFunction> menuFunctions = new ArrayList<MenuFunction>();
+        if (SystemConstant.ADMIN.equals(dah)) {
+            // 系统管理员默认取得所有功能权限
+            menuFunctions = menuFunctionDao.selectMenuFunctionsByMenuId(menuId);
+        } else {
+            // 角色菜单功能取得sql
+            menuFunctions = menuFunctionDao.selectMenuFunctionsByAuth(dah, menuId);
+        }
+
+        return menuFunctions;
+    }
+
+    @Override
+    public int getUserRoleCount(Integer roleId) {
+        logger.info(String.valueOf(new StringBuffer("getUserRoleCount  角色ID：").append(roleId)));
+        // 使用该角色的用户数目取得
+        int count = userRoleDao.selectCountByRoleId(roleId);
+        return count;
+    }
+
+
+    @Override
+    @Transactional
+    public boolean deleteRole(Integer roleId) throws BusinessException {
+        logger.info(String.valueOf(new StringBuffer("deleteRole  角色ID：").append(roleId)));
+        boolean bln = true;
+        try {
+            // 删除角色
+            roleDao.deleteByPrimaryKey(roleId);
+            // 删除角色菜单和角色功能
+            roleMenuDao.deleteByRoleId(roleId);
+            roleFunctionDao.deleteByRoleId(roleId);
+        } catch (RuntimeException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new BusinessException(ConstantMessage.ERR00014, e);
+        }
+        return bln;
+    }
+
+    @Override
+    public List<HashMap<String, Object>> getmenuFunctionList() {
+        // 菜单列表取得
+        List<Menu> menus = menuDao.selectAllMenus(null);
+        // 菜单功能列表取得
+        List<MenuFunction> menuFunctions = menuFunctionDao.selectAllMenuFunctions();
+        // 拼接树的数据格式
+        List<HashMap<String, Object>> maps = new ArrayList<HashMap<String, Object>>();
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        // 菜单的树
+        for (int i = 0; i < menus.size(); i++) {
+            map = new HashMap<String, Object>();
+            if (menus.get(i).getLevel() == 1) {
+                map.put(ConstantKey.KEY_ID, menus.get(i).getId());
+                map.put(ConstantKey.KEY_TEXT, menus.get(i).getName());
+            } else {
+                map.put(ConstantKey.KEY_ID, menus.get(i).getId());
+                map.put(ConstantKey.KEY_TEXT, menus.get(i).getName());
+                map.put(ConstantKey.KEY_PID, menus.get(i).getpId());
+            }
+            maps.add(map);
+        }
+        // 菜单功能的树
+        for (int j = 0; j < menuFunctions.size(); j++) {
+            map = new HashMap<String, Object>();
+            map.put(ConstantKey.KEY_ID, menuFunctions.get(j).getId());
+            map.put(ConstantKey.KEY_TEXT, menuFunctions.get(j).getFunctionName());
+            map.put(ConstantKey.KEY_PID, menuFunctions.get(j).getMenuId());
+            maps.add(map);
+        }
+        return maps;
+    }
+
+    @Override
+    @Transactional
+    public boolean createRole(Role role, String menu) throws BusinessException {
+        logger.info(String.valueOf(new StringBuffer("createRole  角色对象：").append(JSON.Encode(role)).append("  菜单和功能权限：").append(menu)));
+        boolean bln = true;
+        try {
+            // 创建角色
+            roleDao.insert(role);
+            // 取得角色菜单表和角色功能表的数据
+            String[] menus = menu.split(",");
+            RoleMenu roleMenu = new RoleMenu();
+            RoleFunction roleFunction = new RoleFunction();
+            for (int i = 0; i < menus.length; i++) {
+                if (menus[i].contains(ConstantKey.KEY_MENU)) {
+                    roleMenu = new RoleMenu();
+                    roleMenu.setMenuId(menus[i]);
+                    roleMenu.setRoleId(role.getId());
+                    // 添加角色菜单表数据
+                    roleMenuDao.insert(roleMenu);
+                } else {
+                    roleFunction = new RoleFunction();
+                    roleFunction.setFunctionId(menus[i]);
+                    roleFunction.setRoleId(role.getId());
+                    // 添加角色功能表数据
+                    roleFunctionDao.insert(roleFunction);
+                }
+            }
+        } catch (RuntimeException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new BusinessException(ConstantMessage.ERR00014, e);
+        }
+        return bln;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateRole(Role role, String menu) throws BusinessException {
+        logger.info(String.valueOf(new StringBuffer("updateRole  角色对象：").append(JSON.Encode(role)).append("  菜单和功能权限：").append(menu)));
+        boolean bln = true;
+        try {
+            // 更新角色信息
+            roleDao.updateByPrimaryKeySelective(role);
+            // 取得角色菜单表和角色功能表的数据
+            String[] menus = menu.split(SystemConstant.COMMA);
+            RoleMenu roleMenu = new RoleMenu();
+            RoleFunction roleFunction = new RoleFunction();
+            // 删除角色菜单和角色功能
+            roleMenuDao.deleteByRoleId(role.getId());
+            roleFunctionDao.deleteByRoleId(role.getId());
+            // 循环创建角色菜单和角色功能
+            for (int i = 0; i < menus.length; i++) {
+                if (menus[i].contains(ConstantKey.KEY_MENU)) {
+                    roleMenu = new RoleMenu();
+                    roleMenu.setMenuId(menus[i]);
+                    roleMenu.setRoleId(role.getId());
+                    // 添加角色菜单表数据
+                    roleMenuDao.insert(roleMenu);
+                } else {
+                    roleFunction = new RoleFunction();
+                    roleFunction.setFunctionId(menus[i]);
+                    roleFunction.setRoleId(role.getId());
+                    // 添加角色功能表数据
+                    roleFunctionDao.insert(roleFunction);
+                }
+            }
+        } catch (RuntimeException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new BusinessException(ConstantMessage.ERR00014, e);
+        }
+        return bln;
+    }
+
+    @Override
+    public String getRoleMenu(Integer roleId) {
+        logger.info(String.valueOf(new StringBuffer("getRoleMenu  角色ID：").append(roleId)));
+        // List<RoleMenu> roleMenus = roleMenuDao.selectByRoleId(roleId);
+        List<RoleFunction> roleFunctions = roleFunctionDao.selectByRoleId(roleId);
+        StringBuffer roleMenu = new StringBuffer();
+        for (int j = 0; j < roleFunctions.size(); j++) {
+            roleMenu.append(roleFunctions.get(j).getFunctionId());
+            roleMenu.append(SystemConstant.COMMA);
+        }
+        // for (int j = 0; j < roleMenus.size(); j++) {
+        // roleMenu.append(roleMenus.get(j).getMenuId());
+        // roleMenu.append(SystemConstant.COMMA);
+        // }
+        if (roleMenu.length() > 0) {
+            roleMenu.substring(0, roleMenu.length() - 1);
+        }
+        return roleMenu.toString();
+    }
+
+    @Override
+    public List<InstitutionInfo> getChildJgByJgh(String jgh) {
+        logger.info(String.valueOf(new StringBuffer("getChildJgByJgh  机构号：").append(jgh)));
+        List<InstitutionInfo> jgxx = institutionInfoDao.selectJgListByJgh(jgh);
+        return jgxx;
+    }
+
+
+    public List<Role> getRolesByDah(String dah) {
+        logger.info(String.valueOf(new StringBuffer("getRolesByDah  档案号：").append(dah)));
+        List<Role> userRoleVos = userRoleDao.selectRolesByDah(dah);
+        return userRoleVos;
+    }
+
+    @Override
+    public List<UserRoleVo> getUserRoles(UserSearchFilter filter) throws SQLException {
+        logger.info(String.valueOf(new StringBuffer("getUserRoles  查询条件：").append(JSON.Encode(filter))));
+        List<UserRoleVo> roles = userRoleDao.selectUserRoles(filter);
+        for (int i = 0; i < roles.size(); i++) {
+            // 根据档案号获取机构号
+            List<DeptUserVo> yhjgVo = getDeptUserList(roles.get(i).getDah());
+            StringBuffer jgmc = new StringBuffer();
+            for (int j = 0; j < yhjgVo.size(); j++) {
+                jgmc.append(yhjgVo.get(j).getJgmc()).append(",");
+            }
+            // 机构
+            if (jgmc.length() > 0) {
+                roles.get(i).setJgmc(jgmc.substring(0, jgmc.length() - 1));
+            }
+            // 根据档案号获取角色
+            List<Role> temps = getRolesByDah(roles.get(i).getDah());
+            StringBuffer roleName = new StringBuffer();
+            for (int k = 0; k < temps.size(); k++) {
+                roleName.append(temps.get(k).getRoleName()).append(",");
+            }
+            // 角色名
+            if (roleName.length() > 0) {
+                roles.get(i).setRoleName(roleName.substring(0, roleName.length() - 1));
+            }
+        }
+        return roles;
+    }
+
+    @Override
+    public int getUserRolesCount(UserSearchFilter filter) {
+        logger.info(String.valueOf(new StringBuffer("getUserRolesCount  查询条件：").append(JSON.Encode(filter))));
+        int count = userRoleDao.selectUserRolesCount(filter);
+        return count;
+    }
+
+    @Override
+    public String getDataAuthority(String dah) {
+        logger.info(String.valueOf(new StringBuffer("getDataAuthority  档案号：").append(dah)));
+        // 数据权限取得
+        List<DataAuthority> dataAuthoritys = dataAuthorityDao.selectByDah(dah);
+
+        StringBuffer data = new StringBuffer();
+        for (int i = 0; i < dataAuthoritys.size(); i++) {
+            data.append(dataAuthoritys.get(i).getJgh());
+            if (i < dataAuthoritys.size() - 1) {
+                data.append(SystemConstant.COMMA);
+            }
+        }
+
+        return data.toString();
+    }
+
+    @Override
+    @Transactional
+    public boolean createDataAuthority(List<DataAuthority> dataAuthoritys) throws BusinessException {
+        logger.info(String.valueOf(new StringBuffer("createDataAuthority  数据权限：").append(JSON.Encode(dataAuthoritys))));
+        boolean bln = true;
+        try {
+            // 删除数据权限
+            dataAuthorityDao.deleteByDah(dataAuthoritys.get(0).getDah());
+            // 循环创建数据权限
+            for (int i = 0; i < dataAuthoritys.size(); i++) {
+                dataAuthorityDao.insert(dataAuthoritys.get(i));
+            }
+        } catch (RuntimeException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new BusinessException(ConstantMessage.ERR00016, e);
+        }
+        return bln;
+    }
+
+    @Override
+    @Transactional
+    public boolean createUserRole(List<UserRole> userRoles) throws BusinessException {
+        logger.info(String.valueOf(new StringBuffer("createUserRole  员工角色对象：").append(JSON.Encode(userRoles))));
+        boolean bln = true;
+        try {
+            // 删除员工角色
+            userRoleDao.deleteByDah(userRoles.get(0).getDah());
+            // 循环创建用户角色
+            for (int i = 0; i < userRoles.size(); i++) {
+                userRoleDao.insert(userRoles.get(i));
+            }
+        } catch (RuntimeException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new BusinessException(ConstantMessage.ERR00015, e);
+        }
+        return bln;
     }
 }

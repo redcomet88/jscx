@@ -30,4 +30,6 @@ public interface DataAuthorityMapper {
 
     List<DataAuthority> selectByDah(String dah);
 
+    int deleteByDah(String dah);
+
 }
