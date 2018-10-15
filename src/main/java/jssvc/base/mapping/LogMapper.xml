@@ -2,92 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="jssvc.base.dao.LogMapper" >
   <resultMap id="BaseResultMap" type="jssvc.base.model.Log" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="DATETIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="dah" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="jgh" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="ip" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="type" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="object" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="flag" jdbcType="INTEGER" javaType="java.lang.Integer" />
-    </constructor>
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="datetime" property="datetime" jdbcType="TIMESTAMP" />
+    <result column="dah" property="dah" jdbcType="VARCHAR" />
+    <result column="jgh" property="jgh" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="object" property="object" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
+    <resultMap id="LogVoMap" type="jssvc.base.vo.LogVo" extends="BaseResultMap">
+    <result column="ygxm" property="ygxm" jdbcType="VARCHAR" />
+    <result column="jgmc" property="jgmc" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
-    id, DATETIME, dah, jgh, ip, type, object, flag
+    id, datetime, dah, jgh, ip, type, object, flag
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.base.model.LogExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from t_log
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -98,14 +28,8 @@
     delete from t_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="jssvc.base.model.LogExample" >
-    delete from t_log
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
   <insert id="insert" parameterType="jssvc.base.model.Log" >
-    insert into t_log (id, DATETIME, dah, 
+    insert into t_log (id, datetime, dah, 
       jgh, ip, type, object, 
       flag)
     values (#{id,jdbcType=INTEGER}, #{datetime,jdbcType=TIMESTAMP}, #{dah,jdbcType=VARCHAR}, 
@@ -119,7 +43,7 @@
         id,
       </if>
       <if test="datetime != null" >
-        DATETIME,
+        datetime,
       </if>
       <if test="dah != null" >
         dah,
@@ -167,63 +91,11 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="jssvc.base.model.LogExample" resultType="java.lang.Integer" >
-    select count(*) from t_log
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update t_log
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.datetime != null" >
-        DATETIME = #{record.datetime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.dah != null" >
-        dah = #{record.dah,jdbcType=VARCHAR},
-      </if>
-      <if test="record.jgh != null" >
-        jgh = #{record.jgh,jdbcType=VARCHAR},
-      </if>
-      <if test="record.ip != null" >
-        ip = #{record.ip,jdbcType=VARCHAR},
-      </if>
-      <if test="record.type != null" >
-        type = #{record.type,jdbcType=VARCHAR},
-      </if>
-      <if test="record.object != null" >
-        object = #{record.object,jdbcType=VARCHAR},
-      </if>
-      <if test="record.flag != null" >
-        flag = #{record.flag,jdbcType=INTEGER},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update t_log
-    set id = #{record.id,jdbcType=INTEGER},
-      DATETIME = #{record.datetime,jdbcType=TIMESTAMP},
-      dah = #{record.dah,jdbcType=VARCHAR},
-      jgh = #{record.jgh,jdbcType=VARCHAR},
-      ip = #{record.ip,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=VARCHAR},
-      object = #{record.object,jdbcType=VARCHAR},
-      flag = #{record.flag,jdbcType=INTEGER}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="jssvc.base.model.Log" >
     update t_log
     <set >
       <if test="datetime != null" >
-        DATETIME = #{datetime,jdbcType=TIMESTAMP},
+        datetime = #{datetime,jdbcType=TIMESTAMP},
       </if>
       <if test="dah != null" >
         dah = #{dah,jdbcType=VARCHAR},
@@ -248,7 +120,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="jssvc.base.model.Log" >
     update t_log
-    set DATETIME = #{datetime,jdbcType=TIMESTAMP},
+    set datetime = #{datetime,jdbcType=TIMESTAMP},
       dah = #{dah,jdbcType=VARCHAR},
       jgh = #{jgh,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
@@ -257,4 +129,69 @@
       flag = #{flag,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <select id="selectLogs" resultMap="LogVoMap" parameterType="jssvc.base.vo.filter.LogSearchFilter" >
+    select 
+    a.*,b.ygxm,c.jgmc
+    from t_log a
+    left join t_user b
+    on a.dah = b.dah
+    left join t_dept_info c
+    on a.jgh = c.jgh
+    <where>
+        <if test="dah != null and dah != ''" >
+            a.dah = #{dah,jdbcType=VARCHAR}
+        </if>
+        <if test="ygxm != null and ygxm != ''" >
+            and b.ygxm like CONCAT('%',#{ygxm,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="type != null and type != ''" >
+            and a.type like CONCAT('%',#{type,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="jgh != null and jgh != ''" >
+            and a.jgh = #{jgh,jdbcType=VARCHAR}
+        </if>
+        <if test="object != null and object != ''" >
+            and a.object like CONCAT('%',#{object,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="fromDate != null and fromDate != ''" >
+            and a.datetime &gt;= #{fromDate,jdbcType=VARCHAR}
+        </if>
+        <if test="toDate != null and toDate != ''">
+            and a.datetime &lt;= #{toDate,jdbcType=VARCHAR}
+        </if>
+    </where>
+    <if test="sortField != null" >
+        order by a.${sortField} ${sortOrder}
+    </if>
+    <if test="limit != 0" >
+        limit #{offset},#{limit}
+    </if>
+  </select>
+  <select id="selectLogsCount" resultType="int" parameterType="jssvc.base.vo.filter.LogSearchFilter" >
+    select count(1)
+    from t_log a
+    left join t_user b
+    on a.dah = b.dah
+    <where>
+        <if test="dah != null and dah != ''" >
+            a.dah = #{dah,jdbcType=VARCHAR}
+        </if>
+        <if test="ygxm != null and ygxm != ''" >
+            and b.ygxm like CONCAT('%',#{ygxm,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="type != null and type != ''" >
+            and a.type like CONCAT('%',#{type,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="jgh != null and jgh != ''" >
+            and a.jgh = #{jgh,jdbcType=VARCHAR}
+        </if>
+        <if test="fromDate != null and fromDate != ''" >
+            and a.datetime &gt;= #{fromDate,jdbcType=VARCHAR}
+        </if>
+        <if test="toDate != null and toDate != ''">
+            and a.datetime &lt;= #{toDate,jdbcType=VARCHAR}
+        </if>
+    </where>
+ 
+  </select>
 </mapper>

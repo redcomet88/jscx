@@ -13,11 +13,11 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/login/login.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/resources/scripts/boot.js"></script>
     <style type="text/css">
-        .login_mistake
-            color:#fb5900;
-            margin-left:120px;
+        .login_mistake {
+            color: #fb4135;
+            margin-left:150px;
             margin-top:10px;
-            font-size:15px;
+            font-size:18px;
             font-family:Microsoft YaHei;}
     </style>
     <script type="text/javascript">

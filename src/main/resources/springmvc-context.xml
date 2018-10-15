@@ -54,9 +54,22 @@
     </bean>
 
     <!-- 配置拦截器 -->
-
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/**.do"/>
+            <bean class="jssvc.base.interceptor.AllInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <!-- 配置异常映射路径，ajax提示-->
+    <bean id="exceptonResolver" class="jssvc.base.exception.CommonExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">error</prop>
+                <prop key="com.wjrcb.jgj.base.exception.BusinessException">error</prop>
+            </props>
+        </property>
+    </bean>
 
     <!-- 文件上传-->
 

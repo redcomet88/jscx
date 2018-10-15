@@ -7,6 +7,7 @@ import jssvc.base.constant.SystemConstant;
 import jssvc.base.controller.BaseController;
 import jssvc.base.enums.ActionType;
 import jssvc.base.exception.BusinessException;
+import jssvc.base.interceptor.LogFace;
 import jssvc.base.listener.LoginListener;
 import jssvc.base.enums.Sex;
 import jssvc.base.model.Constant;
@@ -79,12 +80,13 @@ public class UserController extends BaseController {
              }
 
              // 机构-部门的处理
-             // TODO
              List<DeptUserVo> depts = userService.getDeptUserList(dah);
              String jgmc = null;
+             String jg_no = null;
              if(depts.size()>0)
              {
                  jgmc = depts.get(0).getJgmc();
+                 jg_no = depts.get(0).getJgh();
              }
              else
              {
@@ -108,7 +110,10 @@ public class UserController extends BaseController {
              LoginListener.getSessionIdMap().put(ConstantKey.KEY_USER, sessionId);
              // 把认证用户和机构号存入session
              httpSession.setAttribute(ConstantKey.KEY_USER, user);
+             httpSession.setAttribute(ConstantKey.KEY_JGH, jg_no);
+             httpSession.setAttribute(ConstantKey.KEY_JGMC, jgmc);
 
+             logger.info("USER"+ httpSession.getAttribute("user") + "JGH:" + httpSession.getAttribute("jgh"));
              mv.setViewName(ConstantKey.HOME);
              mv.addObject(ConstantKey.KEY_YGXM, user.getYgxm());
              //logger.info("员工姓名"+user.getYgxm());
@@ -250,6 +255,7 @@ public class UserController extends BaseController {
      * @return: void        
      * @create: 2018/10/12 
      **/
+    @LogFace
     @ResponseBody
     @RequestMapping("ajax/user_addUser.do")
     private void addUser(User user, String jgh) throws BusinessException {
@@ -290,6 +296,7 @@ public class UserController extends BaseController {
      * @return: void        
      * @create: 2018/10/12 
      **/
+    @LogFace
     @ResponseBody
     @RequestMapping("ajax/user_updateUser.do")
     private void updateUser(User user, String jgh, String action) throws BusinessException {
@@ -369,6 +376,7 @@ public class UserController extends BaseController {
      * @return: void        
      * @create: 2018/10/12 
      **/
+    @LogFace
     @ResponseBody
     @RequestMapping("ajax/user_resetPwd.do")
     public void resetPwd(String dah) throws BusinessException {
@@ -436,6 +444,7 @@ public class UserController extends BaseController {
      * @return: void        
      * @create: 2018/10/12 
      **/
+    @LogFace
     @ResponseBody
     @RequestMapping("ajax/user_deleteUser.do")
     private void deleteUser(String dah) throws BusinessException {
