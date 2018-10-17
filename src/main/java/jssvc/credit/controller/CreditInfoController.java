@@ -84,4 +84,13 @@ public class CreditInfoController extends BaseController {
         return mv;
     }
 
+
+    @RequestMapping("showCreditIndex.do")
+    public ModelAndView showCreditIndex() {
+
+
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("credit/creditIndexList");
+        return mv;
+    }
 }
