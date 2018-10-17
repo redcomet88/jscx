@@ -63,5 +63,25 @@ public class CreditInfoController extends BaseController {
 
     private String currentUser;
 
+    /**
+     * @description:转入信用事件页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/16 
+     **/
+    @RequestMapping("creditInfoSercher.do")
+    public ModelAndView showSuggestSearch() {
+        User user = getSessionUser();
+        String userNo = user.getDah();
+        String role = null;
+        //role是遗留代码
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("credit/creditInfoSercher");
+        mv.addObject("role", role);
+        mv.addObject("userNo", userNo);
+        return mv;
+    }
 
 }
