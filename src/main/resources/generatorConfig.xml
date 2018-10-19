@@ -37,7 +37,7 @@
             targetPackage     指定生成的model生成所在的包名
             targetProject     指定在该项目下所在的路径
         -->
-        <javaModelGenerator targetPackage="jssvc.user.model"
+        <javaModelGenerator targetPackage="jssvc.credit.model"
                             targetProject="src/main/java">
 
             <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
@@ -51,7 +51,7 @@
         </javaModelGenerator>
 
         <!--Mapper映射文件生成所在的目录 为每一个数据库的表生成对应的SqlMap文件 -->
-        <sqlMapGenerator targetPackage="jssvc.user.mapping"
+        <sqlMapGenerator targetPackage="jssvc.credit.mapping"
                          targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
@@ -61,7 +61,7 @@
                 type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
                 type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
         -->
-        <javaClientGenerator targetPackage="jssvc.user.dao"
+        <javaClientGenerator targetPackage="jssvc.credit.dao"
                              targetProject="src/main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>

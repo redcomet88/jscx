@@ -11,8 +11,10 @@ import jssvc.base.interceptor.LogFace;
 import jssvc.base.model.Constant;
 import jssvc.base.service.BaseService;
 import jssvc.base.util.*;
-import jssvc.credit.service.CreditInfoService;
+import jssvc.credit.service.CreditIndexService;
 import jssvc.credit.service.CreditReportService;
+import jssvc.credit.vo.CreditIndexVo;
+import jssvc.credit.vo.filter.CreditIndexSearchFilter;
 import jssvc.user.model.InstitutionInfo;
 import jssvc.user.model.MenuFunction;
 import jssvc.user.model.Role;
@@ -53,7 +55,7 @@ public class CreditInfoController extends BaseController {
     // 常量表中合理化建议状态对应的角色
     private final String SUGGEST_CONSTANT = "suggestStatus";
     @Autowired
-    private CreditInfoService creditInfoService;
+    private CreditIndexService creditIndexService;
     @Autowired
     private CreditReportService creditReportService;
     @Autowired
@@ -87,10 +89,33 @@ public class CreditInfoController extends BaseController {
 
     @RequestMapping("showCreditIndex.do")
     public ModelAndView showCreditIndex() {
-
-
         ModelAndView mv = new ModelAndView();
         mv.setViewName("credit/creditIndexList");
         return mv;
     }
+
+    @ResponseBody
+    @RequestMapping("ajax/credit_creditIndexList.do")
+    private void creditIndexList(CreditIndexSearchFilter filter) throws BusinessException {
+        try {
+            filter.setOffset();
+            filter.setLimit();
+            filter.setLevel(2);  //目前的指标体系只有二级，一级指标类似一个类别，二级指标才有实际意义
+            filter.setSortField("sort");
+            filter.setSortOrder(SortOrder.ASC.toString());
+            List<CreditIndexVo> list = creditIndexService.getCreditIndexList(filter);
+            int count = creditIndexService.getCreditIndexListCount(filter);
+            //返回数据
+            Map<String, Object> result = new HashMap<>();
+            result.put("data", list);
+            result.put("total", count);
+            response.getWriter().write(JSON.Encode(result));
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

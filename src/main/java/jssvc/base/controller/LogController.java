@@ -22,13 +22,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
-import static jssvc.base.enums.ActionType.log_listLog;
 
-/**
- * @Description 日志controller
- * 
- * @author 唐振平 @date 2016-08-03 @reason 新增
- */
 @Controller
 public class LogController extends BaseController {
 

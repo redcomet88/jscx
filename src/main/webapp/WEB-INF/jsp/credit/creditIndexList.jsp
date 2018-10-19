@@ -18,28 +18,19 @@
             <table style="width:100%;table-layout:fixed;">
                 <tr>
                     <td style="width:30%"></td>
-                    <td style="width:50px;">机构：</td>
-                    <td style="width:20%">
+                    <td style="width:70px;">一级指标：</td>
+                    <td style="width:10%">
                         <input id="jgh" name="jgh" class="mini-treeselect" style="width:100%;" textField="jgmc"
                         valueField="jgh" parentField="sjjg" expandOnLoad="0" allowInput="true">
                         </input>
                     </td>
                     <td style="width:1%"></td>
-                    <td style="width:50px;">用户名：</td>
+                    <td style="width:70px;">指标名称：</td>
                     <td style="width:10%">
                         <input id="ygxm" name="ygxm" class="mini-textbox" style="width:100%;"/>
                     </td>
                     <td style="width:1%"></td>
-                    <td style="width:50px;">操作：</td>
-                    <td style="width:10%">
-                        <input id="type" name="type" class="mini-textbox" style="width:100%;"/>
-                    </td>
-                    <td style="width:1%"></td>
-                    <td style="width:50px;">对象：</td>
-                    <td style="width:10%">
-                        <input id="object" name="type" class="mini-textbox" style="width:100%;"/>
-                    </td>
-                    <td style="width:1%"></td>
+
                     <td style="width:70px;">创建时间：</td>
                     <td style="width:10%">
                         <input id="fromDate" name="fromDate" class="mini-datepicker" style="width:100%;"/>
@@ -56,16 +47,12 @@
         </div>
         <div class="mini-fit">  
             <div id="datagrid1" class="mini-datagrid"  allowAlternating="true" style="width:100%;height:100%;"
-            url="<%=request.getContextPath()%>/ajax/log_listLog.do" allowResize="true" idField="id" pageSize="50">
+            url="<%=request.getContextPath()%>/ajax/credit_creditIndexList.do" allowResize="true" idField="id" pageSize="50">
                 <div property="columns">
                     <div type="indexcolumn" width="5%" headerAlign="center">序号</div>
-                    <div field="dah" width="5%" allowSort="true" align="center" headerAlign="center">用户ID</div>
-                    <div field="ygxm" width="10%" allowSort="false" align="center" headerAlign="center">用户姓名</div>
-                    <div field="jgmc" width="15%" allowSort="false" align="center" headerAlign="center">机构</div>
-                    <div field="datetime" width="15%" allowSort="true" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss">时间</div>
-                    <div field="ip" width="10%" allowSort="true" align="center" headerAlign="center">IP</div>
-                    <div field="type" width="20%"  allowSort="false" align="center" headerAlign="center">操作</div>
-                    <div field="object" width="20%" allowSort="false" align="center" headerAlign="center">对象</div>
+                    <div field="topIndexName" width="8%" allowSort="true" align="center" headerAlign="center">一级指标</div>
+                    <div field="name" width="42%" allowSort="false" align="left" headerAlign="center">二级指标</div>
+                    <div field="creditAction" width="45%" allowSort="false" align="left" headerAlign="center">失信行为</div>
                 </div>
             </div>
         </div>
