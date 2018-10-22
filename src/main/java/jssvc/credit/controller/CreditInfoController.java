@@ -85,8 +85,15 @@ public class CreditInfoController extends BaseController {
         mv.addObject("userNo", userNo);
         return mv;
     }
-
-
+    
+    /**
+     * @description:转入信用指标管理页面
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView        
+     * @create: 2018/10/22 
+     **/
     @RequestMapping("showCreditIndex.do")
     public ModelAndView showCreditIndex() {
         ModelAndView mv = new ModelAndView();
@@ -94,6 +101,14 @@ public class CreditInfoController extends BaseController {
         return mv;
     }
 
+    /**
+     * @description:信用指标列表查询
+     *
+     * @author: redcomet
+     * @param: [filter]
+     * @return: void        
+     * @create: 2018/10/22 
+     **/
     @ResponseBody
     @RequestMapping("ajax/credit_creditIndexList.do")
     private void creditIndexList(CreditIndexSearchFilter filter) throws BusinessException {
@@ -117,5 +132,31 @@ public class CreditInfoController extends BaseController {
         }
     }
 
-
+    /**
+     * @description: 诚信事件新增/编辑页面展示
+     *
+     * @author: redcomet
+     * @param: [flag, id, suggestCode]
+     * @return: org.springframework.web.servlet.ModelAndView
+     * @create: 2018/10/22
+     **/
+    @LogFace
+    @ResponseBody
+    @RequestMapping("addCreditInfoApply.do")
+    private ModelAndView addCreditInfoApply(String flag, String id, String suggestCode) throws BusinessException {
+        try {
+            // 跳转到合理化建议信息更新页面
+            ModelAndView mv = new ModelAndView();
+            mv.setViewName(ConstantKey.CREDIT_INFO_APPLY);
+            mv.addObject("flag", flag);
+            // TODO 这两行先注释起来，我先把页面改好，然后再做后台服务
+            //String suggestBh = String.valueOf(creditInfoService.selectFlagNumber("suggestBh", "suggestBh"));
+            //mv.addObject("suggestBh", suggestBh);
+            String fbsj = DateUtil.getSimpleDateString(new Date());
+            mv.addObject("applytime", fbsj);
+            return mv;
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        }
+    }
 }

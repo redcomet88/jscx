@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>合理化建议信息查询</title>
+        <title>教师失信事件查询</title>
         <script src="<%=request.getContextPath()%>/resources/scripts/boot.js" type="text/javascript"></script>
         <link href="<%=request.getContextPath()%>/resources/css/miniui_style.css" type="text/css" rel="stylesheet" />
     </head>
@@ -14,15 +14,15 @@
             <form id="printForm" action="<%=request.getContextPath()%>/ajax/suggest_exportSuggestRecord.do" target="printFrame">
                 <table style="width: 100%;table-layout:fixed;"  >
                     <tr>
-                        <td style="width:8%" align="left">合理化建议编号：</td>
+                        <td style="width:8%" align="left"> 事件编号：</td>
                         <td style="width:17%">
                             <input id="codeInput" name="code" class="mini-textbox" style="width: 100%;" onenter="onKeyEnter"/>
                         </td>
-                        <td style="width: 8%" align="left">合理化建议标题:</td>
+                        <td style="width: 8%" align="left">事件标题:</td>
                         <td style="width: 17%">
                             <input id="nameInput" name="title" class="mini-textbox" style="width: 100%;" onenter="onKeyEnter"/>
                         </td>
-                        <td id="applyuserText" style="width:5%" align="left"><c:if test="${role == 'admin'}">&nbsp;&nbsp;申请人:</c:if></td>
+                        <td id="applyuserText" style="width:5%" align="left"><c:if test="${role == 'admin'}">&nbsp;&nbsp;创建人:</c:if></td>
                         <td style="width:17%">
                             <c:if test="${role == 'admin'}"><input id="applyuserInput" name="applyuser" class="mini-textbox" style="width: 100%;" onenter="onKeyEnter"/></c:if>
                         </td>
@@ -34,7 +34,7 @@
                             <input id="statusInput" name="applystatus" class="mini-combobox" style="width: 100%;" textField="text" valueField="id" onenter="onKeyEnter"
                                 url="<%=request.getContextPath()%>/ajax/suggest_getSuggestProcessStatusList.do" showNullItem="true" nullItemText=""/>
                         </td>  
-                        <td style="width:7%" align="left">&nbsp;&nbsp;申请部门：</td>
+                        <td style="width:7%" align="left">&nbsp;&nbsp;部门：</td>
                         <td style="width:17%">
                             <input id="applybankInput" name="applybank" class="mini-treeselect" style="width: 100%;"
                             textField="jgmc" valueField="jgh" parentField="sjjg" onenter="onKeyEnter"
@@ -48,7 +48,7 @@
                         </td>
                     </tr>
                     <tr>
-                      <td style="width:7%" align="left">&nbsp;&nbsp;申请时间:</td>
+                      <td style="width:7%" align="left">&nbsp;&nbsp;创建时间:</td>
                         <td style="width:17%">
                             <input id="fromDateInpt" name="createDateBegin" class="mini-datepicker" style="width:100%;" onenter="onKeyEnter"/>
                         </td>
@@ -60,7 +60,7 @@
                             <a class="mini-button mini-button-success" onclick="doSearch()" style="width:60px;">查询</a>
                         </td> 
                         <td style="width: 8%">
-                            <a id="add" class="mini-button mini-button-success" style="display: none;width:160px;" onclick="add()">添加合理化建议申请</a>
+                            <a id="add" class="mini-button mini-button-success" style="width:160px;" onclick="add()">添加事件申请</a>
                         </td>
                       
                     </tr>
@@ -72,11 +72,11 @@
                  url="<%=request.getContextPath()%>/ajax/suggest_suggestInfoList.do"  idField="" multiSelect="true">
                 <div property="columns">  
                     <div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
-                    <div field="code" width="120" align="center" headerAlign="center" allowSort="true">合理化建议编号</div>
-                    <div field="suggestTitle" width="120" align="center" headerAlign="center" allowSort="false">合理化建议标题</div>
-                    <div field="applybankName" width="120" align="center" headerAlign="center" allowSort="false">申请部门</div>
-                    <div field="applyuserName" name="applyuserName" id = "applyuserName" width="120" align="center" headerAlign="center" allowSort="false">申请人</div>
-                    <div field="applyTime" width="120" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss" allowSort="false">申请时间</div>
+                    <div field="code" width="120" align="center" headerAlign="center" allowSort="true">事件编号</div>
+                    <div field="suggestTitle" width="120" align="center" headerAlign="center" allowSort="false">事件标题</div>
+                    <div field="applybankName" width="120" align="center" headerAlign="center" allowSort="false">创建部门</div>
+                    <div field="applyuserName" name="applyuserName" id = "applyuserName" width="120" align="center" headerAlign="center" allowSort="false">创建人</div>
+                    <div field="applyTime" width="120" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss" allowSort="false">创建时间</div>
                     <div field="approveStatusName" width="150" align="center" headerAlign="center" allowSort="false">审批状态</div>
                     <div name="active" width="150" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
                 </div>
@@ -158,8 +158,8 @@
             }
 
             function add(){
-                  var url = '<%=request.getContextPath()%>/addSuggestInfoApply.do?flag=add';
-                  parent.showTabForUser("suggestAdd","合理化建议新增",url);
+                  var url = '<%=request.getContextPath()%>/addCreditInfoApply.do?flag=add';
+                  parent.showTabForUser("creditAdd","诚信事件新增",url);
             }
 
             function exportSuggestByMonth() {

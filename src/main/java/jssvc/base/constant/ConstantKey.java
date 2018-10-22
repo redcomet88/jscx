@@ -380,8 +380,8 @@ public class ConstantKey {
     /** 督查督办信息打印页面 ****/
     public static final String DCDB_INFO_PRINT = "dcdb/dcdbPrint";
 
-    /** 合理化建议信息打印页面 ****/
-    public static final String SUGGEST_INFO_PRINT = "suggest/suggestPrint";
+    /** 诚信事件页面 ****/
+    public static final String CREDIT_INFO_PRINT = "credit/creditPrint";
 
     /** 理财信息打印页面 ****/
     public static final String LC_INFO_PRINT = "lc/lcPrint";
@@ -441,9 +441,9 @@ public class ConstantKey {
      */
     public static final String DCDB_INFO_APPLY = "dcdb/dcdbInfoApply";
     /**
-     * 合理化建议信息综合
+     * 诚信事件信息综合
      */
-    public static final String SUGGEST_INFO_APPLY = "suggest/suggestInfoApply";
+    public static final String CREDIT_INFO_APPLY = "credit/creditInfoApply";
 
     /**
      * 理财流程参与者key
