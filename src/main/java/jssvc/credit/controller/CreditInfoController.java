@@ -11,8 +11,14 @@ import jssvc.base.interceptor.LogFace;
 import jssvc.base.model.Constant;
 import jssvc.base.service.BaseService;
 import jssvc.base.util.*;
+import jssvc.credit.enums.CreditProcessStatus;
+import jssvc.credit.enums.CreditStatusResult;
+import jssvc.credit.model.CreditProcess;
+import jssvc.credit.model.CreditProcessLog;
 import jssvc.credit.service.CreditIndexService;
+import jssvc.credit.service.CreditInfoService;
 import jssvc.credit.service.CreditReportService;
+import jssvc.credit.util.SuggestProcessUtil;
 import jssvc.credit.vo.CreditIndexVo;
 import jssvc.credit.vo.filter.CreditIndexSearchFilter;
 import jssvc.user.model.InstitutionInfo;
@@ -58,6 +64,8 @@ public class CreditInfoController extends BaseController {
     private CreditIndexService creditIndexService;
     @Autowired
     private CreditReportService creditReportService;
+    @Autowired
+    private CreditInfoService creditInfoService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -150,8 +158,8 @@ public class CreditInfoController extends BaseController {
             mv.setViewName(ConstantKey.CREDIT_INFO_APPLY);
             mv.addObject("flag", flag);
             // TODO 这两行先注释起来，我先把页面改好，然后再做后台服务
-            //String suggestBh = String.valueOf(creditInfoService.selectFlagNumber("suggestBh", "suggestBh"));
-            //mv.addObject("suggestBh", suggestBh);
+            String suggestBh = String.valueOf(creditInfoService.selectFlagNumber("suggestBh", "suggestBh"));
+            mv.addObject("suggestBh", suggestBh);
             String fbsj = DateUtil.getSimpleDateString(new Date());
             mv.addObject("applytime", fbsj);
             return mv;
@@ -159,4 +167,93 @@ public class CreditInfoController extends BaseController {
             throw new BusinessException(ConstantMessage.ERR00004, e);
         }
     }
+
+    /**
+     * @description:插入诚信流程日志
+     *
+     * @author: redcomet
+     * @param: [suggestId, processingUser, nextUser, handleTime, aproveStatus, oprationDetail, oprationResult]
+     * @return: boolean        
+     * @create: 2018/10/23 
+     **/
+    private boolean insertProcessLog(String processid, String processingUser, String nextUser, Date handleTime, String aproveStatus, String oprationDetail,
+                                     String oprationResult) {
+        CreditProcessLog log = new CreditProcessLog();
+        log.setProcessid(processid);
+        log.setHandleTime(handleTime);
+        log.setNextUser(nextUser);
+        log.setApproveStatus(aproveStatus);
+        log.setOprationDetail(oprationDetail);
+        log.setOprationResult(oprationResult);
+        log.setProcessingUser(processingUser);
+        int result = creditInfoService.insertProcessLog(log);
+        return result == 0;
+    }
+
+    /**
+     * @description:新增诚信事件申请
+     *
+     * @author: redcomet
+     * @param: [suggestFormTransfer, step]
+     * @return: void        
+     * @create: 2018/10/23 
+     **/
+    @SuppressWarnings("rawtypes")
+    @RequestMapping("ajax/suggestInfo_addCreditInfo.do")
+    @ResponseBody
+    public void addCreditInfo(String suggestFormTransfer, String step) throws BusinessException {
+        try {
+            String status = SuggestProcessUtil.getNextProcessStatus(CreditProcessStatus.suggestionApplyStart.getId(), CreditStatusResult.pass.getId(), step);
+            Map suggest = (Map) JSON.Decode(suggestFormTransfer);
+            User user = getSessionUser();
+            if (suggest != null && !suggest.isEmpty()) {
+                CreditProcess suggestInfo = new CreditProcess();
+                if (suggest.get("suggestTitle") != null) {
+                    suggestInfo.setCreditTitle(suggest.get("suggestTitle").toString());
+                }
+                if (suggest.get("suggestContent") != null) {
+                    suggestInfo.setCreditContent(suggest.get("suggestContent").toString());
+                }
+                if (suggest.get("code") != null) {
+                    suggestInfo.setCode(suggest.get("code").toString());
+                }
+                if (suggest.get("applyTime") != null) {
+                    suggestInfo.setCreateTime(DateUtil.parser(suggest.get("applyTime").toString()));
+                }
+                suggestInfo.setUploadUser(user.getDah());
+                suggestInfo.setUploadDept(getSessionJgh());
+                suggestInfo.setStatus(status);
+                // 找出所有下一步处理人员的名单，放到current user中
+                List<User> users = userService.getUsersByRole("82");
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < users.size(); i++) {
+                    String flag = i == users.size() - 1 ? "" : ",";
+                    String current = users.get(i).getDah();
+                    sb.append(current).append(flag);
+                }
+                if ("admin".equals(user.getDah())) {
+                    currentUser = "admin";
+                } else {
+                    currentUser = sb.toString();
+                }
+               //suggestInfo.setManagerUser(currentUser);
+                suggestInfo.setCurrentuser(currentUser);
+                creditInfoService.createCreditInfo(suggestInfo);
+               
+                insertProcessLog(suggestInfo.getCode(), PROPOUNDER, ADMIN_EN, new Date(), CreditProcessStatus.suggestionApplyStart.getId(), "诚信事件提交",
+                        CreditStatusResult.pass.getName());
+            }
+            response.getWriter().write("success");
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e1) {
+            throw new BusinessException(ConstantMessage.ERR00005, e1);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (Exception e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        }
+    }
+
+    
 }

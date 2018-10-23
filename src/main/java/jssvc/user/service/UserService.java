@@ -1,5 +1,6 @@
 package jssvc.user.service;
 
+import jssvc.credit.model.CreditProcess;
 import jssvc.user.model.*;
 import jssvc.user.model.filter.UserSearchFilter;
 import jssvc.base.exception.BusinessException;
@@ -268,5 +269,17 @@ public interface UserService {
      * @create: 2018/10/12 
      **/
     boolean createUserRole(List<UserRole> userRoles) throws BusinessException;
+
+    /**
+     * @description:根据ROLEID获取所有的用户列表
+     *
+     * @author: redcomet
+     * @param: [roleId]
+     * @return: java.util.List<jssvc.user.model.User>        
+     * @create: 2018/10/23 
+     **/
+    List<User> getUsersByRole(String roleId) throws SQLException;
+
+
 
 }

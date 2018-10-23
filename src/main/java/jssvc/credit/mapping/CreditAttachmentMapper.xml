@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="jssvc.credit.dao.CreditAttachmentMapper" >
+  <resultMap id="BaseResultMap" type="jssvc.credit.model.CreditAttachment" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="uploaddah" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="description" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="uploadtime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="filepath" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="filename" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="webfilename" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="suggestbh" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="uploadname" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, uploaddah, description, uploadtime, filepath, filename, webfilename, suggestbh, 
+    uploadname
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.credit.model.CreditAttachmentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_credit_attachment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_credit_attachment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_credit_attachment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="jssvc.credit.model.CreditAttachmentExample" >
+    delete from t_credit_attachment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jssvc.credit.model.CreditAttachment" >
+    insert into t_credit_attachment (id, uploaddah, description, 
+      uploadtime, filepath, filename, 
+      webfilename, suggestbh, uploadname
+      )
+    values (#{id,jdbcType=BIGINT}, #{uploaddah,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{uploadtime,jdbcType=TIMESTAMP}, #{filepath,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR}, 
+      #{webfilename,jdbcType=VARCHAR}, #{suggestbh,jdbcType=VARCHAR}, #{uploadname,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.credit.model.CreditAttachment" >
+    insert into t_credit_attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uploaddah != null" >
+        uploaddah,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="uploadtime != null" >
+        uploadtime,
+      </if>
+      <if test="filepath != null" >
+        filepath,
+      </if>
+      <if test="filename != null" >
+        filename,
+      </if>
+      <if test="webfilename != null" >
+        webfilename,
+      </if>
+      <if test="suggestbh != null" >
+        suggestbh,
+      </if>
+      <if test="uploadname != null" >
+        uploadname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uploaddah != null" >
+        #{uploaddah,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="filepath != null" >
+        #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="webfilename != null" >
+        #{webfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="suggestbh != null" >
+        #{suggestbh,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadname != null" >
+        #{uploadname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jssvc.credit.model.CreditAttachmentExample" resultType="java.lang.Integer" >
+    select count(*) from t_credit_attachment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_credit_attachment
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.uploaddah != null" >
+        uploaddah = #{record.uploaddah,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uploadtime != null" >
+        uploadtime = #{record.uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.filepath != null" >
+        filepath = #{record.filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filename != null" >
+        filename = #{record.filename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.webfilename != null" >
+        webfilename = #{record.webfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.suggestbh != null" >
+        suggestbh = #{record.suggestbh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uploadname != null" >
+        uploadname = #{record.uploadname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_credit_attachment
+    set id = #{record.id,jdbcType=BIGINT},
+      uploaddah = #{record.uploaddah,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      uploadtime = #{record.uploadtime,jdbcType=TIMESTAMP},
+      filepath = #{record.filepath,jdbcType=VARCHAR},
+      filename = #{record.filename,jdbcType=VARCHAR},
+      webfilename = #{record.webfilename,jdbcType=VARCHAR},
+      suggestbh = #{record.suggestbh,jdbcType=VARCHAR},
+      uploadname = #{record.uploadname,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.credit.model.CreditAttachment" >
+    update t_credit_attachment
+    <set >
+      <if test="uploaddah != null" >
+        uploaddah = #{uploaddah,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        uploadtime = #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="filepath != null" >
+        filepath = #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="webfilename != null" >
+        webfilename = #{webfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="suggestbh != null" >
+        suggestbh = #{suggestbh,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadname != null" >
+        uploadname = #{uploadname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.credit.model.CreditAttachment" >
+    update t_credit_attachment
+    set uploaddah = #{uploaddah,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      uploadtime = #{uploadtime,jdbcType=TIMESTAMP},
+      filepath = #{filepath,jdbcType=VARCHAR},
+      filename = #{filename,jdbcType=VARCHAR},
+      webfilename = #{webfilename,jdbcType=VARCHAR},
+      suggestbh = #{suggestbh,jdbcType=VARCHAR},
+      uploadname = #{uploadname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

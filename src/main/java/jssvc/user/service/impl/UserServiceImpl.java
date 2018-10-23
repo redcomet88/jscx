@@ -8,6 +8,7 @@ import jssvc.base.enums.Sex;
 import jssvc.base.exception.BusinessException;
 import jssvc.base.util.JSON;
 import jssvc.base.util.Tree;
+import jssvc.credit.model.CreditProcess;
 import jssvc.user.dao.*;
 import jssvc.user.enums.UserStatus;
 import jssvc.user.model.*;
@@ -526,7 +527,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserRoleVo> getUserRoles(UserSearchFilter filter) throws SQLException {
+    public List<UserRoleVo> getUserRoles(UserSearchFilter filter) {
         logger.info(String.valueOf(new StringBuffer("getUserRoles  查询条件：").append(JSON.Encode(filter))));
         List<UserRoleVo> roles = userRoleDao.selectUserRoles(filter);
         for (int i = 0; i < roles.size(); i++) {
@@ -615,4 +616,15 @@ public class UserServiceImpl implements UserService {
         }
         return bln;
     }
+
+    @Override
+    public List<User> getUsersByRole(String roleId) {
+        logger.info(String.valueOf(new StringBuffer("根据角色获取用户getUsersByRole  角色Id：").append(roleId)));
+        List<User> userList = userDao.selectUsersByRole(roleId);
+        logger.info(String.valueOf(new StringBuffer("根据角色获取用户getUsersByRole  获取到的用户：").append(JSON.Encode(userList))));
+
+        return userList;
+    }
+
+
 }

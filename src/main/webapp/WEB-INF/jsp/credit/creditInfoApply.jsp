@@ -323,35 +323,26 @@
          function save(){
         	 var suggestForm = new mini.Form("#suggestForm");
         	 suggestForm.validate();
-        	 var error = mini.get("whetherReasonable").getErrorText();
-             if (error != "") {
-                 mini.get("specificInfo").focus();
-                 return;
-             }
-             error = mini.get("whetherAccept").getErrorText();
-             if (error != "") {
-                 mini.get("specificInfo").focus();
-                 return;
-             }
+
              if (suggestForm.isValid() == false) {
                  getValidateFocus(suggestForm);
                  return;
                } 
              var suggestFormDate = suggestForm.getData();
              var suggestFormTransfer = mini.encode(suggestFormDate);
-    		 var tipMsg = "是否添加该合理化建议,添加后将不能查看,直到建议人评价时才能查看";
+    		 var tipMsg = "是否确认添加诚信事件";
     		 var step = mini.get("isNeedStep").getValue();
              mini.confirm(tipMsg, "确定？",function(action) {
                  if(action=='ok'){
-                     msgid = mini.loading("合理化建议申请提交中，请稍后......", "合理化建议申请");
+                     msgid = mini.loading("诚信事件申请提交中，请稍后......", "诚信事件提交");
                      $.ajax({
-                         url: "<%=request.getContextPath()%>/ajax/suggestInfo_addSuggestInfo.do",
+                         url: "<%=request.getContextPath()%>/ajax/suggestInfo_addCreditInfo.do",
                          type: "post",
                          data: {suggestFormTransfer: suggestFormTransfer,step:step},
                          dataType: 'text',
                          success: function (text) {
                              if(text=='success'){
-                                  mini.alert("合理化建议申请成功", "提醒", function(action) {
+                                  mini.alert("诚信事件申请提交成功", "提醒", function(action) {
                                       refreshAll();
                                   });
                              }

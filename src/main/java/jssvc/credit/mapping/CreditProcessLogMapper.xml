@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="jssvc.credit.dao.CreditProcessLogMapper" >
+  <resultMap id="BaseResultMap" type="jssvc.credit.model.CreditProcessLog" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="processid" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="processing_user" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="next_user" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="handle_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="approve_status" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="opration_detail" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="opration_result" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, processid, processing_user, next_user, handle_time, approve_status, opration_detail, 
+    opration_result
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="jssvc.credit.model.CreditProcessLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_credit_process_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_credit_process_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_credit_process_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="jssvc.credit.model.CreditProcessLogExample" >
+    delete from t_credit_process_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jssvc.credit.model.CreditProcessLog" >
+    insert into t_credit_process_log (id, processid, processing_user, 
+      next_user, handle_time, approve_status, 
+      opration_detail, opration_result)
+    values (#{id,jdbcType=BIGINT}, #{processid,jdbcType=VARCHAR}, #{processingUser,jdbcType=VARCHAR}, 
+      #{nextUser,jdbcType=VARCHAR}, #{handleTime,jdbcType=TIMESTAMP}, #{approveStatus,jdbcType=VARCHAR}, 
+      #{oprationDetail,jdbcType=VARCHAR}, #{oprationResult,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.credit.model.CreditProcessLog" >
+    insert into t_credit_process_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="processid != null" >
+        processid,
+      </if>
+      <if test="processingUser != null" >
+        processing_user,
+      </if>
+      <if test="nextUser != null" >
+        next_user,
+      </if>
+      <if test="handleTime != null" >
+        handle_time,
+      </if>
+      <if test="approveStatus != null" >
+        approve_status,
+      </if>
+      <if test="oprationDetail != null" >
+        opration_detail,
+      </if>
+      <if test="oprationResult != null" >
+        opration_result,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="processid != null" >
+        #{processid,jdbcType=VARCHAR},
+      </if>
+      <if test="processingUser != null" >
+        #{processingUser,jdbcType=VARCHAR},
+      </if>
+      <if test="nextUser != null" >
+        #{nextUser,jdbcType=VARCHAR},
+      </if>
+      <if test="handleTime != null" >
+        #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveStatus != null" >
+        #{approveStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="oprationDetail != null" >
+        #{oprationDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="oprationResult != null" >
+        #{oprationResult,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jssvc.credit.model.CreditProcessLogExample" resultType="java.lang.Integer" >
+    select count(*) from t_credit_process_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_credit_process_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.processid != null" >
+        processid = #{record.processid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.processingUser != null" >
+        processing_user = #{record.processingUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nextUser != null" >
+        next_user = #{record.nextUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handleTime != null" >
+        handle_time = #{record.handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.approveStatus != null" >
+        approve_status = #{record.approveStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oprationDetail != null" >
+        opration_detail = #{record.oprationDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oprationResult != null" >
+        opration_result = #{record.oprationResult,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_credit_process_log
+    set id = #{record.id,jdbcType=BIGINT},
+      processid = #{record.processid,jdbcType=VARCHAR},
+      processing_user = #{record.processingUser,jdbcType=VARCHAR},
+      next_user = #{record.nextUser,jdbcType=VARCHAR},
+      handle_time = #{record.handleTime,jdbcType=TIMESTAMP},
+      approve_status = #{record.approveStatus,jdbcType=VARCHAR},
+      opration_detail = #{record.oprationDetail,jdbcType=VARCHAR},
+      opration_result = #{record.oprationResult,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.credit.model.CreditProcessLog" >
+    update t_credit_process_log
+    <set >
+      <if test="processid != null" >
+        processid = #{processid,jdbcType=VARCHAR},
+      </if>
+      <if test="processingUser != null" >
+        processing_user = #{processingUser,jdbcType=VARCHAR},
+      </if>
+      <if test="nextUser != null" >
+        next_user = #{nextUser,jdbcType=VARCHAR},
+      </if>
+      <if test="handleTime != null" >
+        handle_time = #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveStatus != null" >
+        approve_status = #{approveStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="oprationDetail != null" >
+        opration_detail = #{oprationDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="oprationResult != null" >
+        opration_result = #{oprationResult,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.credit.model.CreditProcessLog" >
+    update t_credit_process_log
+    set processid = #{processid,jdbcType=VARCHAR},
+      processing_user = #{processingUser,jdbcType=VARCHAR},
+      next_user = #{nextUser,jdbcType=VARCHAR},
+      handle_time = #{handleTime,jdbcType=TIMESTAMP},
+      approve_status = #{approveStatus,jdbcType=VARCHAR},
+      opration_detail = #{oprationDetail,jdbcType=VARCHAR},
+      opration_result = #{oprationResult,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

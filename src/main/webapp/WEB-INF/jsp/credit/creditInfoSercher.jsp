@@ -44,7 +44,7 @@
                             <a class="mini-button mini-button-success" onclick="exportSuggestMss()" style="width:60px;">导出</a>
                         </td>
                         <td style="width: 8%">
-                            <a class="mini-button mini-button-success" onclick="exportSuggestByMonth()" style="width:160px;">按月导出</a>
+                            <a class="mini-button mini-button-success" onclick="exportSuggestByMonth()" style="display:none;width:160px;">按月导出</a>
                         </td>
                     </tr>
                     <tr>
@@ -82,7 +82,7 @@
                 </div>
             </div>
         </div>
-        <div id="exportByMonthWindow" class="mini-window" style="width:500px;height:300px;border:1px solid #e0e0e0;background:#f3f3f4;">
+        <div id="exportByMonthWindow" class="mini-window" style="display:none;width:500px;height:300px;border:1px solid #e0e0e0;background:#f3f3f4;">
             <div id="exportByMonthForm" style="margin-top:60px;">
                 <table style="margin-left: 10%;table-layout:fixed;width:80%">
                     <tbody>
