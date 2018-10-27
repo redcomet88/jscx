@@ -54,6 +54,12 @@
                             			<td style="border: 1px solid #005da2;height:50px;text-align:center;"><label>上传日期</label></td>
                             			<td style="border: 1px solid #005da2;height:50px;"><input id="applyTime" name="applyTime" class="mini-textbox" style="width:80%;" value="${applytime }" enabled="false" /></td>
                             		</tr>
+									<tr>
+										<td style="border: 1px solid #005da2;width:120px;height:50px;text-align:center;" ><label>一级指标</label></td>
+										<td style="border: 1px solid #005da2;height:50px;" ><input id="code" name="code" class="mini-combobox" style="width: 80%;" value="${suggestBh }" /></td>
+										<td style="border: 1px solid #005da2;height:50px;text-align:center;"><label>二级指标</label></td>
+										<td style="border: 1px solid #005da2;height:50px;"><input id="applyTime" name="applyTime" class="mini-combobox" style="width:100%;" value="${applytime }"  /></td>
+									</tr>
                             		<tr>
                             			<td style="border: 1px solid #005da2;width:200px;height:100px;text-align:center;" ><label>主管部门意见</label></td>
                             			<td style="width: 80%;border-right:hidden"><textarea id="column1" name="column1" class="mini-textarea" style="width:500px;height:80px;" value="${column1 }" required="false" ></textarea></td>

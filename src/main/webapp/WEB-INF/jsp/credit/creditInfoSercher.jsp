@@ -73,10 +73,10 @@
                 <div property="columns">  
                     <div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
                     <div field="code" width="120" align="center" headerAlign="center" allowSort="true">事件编号</div>
-                    <div field="suggestTitle" width="120" align="center" headerAlign="center" allowSort="false">事件标题</div>
+                    <div field="creditTitle" width="120" align="center" headerAlign="center" allowSort="false">事件标题</div>
                     <div field="applybankName" width="120" align="center" headerAlign="center" allowSort="false">创建部门</div>
                     <div field="applyuserName" name="applyuserName" id = "applyuserName" width="120" align="center" headerAlign="center" allowSort="false">创建人</div>
-                    <div field="applyTime" width="120" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss" allowSort="false">创建时间</div>
+                    <div field="createTime" width="120" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss" allowSort="false">创建时间</div>
                     <div field="approveStatusName" width="150" align="center" headerAlign="center" allowSort="false">审批状态</div>
                     <div name="active" width="150" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
                 </div>
@@ -151,7 +151,7 @@
                 var row = grid.getRowByUID(row_uid);
                 if(row){
                     var url = '<%=request.getContextPath()%>/showSuggestInfoApply.do?id='+row.id + '&suggestCode=' + row.code + '&flag=search';
-                    parent.showTabForUser("suggestInfo" + row.id,"合理化建议信息详情",url);
+                    parent.showTabForUser("suggestInfo" + row.id,"诚信事件信息详情",url);
                 }else {
                     mini.alert("请选中一条记录！");
                 } 

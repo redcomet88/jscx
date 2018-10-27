@@ -204,6 +204,9 @@ public class UserServiceImpl implements UserService {
         boolean flag = true;
         try {
             // 用户表插入
+            user.setPysx("1");   //这三个值先保存为1
+            user.setPx("1");
+            user.setPyqp("1");
             userDao.insert(user);
             // 循环插入用户所属机构
             for (int i = 0; i < yhjgList.size(); i++) {

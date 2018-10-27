@@ -2,21 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="jssvc.credit.dao.CreditProcessMapper" >
   <resultMap id="BaseResultMap" type="jssvc.credit.model.CreditProcess" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="code" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="credit_Title" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="credit_Content" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="currentUser" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="status" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="Upload_Dept" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="Upload_User" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_Time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="opt_Time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="column1" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="column2" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="column3" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-    </constructor>
+      <id column="id"  property = "id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <result column="code"  property = "code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="credit_Title"  property = "creditTitle" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="credit_Content"  property = "creditContent" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="currentUser"  property = "currentuser" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="status"  property = "status" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="Upload_Dept"  property = "uploadDept" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="Upload_User"  property = "uploadUser" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="create_Time"  property = "createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <result column="opt_Time"  property = "optTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <result column="column1"  property = "column1" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="column2"  property = "column2" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="column3"  property = "column3" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+  </resultMap>
+  <resultMap id="CreditProcessVoMap" type="jssvc.credit.vo.CreditProcessVo" extends="BaseResultMap">
+      <result column="applybankName" property = "applybankName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="applyuserName" property = "applyuserName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="approveStatusName" property = "approveStatusName" jdbcType="VARCHAR" javaType="java.lang.String" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -219,6 +222,38 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="getCreditProcessList" resultMap="CreditProcessVoMap" parameterType="jssvc.credit.vo.filter.CreditProcessSearchFilter" >
+    select
+    suggest.*,ii.jgmc as applybankName,u.ygxm as applyuserName from t_credit_process suggest
+    left join t_dept_info ii on (suggest.upload_dept=ii.jgh)
+    left join t_user u     on (suggest.upload_user=u.dah)
+    where 1=1
+    <if test="code != null and '' != code" >
+      and suggest.code = #{code, jdbcType=VARCHAR}
+    </if>
+    <if test="title != null and '' != title" >
+      and suggest.credit_Title like concat('%', #{title,jdbcType=VARCHAR}, '%')
+    </if>
+
+    <if test="sortField != null and '' != sortField" >
+      order by suggest.${sortField} ${sortOrder}
+    </if>
+    <if test="limit != 0" >
+      limit #{offset},#{limit}
+    </if>
+  </select>
+  <select id="getCreditProcessListCount" resultType="java.lang.Integer" parameterType="jssvc.credit.vo.filter.CreditProcessSearchFilter" >
+  select count(*) from t_credit_process suggest
+  left join t_dept_info ii on (suggest.upload_dept=ii.jgh)
+  left join t_user u              on (suggest.upload_user=u.dah)
+  where 1=1
+  <if test="code != null and '' != code" >
+    and suggest.code = #{code, jdbcType=VARCHAR}
+  </if>
+  <if test="title != null and '' != title" >
+    and suggest.credit_Title like concat('%', #{title,jdbcType=VARCHAR}, '%')
+  </if>
+</select>
   <update id="updateByExampleSelective" parameterType="map" >
     update t_credit_process
     <set >

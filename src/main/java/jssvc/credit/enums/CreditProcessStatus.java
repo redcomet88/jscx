@@ -6,7 +6,7 @@ import java.util.List;
 
 public enum CreditProcessStatus {
     suggestionApplyStart("suggestionApplyStart", "提交诚信事件开始"),suggestionRecall("suggestionRecall", "撤回成功"), departmentHandle("departmentHandle", "经办人员办理"),
-    managerReview("managerReview", "主管总经理复审"), processEnd("processEnd", "流程结束");
+    managerReview("managerReview", "主管领导复审"), processEnd("processEnd", "流程结束");
 
     private String id;
     private String name;

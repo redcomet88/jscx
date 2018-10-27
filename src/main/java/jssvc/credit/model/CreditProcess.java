@@ -29,22 +29,6 @@ public class CreditProcess {
 
     private Date column3;
 
-    public CreditProcess(Integer id, String code, String creditTitle, String creditContent, String currentuser, String status, String uploadDept, String uploadUser, Date createTime, Date optTime, String column1, String column2, Date column3) {
-        this.id = id;
-        this.code = code;
-        this.creditTitle = creditTitle;
-        this.creditContent = creditContent;
-        this.currentuser = currentuser;
-        this.status = status;
-        this.uploadDept = uploadDept;
-        this.uploadUser = uploadUser;
-        this.createTime = createTime;
-        this.optTime = optTime;
-        this.column1 = column1;
-        this.column2 = column2;
-        this.column3 = column3;
-    }
-
     public CreditProcess() {
         super();
     }

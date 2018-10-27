@@ -18,6 +18,16 @@ public class CreditIndexSearchFilter  extends Pagination {
 
     private Integer level;          //指标等级
 
+    private String dah;             //员工的工号
+
+    public String getDah() {
+        return dah;
+    }
+
+    public void setDah(String dah) {
+        this.dah = dah;
+    }
+
     public Integer getLevel() {
         return level;
     }

@@ -1,11 +1,16 @@
 package jssvc.credit.service.impl;
 
 import jssvc.base.util.DateUtil;
+import jssvc.credit.dao.CreditAttachmentMapper;
 import jssvc.credit.dao.CreditProcessLogMapper;
 import jssvc.credit.dao.CreditProcessMapper;
+import jssvc.credit.enums.CreditProcessStatus;
+import jssvc.credit.model.CreditAttachment;
 import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessLog;
 import jssvc.credit.service.CreditInfoService;
+import jssvc.credit.vo.CreditProcessVo;
+import jssvc.credit.vo.filter.CreditProcessSearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description:
@@ -27,8 +33,19 @@ public class CreditInfoServiceImpl implements CreditInfoService {
     private CreditProcessMapper creditProcessDao;
     @Autowired
     private CreditProcessLogMapper creditProcessLogDao;
+    @Autowired
+    private CreditAttachmentMapper creditAttachmentDao;
 
     private static Logger logger = LoggerFactory.getLogger(CreditInfoServiceImpl.class);
+
+
+    @Override
+    public CreditProcess selectByPrimaryKey(int id) {
+        logger.info("selectByPrimaryKey begin");
+        CreditProcess suggestInfo = creditProcessDao.selectByPrimaryKey(id);
+        logger.info("selectByPrimaryKey end");
+        return suggestInfo;
+    }
 
     @Override
     public int selectFlagNumber(String str1, String str2) {
@@ -64,5 +81,31 @@ public class CreditInfoServiceImpl implements CreditInfoService {
         creditProcessDao.insert(suggestInfo);
         logger.info("createSuggestInfo end");
         return null;
+    }
+
+    @Override
+    public Boolean createAttachment(CreditAttachment before) {
+        //这里和原来的程序是有改动的，Mapper中的语句并不一样
+        creditAttachmentDao.insertSelective(before);
+        return true;
+    }
+
+    @Override
+    public List<CreditProcessVo> getCreditInfoList(CreditProcessSearchFilter filter) {
+        logger.info("getSuggestInfoList begin");
+        List<CreditProcessVo> list = creditProcessDao.getCreditProcessList(filter);
+        for (CreditProcessVo creditProcessVo : list) {
+            creditProcessVo.setApproveStatusName(CreditProcessStatus.valueOf(creditProcessVo.getStatus()).getName());
+        }
+        logger.info("getSuggestInfoList end");
+        return list;
+    }
+
+    @Override
+    public int getCreditInfoListCount(CreditProcessSearchFilter filter) {
+        logger.info("getSuggestInfoListCount begin");
+        int count = creditProcessDao.getCreditProcessListCount(filter);
+        logger.info("getSuggestInfoListCount end");
+        return count;
     }
 }

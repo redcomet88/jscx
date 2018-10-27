@@ -5,37 +5,21 @@ import java.util.Date;
 public class CreditAttachment {
     private Long id;
 
-    private String uploaddah;
+    private String uploadDah;
 
     private String description;
 
-    private Date uploadtime;
+    private Date uploadTime;
 
-    private String filepath;
+    private String filePath;
 
-    private String filename;
+    private String fileName;
 
-    private String webfilename;
+    private String webFileName;
 
     private String suggestbh;
 
-    private String uploadname;
-
-    public CreditAttachment(Long id, String uploaddah, String description, Date uploadtime, String filepath, String filename, String webfilename, String suggestbh, String uploadname) {
-        this.id = id;
-        this.uploaddah = uploaddah;
-        this.description = description;
-        this.uploadtime = uploadtime;
-        this.filepath = filepath;
-        this.filename = filename;
-        this.webfilename = webfilename;
-        this.suggestbh = suggestbh;
-        this.uploadname = uploadname;
-    }
-
-    public CreditAttachment() {
-        super();
-    }
+    private String uploadName;
 
     public Long getId() {
         return id;
@@ -45,12 +29,12 @@ public class CreditAttachment {
         this.id = id;
     }
 
-    public String getUploaddah() {
-        return uploaddah;
+    public String getUploadDah() {
+        return uploadDah;
     }
 
-    public void setUploaddah(String uploaddah) {
-        this.uploaddah = uploaddah == null ? null : uploaddah.trim();
+    public void setUploadDah(String uploadDah) {
+        this.uploadDah = uploadDah == null ? null : uploadDah.trim();
     }
 
     public String getDescription() {
@@ -61,36 +45,36 @@ public class CreditAttachment {
         this.description = description == null ? null : description.trim();
     }
 
-    public Date getUploadtime() {
-        return uploadtime;
+    public Date getUploadTime() {
+        return uploadTime;
     }
 
-    public void setUploadtime(Date uploadtime) {
-        this.uploadtime = uploadtime;
+    public void setUploadTime(Date uploadTime) {
+        this.uploadTime = uploadTime;
     }
 
-    public String getFilepath() {
-        return filepath;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setFilepath(String filepath) {
-        this.filepath = filepath == null ? null : filepath.trim();
+    public void setFilePath(String filePath) {
+        this.filePath = filePath == null ? null : filePath.trim();
     }
 
-    public String getFilename() {
-        return filename;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename == null ? null : filename.trim();
+    public void setFileName(String fileName) {
+        this.fileName = fileName == null ? null : fileName.trim();
     }
 
-    public String getWebfilename() {
-        return webfilename;
+    public String getWebFileName() {
+        return webFileName;
     }
 
-    public void setWebfilename(String webfilename) {
-        this.webfilename = webfilename == null ? null : webfilename.trim();
+    public void setWebFileName(String webFileName) {
+        this.webFileName = webFileName;
     }
 
     public String getSuggestbh() {
@@ -101,11 +85,12 @@ public class CreditAttachment {
         this.suggestbh = suggestbh == null ? null : suggestbh.trim();
     }
 
-    public String getUploadname() {
-        return uploadname;
+    public String getUploadName() {
+        return uploadName;
     }
 
-    public void setUploadname(String uploadname) {
-        this.uploadname = uploadname == null ? null : uploadname.trim();
+    public void setUploadName(String uploadName) {
+        this.uploadName = uploadName == null ? null : uploadName.trim();
     }
+
 }

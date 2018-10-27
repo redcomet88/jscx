@@ -28,6 +28,11 @@
            <if test="topIndexName != null and '' != topIndexName">
             and b.name like  concat('%',#{topIndexName,jdbcType=VARCHAR},'%')
           </if>
+          <if test="dah != null and '' != dah and dah != 'admin' ">
+            and  a.column1 IN
+            ( select da.jgh  from  jscx.t_data_authority da ,jscx.t_user u
+              where  da.dah = u.dah and u.dah =  #{dah,jdbcType=VARCHAR})
+          </if>
           <if test="sortField != null and '' != sortField">
              order by a.${sortField} ${sortOrder}
           </if>
@@ -45,6 +50,11 @@
     </if>
     <if test="topIndexName != null and '' != topIndexName">
       and b.name like  concat('%',#{topIndexName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="dah != null and '' != dah and dah != 'admin' ">
+      and  a.column1 IN
+      ( select da.jgh  from  jscx.t_data_authority da ,jscx.t_user u
+      where  da.dah = u.dah and u.dah =  #{dah,jdbcType=VARCHAR})
     </if>
   </select>
   <sql id="Example_Where_Clause" >

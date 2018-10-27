@@ -2,17 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="jssvc.credit.dao.CreditAttachmentMapper" >
   <resultMap id="BaseResultMap" type="jssvc.credit.model.CreditAttachment" >
-    <constructor >
-      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="uploaddah" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="description" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="uploadtime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="filepath" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="filename" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="webfilename" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="suggestbh" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="uploadname" jdbcType="VARCHAR" javaType="java.lang.String" />
-    </constructor>
+      <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Long" />
+      <result column="uploadDah"  property="uploadDah" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="description" property="description" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="uploadTime" property="uploadTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <result column="filepath" property="filePath" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="filename" property="fileName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="webFileName" property="webFileName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="suggestbh" property="suggestbh" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="uploadName" property="uploadName" jdbcType="VARCHAR" javaType="java.lang.String" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -111,9 +109,9 @@
       uploadtime, filepath, filename, 
       webfilename, suggestbh, uploadname
       )
-    values (#{id,jdbcType=BIGINT}, #{uploaddah,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
-      #{uploadtime,jdbcType=TIMESTAMP}, #{filepath,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR}, 
-      #{webfilename,jdbcType=VARCHAR}, #{suggestbh,jdbcType=VARCHAR}, #{uploadname,jdbcType=VARCHAR}
+    values (#{id,jdbcType=BIGINT}, #{uploadDah,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+      #{uploadTime,jdbcType=TIMESTAMP}, #{filePath,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR},
+      #{webFileName,jdbcType=VARCHAR}, #{suggestbh,jdbcType=VARCHAR}, #{uploadName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="jssvc.credit.model.CreditAttachment" >
@@ -122,58 +120,58 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="uploaddah != null" >
-        uploaddah,
+      <if test="uploadDah != null" >
+        uploadDah,
       </if>
       <if test="description != null" >
         description,
       </if>
-      <if test="uploadtime != null" >
-        uploadtime,
+      <if test="uploadTime != null" >
+        uploadTime,
       </if>
-      <if test="filepath != null" >
-        filepath,
+      <if test="filePath != null" >
+        filePath,
       </if>
-      <if test="filename != null" >
-        filename,
+      <if test="fileName != null" >
+        fileName,
       </if>
-      <if test="webfilename != null" >
-        webfilename,
+      <if test="webFileName != null" >
+        webFileName,
       </if>
       <if test="suggestbh != null" >
         suggestbh,
       </if>
-      <if test="uploadname != null" >
-        uploadname,
+      <if test="uploadName != null" >
+        uploadName,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="uploaddah != null" >
-        #{uploaddah,jdbcType=VARCHAR},
+      <if test="uploadDah != null" >
+        #{uploadDah,jdbcType=VARCHAR},
       </if>
       <if test="description != null" >
         #{description,jdbcType=VARCHAR},
       </if>
-      <if test="uploadtime != null" >
-        #{uploadtime,jdbcType=TIMESTAMP},
+      <if test="uploadTime != null" >
+        #{uploadTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="filepath != null" >
-        #{filepath,jdbcType=VARCHAR},
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
       </if>
-      <if test="filename != null" >
-        #{filename,jdbcType=VARCHAR},
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
       </if>
-      <if test="webfilename != null" >
-        #{webfilename,jdbcType=VARCHAR},
+      <if test="webFileName != null" >
+        #{webFileName,jdbcType=VARCHAR},
       </if>
       <if test="suggestbh != null" >
         #{suggestbh,jdbcType=VARCHAR},
       </if>
-      <if test="uploadname != null" >
-        #{uploadname,jdbcType=VARCHAR},
+      <if test="uploadName != null" >
+        #{uploadName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

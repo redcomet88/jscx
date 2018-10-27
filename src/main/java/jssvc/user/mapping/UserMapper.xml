@@ -177,7 +177,7 @@
 
   <select id="selectUsersByRole" resultMap="BaseResultMap" parameterType="java.lang.String">
     select
-        u.dah, ygxm, mjkkh, sex, mobile, email, sfzh, password, gwdj, flag, bz, px
+        u.dah, ygxm, mjkkh, sex, mobile, email, sfzh, password, gwdj, flag, bz, px, pysx, pyqp
     from t_user u join t_user_role  ur
        on u.dah=ur.dah
     where ur.role_id = #{roleId,jdbcType=VARCHAR}
