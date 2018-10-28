@@ -57,6 +57,25 @@
       where  da.dah = u.dah and u.dah =  #{dah,jdbcType=VARCHAR})
     </if>
   </select>
+  <select id="getCreditIndexOption" resultMap="BaseResultMap" parameterType="jssvc.credit.vo.filter.CreditIndexSearchFilter">
+    select * from  t_credit_index a
+    where 1=1
+    and a.level = #{level,jdbcType=INTEGER}
+    <if test="name != null and '' != name">
+      and a.name like  concat('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="topIndexId != null and '' != topIndexId and topIndexId != '-1'">
+      and a.parrent_id =  #{topIndexId,jdbcType=VARCHAR}
+    </if>
+    <if test="dah != null and '' != dah and dah != 'admin' ">
+      and  a.column1 IN
+      ( select da.jgh  from  jscx.t_data_authority da ,jscx.t_user u
+      where  da.dah = u.dah and u.dah =  #{dah,jdbcType=VARCHAR})
+    </if>
+    <if test="sortField != null and '' != sortField">
+      order by a.${sortField} ${sortOrder}
+    </if>
+  </select>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

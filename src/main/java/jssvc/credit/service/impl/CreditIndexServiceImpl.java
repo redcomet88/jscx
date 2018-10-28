@@ -1,6 +1,7 @@
 package jssvc.credit.service.impl;
 
 import jssvc.credit.dao.CreditIndexMapper;
+import jssvc.credit.model.CreditIndex;
 import jssvc.credit.service.CreditIndexService;
 import jssvc.credit.vo.CreditIndexVo;
 import jssvc.credit.vo.filter.CreditIndexSearchFilter;
@@ -38,5 +39,13 @@ public class CreditIndexServiceImpl implements CreditIndexService {
         int count = creditIndexDao.getCreditIndexListCount(filter);
         logger.info("getCreditIndexListCount end");
         return count;
+    }
+
+    @Override
+    public List<CreditIndex> getCreditIndexOption(CreditIndexSearchFilter filter) {
+        logger.info("getCreditIndexList begin");
+        List<CreditIndex> list  = creditIndexDao.getCreditIndexOption(filter);
+        logger.info("getCreditIndexList end");
+        return list;
     }
 }

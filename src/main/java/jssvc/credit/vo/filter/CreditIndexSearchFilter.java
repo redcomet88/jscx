@@ -14,6 +14,8 @@ public class CreditIndexSearchFilter  extends Pagination {
 
     private String topIndexName;    //一级指标名称
 
+    private String topIndexId;      //一级指标ID
+
     private String name;            //指标名称
 
     private Integer level;          //指标等级
@@ -60,8 +62,17 @@ public class CreditIndexSearchFilter  extends Pagination {
         this.name = name;
     }
 
+    public String getTopIndexId() {
+        return topIndexId;
+    }
+
+    public void setTopIndexId(String topIndexId) {
+        this.topIndexId = topIndexId;
+    }
     @Override
     public String toString() {
-        return "CreditIndexSearchFilter [id=" + id + ", topIndexName=" + topIndexName + ", name=" + name +  "]";
+        return "CreditIndexSearchFilter [id=" + id + ", topIndexName=" + topIndexName + ", name=" + name + ",topIndexId=" + topIndexId + "]";
     }
+
+
 }

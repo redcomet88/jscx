@@ -14,6 +14,7 @@ import jssvc.base.util.*;
 import jssvc.credit.enums.CreditProcessStatus;
 import jssvc.credit.enums.CreditStatusResult;
 import jssvc.credit.model.CreditAttachment;
+import jssvc.credit.model.CreditIndex;
 import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessLog;
 import jssvc.credit.service.CreditIndexService;
@@ -146,6 +147,39 @@ public class CreditInfoController extends BaseController {
     }
 
     /**
+     * @description:诚信指标下拉列表
+     *
+     * @author: redcomet
+     * @param: [filter]
+     * @return: void        
+     * @create: 2018/10/28 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/credit_creditIndexOption.do")
+    private void creditIndexOption(CreditIndexSearchFilter filter) throws BusinessException {
+        try {
+            User user = getSessionUser();
+            filter.setOffset();
+            filter.setLimit();
+            filter.setDah(user.getDah());
+            if (null == filter.getLevel())        //如果没有指定等级，那么认为是取一级指标
+                filter.setLevel(1);
+            filter.setSortField("sort");
+            filter.setSortOrder(SortOrder.ASC.toString());
+            List<CreditIndex> list = creditIndexService.getCreditIndexOption(filter);
+            //返回数据
+            Map<String, Object> result = new HashMap<>();
+            result.put("data", list);
+            response.getWriter().write(JSON.Encode(result));
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * @description: 诚信事件新增/编辑页面展示
      *
      * @author: redcomet
@@ -162,7 +196,6 @@ public class CreditInfoController extends BaseController {
             ModelAndView mv = new ModelAndView();
             mv.setViewName(ConstantKey.CREDIT_INFO_APPLY);
             mv.addObject("flag", flag);
-            // TODO 这两行先注释起来，我先把页面改好，然后再做后台服务
             String suggestBh = String.valueOf(creditInfoService.selectFlagNumber("suggestBh", "suggestBh"));
             mv.addObject("suggestBh", suggestBh);
             String fbsj = DateUtil.getSimpleDateString(new Date());
@@ -224,6 +257,9 @@ public class CreditInfoController extends BaseController {
                 }
                 if (suggest.get("applyTime") != null) {
                     suggestInfo.setCreateTime(DateUtil.parser(suggest.get("applyTime").toString()));
+                }
+                if (suggest.get("secondaryCombo") != null) {
+                    suggestInfo.setColumn1(suggest.get("secondaryCombo").toString());
                 }
                 suggestInfo.setUploadUser(user.getDah());
                 suggestInfo.setUploadDept(getSessionJgh());

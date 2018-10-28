@@ -56,9 +56,11 @@
                             		</tr>
 									<tr>
 										<td style="border: 1px solid #005da2;width:120px;height:50px;text-align:center;" ><label>一级指标</label></td>
-										<td style="border: 1px solid #005da2;height:50px;" ><input id="code" name="code" class="mini-combobox" style="width: 80%;" value="${suggestBh }" /></td>
+										<td style="border: 1px solid #005da2;height:50px;" ><input id="topCombo" name="topCombo" class="mini-combobox" style="width: 80%;"  url="<%=request.getContextPath()%>/ajax/credit_creditIndexOption.do"
+                                                 emptyText="----快速选择----" textField="name" valueField="id" onvaluechanged="onCreditIndexChanged" /></td>
 										<td style="border: 1px solid #005da2;height:50px;text-align:center;"><label>二级指标</label></td>
-										<td style="border: 1px solid #005da2;height:50px;"><input id="applyTime" name="applyTime" class="mini-combobox" style="width:100%;" value="${applytime }"  /></td>
+										<td style="border: 1px solid #005da2;height:50px;"><input id="secondaryCombo" name="secondaryCombo" class="mini-combobox" style="width:100%;" url=""
+                                                emptyText="----快速选择----" textField="name" valueField="id" onvaluechanged=""/></td>
 									</tr>
                             		<tr>
                             			<td style="border: 1px solid #005da2;width:200px;height:100px;text-align:center;" ><label>主管部门意见</label></td>
@@ -82,9 +84,6 @@
                                             expandOnLoad="0" allowInput="true" onblur="inputMouseMove('minorDepartment')"/>
                                         </td>
                             		</tr>
-
-
-
 
                             	</table>
                             </div>
@@ -360,6 +359,18 @@
                  
              });
          }
+
+         var topCombo = mini.get("topCombo");
+         var secondaryCombo = mini.get("secondaryCombo");
+
+         function onCreditIndexChanged(e) {
+             var id = topCombo.getValue();
+             secondaryCombo.setValue("");
+             var url = "<%=request.getContextPath()%>/ajax/credit_creditIndexOption.do?topIndexId=" + id + "&level=2";
+             secondaryCombo.setUrl(url);
+             secondaryCombo.select(0);
+         }
+
 
          function taskCommit(result) {
        		if(mini.get("spResult").getValue() == "" && result != "transfer" && applyStatus != 'suggestionApplyStart' && applyStatus != 'adminView' && applyStatus != 'adminAccept' && applyStatus != 'departmentHandle') {

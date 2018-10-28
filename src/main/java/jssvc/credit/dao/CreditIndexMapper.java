@@ -34,4 +34,6 @@ public interface CreditIndexMapper {
 
     int getCreditIndexListCount(CreditIndexSearchFilter filter);
 
+    List<CreditIndex> getCreditIndexOption(CreditIndexSearchFilter filter);
+
 }

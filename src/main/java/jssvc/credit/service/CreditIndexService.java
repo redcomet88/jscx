@@ -1,5 +1,6 @@
 package jssvc.credit.service;
 
+import jssvc.credit.model.CreditIndex;
 import jssvc.credit.vo.CreditIndexVo;
 import jssvc.credit.vo.filter.CreditIndexSearchFilter;
 
@@ -32,4 +33,14 @@ public interface CreditIndexService {
      * @create: 2018/10/19 
      **/
     int getCreditIndexListCount(CreditIndexSearchFilter filter);
+
+    /**
+     * @description:获取诚信指标选项
+     *
+     * @author: redcomet
+     * @param: [filter]
+     * @return: java.util.List<jssvc.credit.vo.CreditIndexVo>
+     * @create: 2018/10/28
+     **/
+    List<CreditIndex> getCreditIndexOption(CreditIndexSearchFilter filter);
 }
