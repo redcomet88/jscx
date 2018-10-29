@@ -255,11 +255,15 @@
                      showUpload = "true";
 	            	 $("#opinionLabel2").show();
 	            	 $("#opinionLabel1").hide();
+                     $("#fillingOption").show();
+                     $("#deleteOption").show();
             	 }else{
             		 //$("#uploadAttachment").show();
                      showUpload = "true";
 	            	 $("#opinionLabel1").show();
 	            	 $("#opinionLabel2").hide();
+                     $("#fillingOption").show();
+                     $("#deleteOption").show();
             	 }
 				 if (roleName == "suggestor") {
 
@@ -405,9 +409,9 @@
         	 mini.get("isNeedWindow").hide();
       		 var tipMsg = null;
       		 if(result == 'pass'){
-    	  		 tipMsg = "是否通过该合理化建议审批";
+    	  		 tipMsg = "是否通过该诚信事件审批";
       		 }else if(result == 'transfer'){
-    	  		 tipMsg = "是否流转该合理化建议任务";
+    	  		 tipMsg = "是否流转该诚信事件任务";
       		 }else if(result == 'refuse'){
     	  		 tipMsg = "是否确认退回";
       		 }
@@ -417,7 +421,7 @@
              }
              mini.confirm(tipMsg, "确定？",function(action) {
                  if(action=='ok'){
-                     msgid = mini.loading("合理化建议提交中，请稍后......", "合理化建议");
+                     msgid = mini.loading("诚信事件提交中，请稍后......", "诚信事件提交");
                      if( applyStatus == 'adminView' || applyStatus == 'departmentHandle'){
     	                 mini.get("handleResult").setValue("");
                      }
@@ -428,7 +432,7 @@
                          dataType: 'text',
                          success: function (text) {
                              if(text=='success'){
-                                  mini.alert("合理化建议提交成功", "提醒", function(action) {
+                                  mini.alert("诚信事件提交成功", "提醒", function(action) {
                                       refreshAll();
                                   });
                              }else if (text == "done"){

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jssvc.base.dao.ApproveOptionMapper">
+  <resultMap id="BaseResultMap" type="jssvc.base.model.ApproveOption">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="option_code" jdbcType="VARCHAR" property="optionCode" />
+    <result column="option_name" jdbcType="VARCHAR" property="optionName" />
+    <result column="option_user" jdbcType="VARCHAR" property="optionUser" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, option_code, option_name, option_user
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_approve_option
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_approve_option
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="jssvc.base.model.ApproveOption">
+    insert into t_approve_option (id, option_code, option_name, 
+      option_user)
+    values (#{id,jdbcType=BIGINT}, #{optionCode,jdbcType=VARCHAR}, #{optionName,jdbcType=VARCHAR}, 
+      #{optionUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.base.model.ApproveOption">
+    insert into t_approve_option
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="optionCode != null">
+        option_code,
+      </if>
+      <if test="optionName != null">
+        option_name,
+      </if>
+      <if test="optionUser != null">
+        option_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="optionCode != null">
+        #{optionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="optionName != null">
+        #{optionName,jdbcType=VARCHAR},
+      </if>
+      <if test="optionUser != null">
+        #{optionUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.base.model.ApproveOption">
+    update t_approve_option
+    <set>
+      <if test="optionCode != null">
+        option_code = #{optionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="optionName != null">
+        option_name = #{optionName,jdbcType=VARCHAR},
+      </if>
+      <if test="optionUser != null">
+        option_user = #{optionUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.base.model.ApproveOption">
+    update t_approve_option
+    set option_code = #{optionCode,jdbcType=VARCHAR},
+      option_name = #{optionName,jdbcType=VARCHAR},
+      option_user = #{optionUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="jssvc.base.model.ApproveOption">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="option_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="option_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="option_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, option_code, option_name, option_user
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_approve_option
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_approve_option
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="jssvc.base.model.ApproveOption">
+    insert into t_approve_option (id, option_code, option_name, 
+      option_user)
+    values (#{id,jdbcType=BIGINT}, #{optionCode,jdbcType=VARCHAR}, #{optionName,jdbcType=VARCHAR}, 
+      #{optionUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.base.model.ApproveOption">
+    insert into t_approve_option
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="optionCode != null">
+        option_code,
+      </if>
+      <if test="optionName != null">
+        option_name,
+      </if>
+      <if test="optionUser != null">
+        option_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="optionCode != null">
+        #{optionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="optionName != null">
+        #{optionName,jdbcType=VARCHAR},
+      </if>
+      <if test="optionUser != null">
+        #{optionUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.base.model.ApproveOption">
+    update t_approve_option
+    <set>
+      <if test="optionCode != null">
+        option_code = #{optionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="optionName != null">
+        option_name = #{optionName,jdbcType=VARCHAR},
+      </if>
+      <if test="optionUser != null">
+        option_user = #{optionUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.base.model.ApproveOption">
+    update t_approve_option
+    set option_code = #{optionCode,jdbcType=VARCHAR},
+      option_name = #{optionName,jdbcType=VARCHAR},
+      option_user = #{optionUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
