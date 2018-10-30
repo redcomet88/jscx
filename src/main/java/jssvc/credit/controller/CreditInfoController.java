@@ -8,7 +8,7 @@ import jssvc.base.enums.ActionType;
 import jssvc.base.enums.SortOrder;
 import jssvc.base.exception.BusinessException;
 import jssvc.base.interceptor.LogFace;
-import jssvc.base.model.Constant;
+import jssvc.base.model.ApproveOption;
 import jssvc.base.service.BaseService;
 import jssvc.base.util.*;
 import jssvc.credit.enums.CreditProcessStatus;
@@ -30,11 +30,8 @@ import jssvc.user.model.MenuFunction;
 import jssvc.user.model.Role;
 import jssvc.user.model.User;
 import jssvc.user.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -256,14 +253,16 @@ public class CreditInfoController extends BaseController {
                     suggestInfo.setCode(suggest.get("code").toString());
                 }
                 if (suggest.get("applyTime") != null) {
-                    suggestInfo.setCreateTime(DateUtil.parser(suggest.get("applyTime").toString()));
+                    suggestInfo.setApplyTime(DateUtil.parser(suggest.get("applyTime").toString()));
                 }
                 if (suggest.get("secondaryCombo") != null) {
                     suggestInfo.setColumn1(suggest.get("secondaryCombo").toString());
                 }
-                suggestInfo.setUploadUser(user.getDah());
-                suggestInfo.setUploadDept(getSessionJgh());
-                suggestInfo.setStatus(status);
+                suggestInfo.setApplyUser(user.getDah());
+                suggestInfo.setApplyDept(getSessionJgh());
+                suggestInfo.setApplyTime(new Date());
+                suggestInfo.setUpdateTime(new Date());
+                suggestInfo.setApplyStatus(status);
                 // 找出所有下一步处理人员的名单，放到current user中
                 List<User> users = userService.getUsersByRole("82");
                 StringBuffer sb = new StringBuffer();
@@ -384,7 +383,7 @@ public class CreditInfoController extends BaseController {
             //filter.setSuggestEnd(true);
             //filter.setSuggestStart(true);
             //filter.setSuggestApply(true);
-            filter.setSortField("create_Time");
+            filter.setSortField("apply_Time");
             filter.setSortOrder(SortOrder.DESC.toString());
             //filter.setCreateDateEnd(StringUtil.isEmpty(filter.getCreateDateEnd()) ? null
             //       : DateUtil.getSimpleDateStringYYYYMMDDHHMM(DateUtil.getTheEndTimeOfDate(DateUtil.parser(filter.getCreateDateEnd()))).toString());
@@ -534,12 +533,12 @@ public class CreditInfoController extends BaseController {
                 mv.addObject("suggestTitle", suggestInfo.getCreditTitle());
                 mv.addObject("suggestContent", suggestInfo.getCreditContent());
                 mv.addObject("suggestBh", suggestInfo.getCode());
-                mv.addObject("applytime", DateUtil.getSimpleDateTimeString(suggestInfo.getCreateTime()));
+                mv.addObject("applytime", DateUtil.getSimpleDateTimeString(suggestInfo.getApplyTime()));
                 mv.addObject("applystatus", suggestInfo.getStatus());
-                mv.addObject("applybank", suggestInfo.getUploadDept());
-                mv.addObject("maindepartment", suggestInfo.getUploadDept());
-                mv.addObject("minordepartment", suggestInfo.getUploadDept());
-                if (user.getDah().equals(suggestInfo.getUploadUser())) {
+                mv.addObject("applybank", suggestInfo.getApplyDept());
+                mv.addObject("maindepartment", suggestInfo.getApplyDept());
+                mv.addObject("minordepartment", suggestInfo.getApplyDept());
+                if (user.getDah().equals(suggestInfo.getApplyUser())) {
                     mv.addObject("roleName", "suggestor");
                 }
                /* if (suggestInfo.getHandleTime() != null) {
@@ -710,6 +709,22 @@ public class CreditInfoController extends BaseController {
             permissionMap.put("previewPermission", 1);
 
             response.getWriter().write(JSON.Encode(permissionMap));
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * 获取快速审批意见
+     * @throws BusinessException
+     */
+    @RequestMapping("ajax/approveOption.do")
+    @ResponseBody
+    private void getApproveOption() throws BusinessException {
+        User user = getSessionUser();
+        List<ApproveOption> options = baseService.getApproveOption(user.getDah());
+        try {
+            response.getWriter().write(JSON.Encode(options));
         } catch (IOException e) {
             throw new BusinessException(ConstantMessage.ERR00005, e);
         }

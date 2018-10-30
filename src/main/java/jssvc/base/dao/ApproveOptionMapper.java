@@ -1,6 +1,9 @@
 package jssvc.base.dao;
 
 import jssvc.base.model.ApproveOption;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ApproveOptionMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +17,7 @@ public interface ApproveOptionMapper {
     int updateByPrimaryKeySelective(ApproveOption record);
 
     int updateByPrimaryKey(ApproveOption record);
+
+    List<ApproveOption> selectOptionByDah(@Param("dah")String dah);
+
 }

@@ -15,13 +15,19 @@ public class CreditProcess {
 
     private String status;
 
-    private String uploadDept;
+    private String applyDept;
 
-    private String uploadUser;
+    private String applyUser;
 
-    private Date createTime;
+    private Date applyTime;
 
-    private Date optTime;
+    private Date updateTime;
+
+    private String applyStatus;
+
+    private String handleResult;
+
+    private String specificInfo;
 
     private String column1;
 
@@ -81,37 +87,6 @@ public class CreditProcess {
         this.status = status == null ? null : status.trim();
     }
 
-    public String getUploadDept() {
-        return uploadDept;
-    }
-
-    public void setUploadDept(String uploadDept) {
-        this.uploadDept = uploadDept == null ? null : uploadDept.trim();
-    }
-
-    public String getUploadUser() {
-        return uploadUser;
-    }
-
-    public void setUploadUser(String uploadUser) {
-        this.uploadUser = uploadUser == null ? null : uploadUser.trim();
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getOptTime() {
-        return optTime;
-    }
-
-    public void setOptTime(Date optTime) {
-        this.optTime = optTime;
-    }
 
     public String getColumn1() {
         return column1;
@@ -135,5 +110,61 @@ public class CreditProcess {
 
     public void setColumn3(Date column3) {
         this.column3 = column3;
+    }
+
+    public String getApplyDept() {
+        return applyDept;
+    }
+
+    public void setApplyDept(String applyDept) {
+        this.applyDept = applyDept;
+    }
+
+    public String getApplyUser() {
+        return applyUser;
+    }
+
+    public void setApplyUser(String applyUser) {
+        this.applyUser = applyUser;
+    }
+
+    public Date getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(Date applyTime) {
+        this.applyTime = applyTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getHandleResult() {
+        return handleResult;
+    }
+
+    public void setHandleResult(String handleResult) {
+        this.handleResult = handleResult;
+    }
+
+    public String getSpecificInfo() {
+        return specificInfo;
+    }
+
+    public void setSpecificInfo(String specificInfo) {
+        this.specificInfo = specificInfo;
+    }
+
+    public String getApplyStatus() {
+        return applyStatus;
+    }
+
+    public void setApplyStatus(String applyStatus) {
+        this.applyStatus = applyStatus;
     }
 }

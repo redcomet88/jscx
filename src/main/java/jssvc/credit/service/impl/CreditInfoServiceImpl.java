@@ -95,7 +95,7 @@ public class CreditInfoServiceImpl implements CreditInfoService {
         logger.info("getSuggestInfoList begin");
         List<CreditProcessVo> list = creditProcessDao.getCreditProcessList(filter);
         for (CreditProcessVo creditProcessVo : list) {
-            creditProcessVo.setApproveStatusName(CreditProcessStatus.valueOf(creditProcessVo.getStatus()).getName());
+            creditProcessVo.setApproveStatusName(CreditProcessStatus.valueOf(creditProcessVo.getApplyStatus()).getName());
         }
         logger.info("getSuggestInfoList end");
         return list;

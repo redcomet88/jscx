@@ -4,6 +4,7 @@ import jssvc.base.constant.ConstantKey;
 import jssvc.base.constant.ConstantMessage;
 import jssvc.base.constant.SystemConstant;
 import jssvc.base.exception.BusinessException;
+import jssvc.base.model.ApproveOption;
 import jssvc.base.model.Constant;
 import jssvc.base.service.BaseService;
 import jssvc.base.util.JSON;
@@ -12,6 +13,8 @@ import jssvc.user.model.MenuFunction;
 import jssvc.user.model.User;
 import jssvc.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -105,4 +108,5 @@ public abstract class BaseController {
         List<MenuFunction> menuFunctions = userService.getMenuFunction(user.getDah(), menuId);
         return menuFunctions;
     }
+
 }

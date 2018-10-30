@@ -62,6 +62,10 @@
 										<td style="border: 1px solid #005da2;height:50px;"><input id="secondaryCombo" name="secondaryCombo" class="mini-combobox" style="width:100%;" url=""
                                                 emptyText="----快速选择----" textField="name" valueField="id" onvaluechanged=""/></td>
 									</tr>
+									<tr id="handleResultTr">
+										<td style="border: 1px solid #005da2;width:120px;height:120px;text-align:center;" ><label id="opinionLabel1" style="display: none">上一步处理意见</label><label id="opinionLabel2" style="display: none">当前处理意见</label><br/><label></label></td>
+										<td style="border: 1px solid #005da2;height:50px;" colspan="3" ><textarea id="handleResult" name="handleResult" class="mini-textarea" style="width: 500px;height: 100px;"  enabled="false">${handleResult } </textarea></td>
+									</tr>
                             		<tr>
                             			<td style="border: 1px solid #005da2;width:200px;height:100px;text-align:center;" ><label>主管部门意见</label></td>
                             			<td style="width: 80%;border-right:hidden"><textarea id="column1" name="column1" class="mini-textarea" style="width:500px;height:80px;" value="${column1 }" required="false" ></textarea></td>
@@ -117,7 +121,7 @@
 				                    <tbody>
 				                        <tr>
 				                            <td style='width: 100px;'><label>审批意见选择：</label></td>
-				                            <td colspan="2"><input id="ywOption" class="mini-combobox" url="<%=request.getContextPath()%>/ajax/cg_approveOption.do"
+				                            <td colspan="2"><input id="ywOption" class="mini-combobox" url="<%=request.getContextPath()%>/ajax/approveOption.do"
 				                                style="width: 100%" emptyText="----快速选择----" textField="optionName" valueField="optionName" onvaluechanged="onYwOptionChanged"
 				                                showNullItem="true"/>
 				                            </td>
@@ -582,7 +586,7 @@
                          type:"post",
                          success: function(result) {
                              if(result == "SUCCESS") {
-                                 mini.get("ywOption").load("<%=request.getContextPath()%>/ajax/cg_approveOption.do");
+                                 mini.get("ywOption").load("<%=request.getContextPath()%>/ajax/approveOption.do");
                                  mini.alert("保存成功！");
                              } else  if(result == "EXIST"){
                                  mini.alert("意见已存在，无需再次收藏！");

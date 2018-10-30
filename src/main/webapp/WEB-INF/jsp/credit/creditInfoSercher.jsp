@@ -76,7 +76,7 @@
                     <div field="creditTitle" width="120" align="center" headerAlign="center" allowSort="false">事件标题</div>
                     <div field="applybankName" width="120" align="center" headerAlign="center" allowSort="false">创建部门</div>
                     <div field="applyuserName" name="applyuserName" id = "applyuserName" width="120" align="center" headerAlign="center" allowSort="false">创建人</div>
-                    <div field="createTime" width="120" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss" allowSort="false">创建时间</div>
+                    <div field="applyTime" width="120" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss" allowSort="false">创建时间</div>
                     <div field="approveStatusName" width="150" align="center" headerAlign="center" allowSort="false">审批状态</div>
                     <div name="active" width="150" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
                 </div>
