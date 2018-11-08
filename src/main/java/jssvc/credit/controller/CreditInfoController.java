@@ -110,6 +110,14 @@ public class CreditInfoController extends BaseController {
         return mv;
     }
 
+
+    @RequestMapping("showCreditReport.do")
+    public ModelAndView showCreditReport() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("credit/creditReport");
+        return mv;
+    }
+
     /**
      * @description:信用指标列表查询
      *
@@ -447,7 +455,7 @@ public class CreditInfoController extends BaseController {
             //filter.setSuggestApply(true);
             filter.setCurrentuser(user.getDah());
             filter.setLoginDah(user.getDah());
-            filter.setSortField("opt_Time");
+            filter.setSortField("update_Time");
             filter.setSortOrder(SortOrder.DESC.toString());
             List<CreditProcessVo> list = creditInfoService.getCreditInfoList(filter);
             int count = creditInfoService.getCreditInfoListCount(filter);

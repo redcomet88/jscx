@@ -19,10 +19,9 @@
                 <tr>
                     <td style="width:30%"></td>
                     <td style="width:70px;">一级指标：</td>
-                    <td style="width:10%">
-                        <input id="jgh" name="jgh" class="mini-treeselect" style="width:100%;" textField="jgmc"
-                        valueField="jgh" parentField="sjjg" expandOnLoad="0" allowInput="true">
-                        </input>
+                    <td style="width:15%">
+                        <input id="topCombo" name="topCombo" class="mini-combobox" style="width:100%;" url="<%=request.getContextPath()%>/ajax/credit_creditIndexOption.do"
+                               emptyText="----快速选择----" textField="name" valueField="id"  />
                     </td>
                     <td style="width:1%"></td>
                     <td style="width:70px;">指标名称：</td>

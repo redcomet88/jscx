@@ -40,10 +40,20 @@
                             	<table border="1px" style="width:100%;table-layout:fixed;border-collapse: collapse;border:1px solid #005da2;border-left: none;border-right: none">
                             		<tr>
                             			<td style="border: 1px solid #005da2;width:200px;height:50px;text-align:center;" ><label>诚信事件标题</label></td>
-                            			<td style="width: 350px;border-right:hidden"><input id="suggestTitle" name="suggestTitle" class="mini-textbox" style="width:500px;" value="${suggestTitle }" required="true" onvaluechanged="checkText"/></td>
-                            			<td style="width: 200px;border-right:hidden"></td>
-                            			<td></td>
-                            		</tr>
+                            			<td style="border: 1px solid #005da2;width:300px;"><input id="suggestTitle" name="suggestTitle" class="mini-textbox" style="width:300px;" value="${suggestTitle }" required="true" onvaluechanged="checkText"/></td>
+                            			<td style="border: 1px solid #005da2;width:200px;height:50px;text-align:center;"><label>工号</label></td>
+										<td style="border: 1px solid #005da2;width:200px;height:50px;border-right:hidden"><input id="unCreditDah" name="unCreditDah" class="mini-textbox" style="width:180px;" value="${unCreditDah}" required="true" onvaluechanged="onUncreditDahChanged"/></td>
+									</tr>
+									<tr>
+										<td style="border: 1px solid #005da2;width:200px;height:50px;text-align:center;"><label>姓名</label></td>
+										<td style="border: 1px solid #005da2;width:300px;height:50px;"><input id="unCreditName" name="unCreditName" class="mini-textbox" style="width:300px;" value="${unCreditName}"/></td>
+										<td style="border: 1px solid #005da2;width:200px;height:50px;text-align:center;"><label>院部</label></td>
+										<td style="border: 1px solid #005da2;width:200px;height:50px;border-right:hidden">
+											<input  id="unCreditDept" class="mini-treeselect" textField="jgmc" valueField="jgh" parentField="sjjg" showClose="true"
+													style="width:180px;" value="${unCreditDeptName}" url="<%=request.getContextPath()%>/ajax/cg_getJgList.do"
+													oncloseclick="onCloseClick" expandOnLoad="0"/></td>
+
+									</tr>
                             		<tr>
                             			<td style="border: 1px solid #005da2;width:120px;height:190px;text-align:center;" ><label>事件具体内容</label></td>
                                         <td style="border-right:hidden;" colspan="3"><textarea id="suggestContent" name="suggestContent" class="mini-textarea" style="height:180px;width:90%;" value="${suggestContent }" required="true" onvaluechanged="checkText"></textarea></td>
@@ -379,6 +389,31 @@
              secondaryCombo.select(0);
          }
 
+         var unCreditDah = mini.get("unCreditDah");
+         var unCreditName = mini.get("unCreditName");
+         var unCreditDept = mini.get("unCreditDept");
+         function onUncreditDahChanged(e) {
+             var dah = unCreditDah.getValue();
+             $.ajax({
+                 url: "<%=request.getContextPath()%>/ajax/user_getUser.do",
+                 type: "post",
+                 data: {dah:dah},
+                 dataType: 'text',
+                 success: function (text) {
+                     var data = mini.decode(text);
+                     if(null == data.user) {
+                         mini.alert("未找到该员工，员工号：["+ dah + "]", "提醒", null);
+					 }
+					 else {
+                         unCreditName.setValue(data.user.ygxm);
+                         unCreditDept.setValue(data.jgxx);
+                         unCreditName.setEnabled(false);
+                         unCreditDept.setEnabled(false)
+                     }
+                     mini.parse();
+                 }
+             });
+         }
 
          function taskCommit(result) {
        		if(mini.get("spResult").getValue() == "" && result != "transfer" && applyStatus != 'suggestionApplyStart' && applyStatus != 'adminView' && applyStatus != 'adminAccept' && applyStatus != 'departmentHandle') {
