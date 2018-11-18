@@ -48,4 +48,12 @@ public class CreditIndexServiceImpl implements CreditIndexService {
         logger.info("getCreditIndexList end");
         return list;
     }
+
+    @Override
+    public CreditIndexVo getCreditIndex(String id){
+        logger.info("getCreditIndex begin");
+        CreditIndexVo index  = creditIndexDao.selectVoByPrimaryKey(id);
+        logger.info("getCreditIndex end");
+        return index;
+    }
 }

@@ -43,4 +43,7 @@ public interface CreditIndexService {
      * @create: 2018/10/28
      **/
     List<CreditIndex> getCreditIndexOption(CreditIndexSearchFilter filter);
+
+
+    CreditIndexVo getCreditIndex(String id);
 }

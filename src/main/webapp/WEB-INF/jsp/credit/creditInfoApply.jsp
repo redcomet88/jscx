@@ -1,3 +1,4 @@
+<%@ taglib prefix="#005da2;height" uri="http://www.springframework.org/tags/form" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -49,7 +50,7 @@
 										<td style="border: 1px solid #005da2;width:300px;height:50px;"><input id="unCreditName" name="unCreditName" class="mini-textbox" style="width:300px;" value="${unCreditName}"/></td>
 										<td style="border: 1px solid #005da2;width:200px;height:50px;text-align:center;"><label>院部</label></td>
 										<td style="border: 1px solid #005da2;width:200px;height:50px;border-right:hidden">
-											<input  id="unCreditDept" class="mini-treeselect" textField="jgmc" valueField="jgh" parentField="sjjg" showClose="true"
+											<input  id="unCreditDept" name="unCreditDept"  class="mini-treeselect" textField="jgmc" valueField="jgh" parentField="sjjg" showClose="true"
 													style="width:180px;" value="${unCreditDeptName}" url="<%=request.getContextPath()%>/ajax/cg_getJgList.do"
 													oncloseclick="onCloseClick" expandOnLoad="0"/></td>
 
@@ -66,11 +67,9 @@
                             		</tr>
 									<tr>
 										<td style="border: 1px solid #005da2;width:120px;height:50px;text-align:center;" ><label>一级指标</label></td>
-										<td style="border: 1px solid #005da2;height:50px;" ><input id="topCombo" name="topCombo" class="mini-combobox" style="width: 80%;"  url="<%=request.getContextPath()%>/ajax/credit_creditIndexOption.do"
-                                                 emptyText="----快速选择----" textField="name" valueField="id" onvaluechanged="onCreditIndexChanged" /></td>
-										<td style="border: 1px solid #005da2;height:50px;text-align:center;"><label>二级指标</label></td>
-										<td style="border: 1px solid #005da2;height:50px;"><input id="secondaryCombo" name="secondaryCombo" class="mini-combobox" style="width:100%;" url=""
-                                                emptyText="----快速选择----" textField="name" valueField="id" onvaluechanged=""/></td>
+										<td style="border: 1px solid #005da2;height:50px;" ><input id="topCombo" name="topCombo" class="mini-combobox" style="width: 80%;"  url="<%=request.getContextPath()%>/ajax/credit_creditIndexOption.do" emptyText="----快速选择----" textField="name" valueField="id" onvaluechanged="onCreditIndexChanged" value="${topCombo}"/></td>
+										<td style="border: 1px solid #005da2;height:#005da2;height:50px;text-align:center;"><label>二级指标</label></td>
+										<td style="border: 1px solid #005da2;height:50px;"><input id="secondaryCombo" name="secondaryCombo" class="mini-combobox" style="width:100%;" required="true" url="" emptyText="----快速选择----" textField="name" valueField="id" onvaluechanged="" value="${secondaryCombo}"/></td>
 									</tr>
 									<tr id="handleResultTr">
 										<td style="border: 1px solid #005da2;width:120px;height:120px;text-align:center;" ><label id="opinionLabel1" style="display: none">上一步处理意见</label><label id="opinionLabel2" style="display: none">当前处理意见</label><br/><label></label></td>
@@ -78,7 +77,7 @@
 									</tr>
                             		<tr>
                             			<td style="border: 1px solid #005da2;width:200px;height:100px;text-align:center;" ><label>主管部门意见</label></td>
-                            			<td style="width: 80%;border-right:hidden"><textarea id="column1" name="column1" class="mini-textarea" style="width:500px;height:80px;" value="${column1 }" required="false" ></textarea></td>
+                            			<td style="width: 80%;border-right:hidden"><textarea id="specificInfo" name="specificInfo" class="mini-textarea" style="width:500px;height:80px;" value="${specificInfo }" required="false" ></textarea></td>
                             			<td style="width: 200px;border-right:hidden"></td>
                             			<td></td>
                             		</tr>
@@ -264,6 +263,9 @@
                 mini.get("column2").setAllowInput(false);
                 mini.get("leaderIndicate").setAllowInput(false);
              }else{
+                 mini.get("topCombo").disable();
+                 mini.get("secondaryCombo").disable();
+                 mini.get("suggestContent").disable();
             	 if(("other" == flag && ( applyStatus == 'managerReview' || applyStatus == 'departmentAcceptEnd')) || ("edit" == flag && applyStatus == 'departmentAcceptEnd')){
             		 //$("#uploadAttachment").show();
                      showUpload = "true";
@@ -423,16 +425,7 @@
        	    var suggestForm = new mini.Form("#suggestForm");
       	 	setRequiredValidate(result);
             suggestForm.validate();
-            var error = mini.get("whetherReasonable").getErrorText();
-            if (error != "") {
-            	mini.get("specificInfo").focus();
-            	return;
-            }
-            error = mini.get("whetherAccept").getErrorText();
-            if (error != "") {
-                mini.get("specificInfo").focus();
-                return;
-            }
+
             if (suggestForm.isValid() == false) {
                 getValidateFocus(suggestForm);
                 return;
@@ -559,8 +552,6 @@
                     mini.get("column1").setRequired(false);
                 }
                 if(applyStatus == 'departmentHandle'){
-		           	 mini.get("whetherReasonable").setRequired(false);
-		           	 mini.get("whetherAccept").setRequired(false);
 		           	 mini.get("specificInfo").setRequired(false);
                 }
                 if(applyStatus == 'departmentAcceptEnd'){

@@ -3,6 +3,7 @@ package jssvc.credit.service;
 import jssvc.credit.model.CreditAttachment;
 import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessLog;
+import jssvc.credit.model.CreditResult;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public interface CreditInfoService {
     int insertProcessLog(CreditProcessLog suggestProcessLog);
 
     /**
-     * @description:创建诚信事件
+     * @description:创建诚信事件（不包括处理结果）
      *
      * @author: redcomet
      * @param: [suggestInfo]
@@ -56,6 +57,37 @@ public interface CreditInfoService {
      * @create: 2018/10/23
      **/
     String createCreditInfo(CreditProcess suggestInfo) throws SQLException;
+
+    /**
+     * @description:更新诚信事件
+     *
+     * @author: redcomet
+     * @param: [suggestInfo]
+     * @return: int        
+     * @create: 2018/11/18 
+     **/
+    int updateSuggestInfo(CreditProcess suggestInfo) throws SQLException;
+
+    /**
+     * @description:
+     *
+     * @author: redcomet
+     * @param: [CreditProcess]
+     * @return: java.lang.String
+     * @create: 2018/11/18
+     **/
+    String getNextUser(CreditProcess suggestInfo) throws SQLException;
+
+
+    /**
+     * @description:创建诚信事件处理结果
+     *
+     * @author: redcomet
+     * @param: [suggestInfo]
+     * @return: java.lang.String        
+     * @create: 2018/11/15 
+     **/
+    String createCreditResult(CreditResult suggestInfo) throws SQLException;
 
     /**
      * @description:创建附件
@@ -87,5 +119,13 @@ public interface CreditInfoService {
      **/
     int getCreditInfoListCount(CreditProcessSearchFilter filter);
 
-
+    /**
+     * @description:根据诚信事件编号获取处理结果
+     *
+     * @author: redcomet
+     * @param: [code]
+     * @return: jssvc.credit.model.CreditResult        
+     * @create: 2018/11/15 
+     **/
+    CreditResult getCreditResult(String code);
 }

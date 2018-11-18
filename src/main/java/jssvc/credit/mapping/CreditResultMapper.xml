@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jssvc.credit.dao.CreditResultMapper">
+  <resultMap id="BaseResultMap" type="jssvc.credit.model.CreditResult">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="dah" jdbcType="VARCHAR" property="dah" />
+    <result column="handleResult" jdbcType="VARCHAR" property="handleresult" />
+    <result column="handleResult2" jdbcType="VARCHAR" property="handleresult2" />
+    <result column="handleResult3" jdbcType="VARCHAR" property="handleresult3" />
+    <result column="handleUser" jdbcType="VARCHAR" property="handleuser" />
+    <result column="handleTime" jdbcType="TIMESTAMP" property="handletime" />
+    <result column="column1" jdbcType="VARCHAR" property="column1" />
+    <result column="column2" jdbcType="VARCHAR" property="column2" />
+    <result column="column3" jdbcType="TIMESTAMP" property="column3" />
+    <result column="column4" jdbcType="TIMESTAMP" property="column4" />
+    <result column="column5" jdbcType="TIMESTAMP" property="column5" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, code, dah, handleResult, handleResult2, handleResult3, handleUser, handleTime, 
+    column1, column2, column3, column4, column5
+  </sql>
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_credit_result
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_credit_result
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_credit_result
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="jssvc.credit.model.CreditResult">
+    insert into t_credit_result (id, code, dah, 
+      handleResult, handleResult2, handleResult3, 
+      handleUser, handleTime, column1, 
+      column2, column3, column4, 
+      column5)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{dah,jdbcType=VARCHAR}, 
+      #{handleresult,jdbcType=VARCHAR}, #{handleresult2,jdbcType=VARCHAR}, #{handleresult3,jdbcType=VARCHAR}, 
+      #{handleuser,jdbcType=VARCHAR}, #{handletime,jdbcType=TIMESTAMP}, #{column1,jdbcType=VARCHAR}, 
+      #{column2,jdbcType=VARCHAR}, #{column3,jdbcType=TIMESTAMP}, #{column4,jdbcType=TIMESTAMP}, 
+      #{column5,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.credit.model.CreditResult">
+    insert into t_credit_result
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="dah != null">
+        dah,
+      </if>
+      <if test="handleresult != null">
+        handleResult,
+      </if>
+      <if test="handleresult2 != null">
+        handleResult2,
+      </if>
+      <if test="handleresult3 != null">
+        handleResult3,
+      </if>
+      <if test="handleuser != null">
+        handleUser,
+      </if>
+      <if test="handletime != null">
+        handleTime,
+      </if>
+      <if test="column1 != null">
+        column1,
+      </if>
+      <if test="column2 != null">
+        column2,
+      </if>
+      <if test="column3 != null">
+        column3,
+      </if>
+      <if test="column4 != null">
+        column4,
+      </if>
+      <if test="column5 != null">
+        column5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="dah != null">
+        #{dah,jdbcType=VARCHAR},
+      </if>
+      <if test="handleresult != null">
+        #{handleresult,jdbcType=VARCHAR},
+      </if>
+      <if test="handleresult2 != null">
+        #{handleresult2,jdbcType=VARCHAR},
+      </if>
+      <if test="handleresult3 != null">
+        #{handleresult3,jdbcType=VARCHAR},
+      </if>
+      <if test="handleuser != null">
+        #{handleuser,jdbcType=VARCHAR},
+      </if>
+      <if test="handletime != null">
+        #{handletime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="column1 != null">
+        #{column1,jdbcType=VARCHAR},
+      </if>
+      <if test="column2 != null">
+        #{column2,jdbcType=VARCHAR},
+      </if>
+      <if test="column3 != null">
+        #{column3,jdbcType=TIMESTAMP},
+      </if>
+      <if test="column4 != null">
+        #{column4,jdbcType=TIMESTAMP},
+      </if>
+      <if test="column5 != null">
+        #{column5,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.credit.model.CreditResult">
+    update t_credit_result
+    <set>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="dah != null">
+        dah = #{dah,jdbcType=VARCHAR},
+      </if>
+      <if test="handleresult != null">
+        handleResult = #{handleresult,jdbcType=VARCHAR},
+      </if>
+      <if test="handleresult2 != null">
+        handleResult2 = #{handleresult2,jdbcType=VARCHAR},
+      </if>
+      <if test="handleresult3 != null">
+        handleResult3 = #{handleresult3,jdbcType=VARCHAR},
+      </if>
+      <if test="handleuser != null">
+        handleUser = #{handleuser,jdbcType=VARCHAR},
+      </if>
+      <if test="handletime != null">
+        handleTime = #{handletime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="column1 != null">
+        column1 = #{column1,jdbcType=VARCHAR},
+      </if>
+      <if test="column2 != null">
+        column2 = #{column2,jdbcType=VARCHAR},
+      </if>
+      <if test="column3 != null">
+        column3 = #{column3,jdbcType=TIMESTAMP},
+      </if>
+      <if test="column4 != null">
+        column4 = #{column4,jdbcType=TIMESTAMP},
+      </if>
+      <if test="column5 != null">
+        column5 = #{column5,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.credit.model.CreditResult">
+    update t_credit_result
+    set code = #{code,jdbcType=VARCHAR},
+      dah = #{dah,jdbcType=VARCHAR},
+      handleResult = #{handleresult,jdbcType=VARCHAR},
+      handleResult2 = #{handleresult2,jdbcType=VARCHAR},
+      handleResult3 = #{handleresult3,jdbcType=VARCHAR},
+      handleUser = #{handleuser,jdbcType=VARCHAR},
+      handleTime = #{handletime,jdbcType=TIMESTAMP},
+      column1 = #{column1,jdbcType=VARCHAR},
+      column2 = #{column2,jdbcType=VARCHAR},
+      column3 = #{column3,jdbcType=TIMESTAMP},
+      column4 = #{column4,jdbcType=TIMESTAMP},
+      column5 = #{column5,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

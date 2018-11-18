@@ -22,6 +22,8 @@ public interface CreditIndexMapper {
 
     CreditIndex selectByPrimaryKey(String id);
 
+    CreditIndexVo selectVoByPrimaryKey(String id);
+
     int updateByExampleSelective(@Param("record") CreditIndex record, @Param("example") CreditIndexExample example);
 
     int updateByExample(@Param("record") CreditIndex record, @Param("example") CreditIndexExample example);

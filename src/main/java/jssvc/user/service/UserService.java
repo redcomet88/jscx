@@ -281,5 +281,14 @@ public interface UserService {
     List<User> getUsersByRole(String roleId) throws SQLException;
 
 
+    /**
+     * @description:取得机构列表
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: java.util.List<jssvc.user.model.InstitutionInfo>        
+     * @create: 2018/11/12 
+     **/
+    List<InstitutionInfo> getHeadBankList();
 
 }

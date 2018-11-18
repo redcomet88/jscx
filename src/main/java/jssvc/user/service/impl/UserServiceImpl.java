@@ -629,5 +629,9 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
-
+    @Override
+    public List<InstitutionInfo> getHeadBankList() {
+        List<InstitutionInfo> resultList = institutionInfoDao.selectHeadBankList();
+        return resultList;
+    }
 }

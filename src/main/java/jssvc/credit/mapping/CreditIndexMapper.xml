@@ -157,6 +157,13 @@
     from t_credit_index
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="selectVoByPrimaryKey" resultMap="creditInfoVoMap" parameterType="java.lang.String" >
+    select
+    a.*, b.name as topIndexName from  t_credit_index a ,t_credit_index b
+    where 1=1
+    and a.parrent_id = b.id
+    and a.id = #{id,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from t_credit_index
     where id = #{id,jdbcType=VARCHAR}

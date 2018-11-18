@@ -4,19 +4,23 @@ import jssvc.base.util.DateUtil;
 import jssvc.credit.dao.CreditAttachmentMapper;
 import jssvc.credit.dao.CreditProcessLogMapper;
 import jssvc.credit.dao.CreditProcessMapper;
+import jssvc.credit.dao.CreditResultMapper;
 import jssvc.credit.enums.CreditProcessStatus;
 import jssvc.credit.model.CreditAttachment;
 import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessLog;
+import jssvc.credit.model.CreditResult;
 import jssvc.credit.service.CreditInfoService;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +35,8 @@ public class CreditInfoServiceImpl implements CreditInfoService {
 
     @Autowired
     private CreditProcessMapper creditProcessDao;
+    @Autowired
+    private CreditResultMapper creditResultDao;
     @Autowired
     private CreditProcessLogMapper creditProcessLogDao;
     @Autowired
@@ -77,11 +83,36 @@ public class CreditInfoServiceImpl implements CreditInfoService {
     @Override
     @Transactional
     public String createCreditInfo(CreditProcess suggestInfo) {
-        logger.info("createSuggestInfo begin");
+        logger.info("createCreditInfo begin");
         creditProcessDao.insert(suggestInfo);
-        logger.info("createSuggestInfo end");
+        logger.info("createCreditInfo end");
         return null;
     }
+
+    @Override
+    public int updateSuggestInfo(CreditProcess suggestInfo) {
+        logger.info("createCreditInfo begin");
+        int result = creditProcessDao.updateByPrimaryKey(suggestInfo);
+        logger.info("createCreditInfo end");
+        return result;
+    }
+
+    @Override
+    public String getNextUser(CreditProcess suggestInfo) {
+        String userId = "admin";
+        return userId;
+    }
+
+
+    @Override
+    @Transactional
+    public String createCreditResult(CreditResult suggestResult) {
+        logger.info("createCreditResult begin");
+        creditResultDao.insert(suggestResult);
+        logger.info("createCreditResult end");
+        return null;
+    }
+
 
     @Override
     public Boolean createAttachment(CreditAttachment before) {
@@ -99,6 +130,14 @@ public class CreditInfoServiceImpl implements CreditInfoService {
         }
         logger.info("getSuggestInfoList end");
         return list;
+    }
+
+    @Override
+    public CreditResult getCreditResult(String code) {
+        logger.info("getCreditResult begin");
+        CreditResult result = creditResultDao.selectByCode(code);
+        logger.info("getCreditResult end");
+        return result;
     }
 
     @Override

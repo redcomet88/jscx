@@ -174,8 +174,7 @@
      select 
     <include refid="Base_Column_List" />
     from t_dept_info
-    where sfydzh = 'N'
-    and flag = '0'
+    where  flag = '0'
     order by num
   </select>
   

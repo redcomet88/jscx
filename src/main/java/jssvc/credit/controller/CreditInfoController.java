@@ -13,10 +13,7 @@ import jssvc.base.service.BaseService;
 import jssvc.base.util.*;
 import jssvc.credit.enums.CreditProcessStatus;
 import jssvc.credit.enums.CreditStatusResult;
-import jssvc.credit.model.CreditAttachment;
-import jssvc.credit.model.CreditIndex;
-import jssvc.credit.model.CreditProcess;
-import jssvc.credit.model.CreditProcessLog;
+import jssvc.credit.model.*;
 import jssvc.credit.service.CreditIndexService;
 import jssvc.credit.service.CreditInfoService;
 import jssvc.credit.service.CreditReportService;
@@ -25,11 +22,10 @@ import jssvc.credit.vo.CreditIndexVo;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditIndexSearchFilter;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
-import jssvc.user.model.InstitutionInfo;
-import jssvc.user.model.MenuFunction;
-import jssvc.user.model.Role;
-import jssvc.user.model.User;
+import jssvc.user.model.*;
+import jssvc.user.model.filter.UserSearchFilter;
 import jssvc.user.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +71,18 @@ public class CreditInfoController extends BaseController {
     private String currentUser;
 
     /**
+     * 主办部室下拉列表
+     * @throws IOException
+     */
+    @RequestMapping("ajax/suggestInfo_selectZbbs.do")
+    @ResponseBody
+    public void selectZbbs() throws IOException {
+        List<InstitutionInfo> list = userService.getHeadBankList();
+        String json = JSON.Encode(list);
+        response.getWriter().write(json);
+    }
+
+    /**
      * @description:转入信用事件页面
      *
      * @author: redcomet
@@ -111,7 +119,7 @@ public class CreditInfoController extends BaseController {
     }
 
 
-    @RequestMapping("showCreditReport.do")
+    @RequestMapping("addCreditInfoApply.do.do")
     public ModelAndView showCreditReport() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("credit/creditReport");
@@ -212,6 +220,84 @@ public class CreditInfoController extends BaseController {
     }
 
     /**
+     * 流程审批提交
+     * @param suggestForm 数据主体
+     * @param star 行领导评价
+     * @param id 流程id
+     * @param result 处理结果:同意 拒绝 流转
+     * @param step 第几步
+     * @throws IOException
+     * @throws BusinessException
+     */
+    @SuppressWarnings("rawtypes")
+    @RequestMapping("ajax/suggestInfo_updateSuggestInfo.do")
+    @ResponseBody
+    public void updateSuggestInfo(String suggestForm, String star, int id, String result, String step) throws IOException, BusinessException {
+
+        try {
+            Map suggest = (Map) JSON.Decode(suggestForm);
+            User user = getSessionUser();
+            String dah = user.getDah();
+            if (suggest != null && !suggest.isEmpty()) {
+                CreditProcess suggestInfo = creditInfoService.selectByPrimaryKey(id);
+                if (suggestInfo != null) {
+                    if (!dah.equals(suggestInfo.getApplyUser())) {
+                        response.getWriter().write("done");
+                    } else {
+                        //正常的流程从这里开始
+                        String approveOpinion = null;
+                        String currentStatus = suggestInfo.getApplyStatus();
+                        //1如果状态是流转
+                        if (CreditStatusResult.transfer.getId().equals(result)) {
+                            String transferUser = null;
+                            if (suggest.get("transferUser") != null) {
+                                transferUser = suggest.get("transferUser").toString();
+                                suggestInfo.setCurrentuser(transferUser);
+                            }
+                            //creditInfoService.updateSuggestInfo(suggestInfo);
+
+                            insertProcessLog(suggestInfo.getCode(), dah, transferUser, new Date(), currentStatus, "任务内部人员流转",
+                                    CreditStatusResult.valueOf(result).getName());
+                            response.getWriter().write("success");
+                            return;
+                        }
+                        //如果状态是审批通过
+                        else if (CreditStatusResult.pass.getId().equals(result)) {
+
+                            if (suggest.get("handleResult") != null) { // 领导意见
+                                suggestInfo.setHandleResult(suggest.get("handleResult").toString());
+                            }
+                            if (suggest.get("specificInfo") != null) {
+                                suggestInfo.setSpecificInfo(suggest.get("specificInfo").toString());
+                            }
+                            if (suggest.get("column2") != null) {// 部门负责人上班意见，退回时必填
+                                suggestInfo.setColumn2(suggest.get("column2").toString());
+                            }
+
+                        }
+                        suggestInfo.setStatus(result);
+                        suggestInfo.setUpdateTime(new Date());
+
+                        String nextStatus = SuggestProcessUtil.getNextProcessStatus(currentStatus, result, step);
+
+                        suggestInfo.setApplyStatus(nextStatus);
+                        String currentUser = creditInfoService.getNextUser(suggestInfo);
+                        suggestInfo.setCurrentuser(currentUser);
+                        creditInfoService.updateSuggestInfo(suggestInfo);
+                    }
+                    response.getWriter().write("success");
+                }
+
+            }
+
+        }catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        }
+    }
+
+
+
+    /**
      * @description:插入诚信流程日志
      *
      * @author: redcomet
@@ -251,6 +337,7 @@ public class CreditInfoController extends BaseController {
             User user = getSessionUser();
             if (suggest != null && !suggest.isEmpty()) {
                 CreditProcess suggestInfo = new CreditProcess();
+                CreditResult creditResult = new CreditResult();
                 if (suggest.get("suggestTitle") != null) {
                     suggestInfo.setCreditTitle(suggest.get("suggestTitle").toString());
                 }
@@ -259,6 +346,7 @@ public class CreditInfoController extends BaseController {
                 }
                 if (suggest.get("code") != null) {
                     suggestInfo.setCode(suggest.get("code").toString());
+                    creditResult.setCode(suggest.get("code").toString());
                 }
                 if (suggest.get("applyTime") != null) {
                     suggestInfo.setApplyTime(DateUtil.parser(suggest.get("applyTime").toString()));
@@ -266,6 +354,16 @@ public class CreditInfoController extends BaseController {
                 if (suggest.get("secondaryCombo") != null) {
                     suggestInfo.setColumn1(suggest.get("secondaryCombo").toString());
                 }
+                if (suggest.get("unCreditDah") != null) {
+                    creditResult.setDah(suggest.get("unCreditDah").toString());
+                }
+                if (suggest.get("unCreditName") != null) {
+                    creditResult.setColumn1(suggest.get("unCreditName").toString());
+                }
+                if (suggest.get("unCreditDept") != null) {
+                    creditResult.setColumn2(suggest.get("unCreditDept").toString());
+                }
+
                 suggestInfo.setApplyUser(user.getDah());
                 suggestInfo.setApplyDept(getSessionJgh());
                 suggestInfo.setApplyTime(new Date());
@@ -287,7 +385,10 @@ public class CreditInfoController extends BaseController {
                //suggestInfo.setManagerUser(currentUser);
                 suggestInfo.setCurrentuser(currentUser);
                 creditInfoService.createCreditInfo(suggestInfo);
-               
+
+                //添加诚信事件处理结果
+                creditInfoService.createCreditResult(creditResult);
+
                 insertProcessLog(suggestInfo.getCode(), PROPOUNDER, ADMIN_EN, new Date(), CreditProcessStatus.suggestionApplyStart.getId(), "诚信事件提交",
                         CreditStatusResult.pass.getName());
             }
@@ -535,6 +636,7 @@ public class CreditInfoController extends BaseController {
             ModelAndView mv = new ModelAndView();
             mv.setViewName(ConstantKey.CREDIT_INFO_APPLY);
             mv.addObject("flag", flag);
+            logger.info("flag=" + flag);
             if (!"add".equals(flag)) {
                 CreditProcess suggestInfo = creditInfoService.selectByPrimaryKey(Integer.valueOf(id));
                 mv.addObject("id", id);
@@ -546,6 +648,15 @@ public class CreditInfoController extends BaseController {
                 mv.addObject("applybank", suggestInfo.getApplyDept());
                 mv.addObject("maindepartment", suggestInfo.getApplyDept());
                 mv.addObject("minordepartment", suggestInfo.getApplyDept());
+                mv.addObject("specificInfo", suggestInfo.getSpecificInfo());
+                mv.addObject("handleResult", suggestInfo.getHandleResult());
+                CreditIndexVo indexVo = creditIndexService.getCreditIndex(suggestInfo.getColumn1());
+                mv.addObject("secondaryCombo",indexVo.getName() );
+                mv.addObject("topCombo",indexVo.getTopIndexName() );
+                CreditResult creditResult = creditInfoService.getCreditResult(suggestInfo.getCode());
+                mv.addObject("unCreditDah",creditResult.getDah());
+                mv.addObject("unCreditName",creditResult.getColumn1());
+                mv.addObject("unCreditDeptName",creditResult.getColumn2());
                 if (user.getDah().equals(suggestInfo.getApplyUser())) {
                     mv.addObject("roleName", "suggestor");
                 }
