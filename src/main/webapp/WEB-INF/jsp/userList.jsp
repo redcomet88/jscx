@@ -26,10 +26,11 @@
                     <td style="width:60px;text-align:right;">机构：</td>
                     <td style="width:35%">
                         <input id="jgh" name="jgh" class="mini-treeselect" style="width:100%;" textField="jgmc"
-                        valueField="jgh" parentField="sjjg" expandOnLoad="0" allowInput="true">
+                        valueField="jgh" parentField="sjjg" expandOnLoad="0"
+                         allowInput="true">
                         </input>
                     </td>
-                    <td style="width:60px;text-align:right;">员工号：</td>
+                    <td style="width:60px;text-align:right;">工号：</td>
                     <td style="width:15%">
                         <input id="dah" name="dah" class="mini-textbox" style="width:100%;"/>
                     </td>
@@ -37,7 +38,7 @@
                     <td style="width:15%">
                         <input id="ygxm" name="ygxm" class="mini-textbox" style="width:100%;"/>
                     </td>
-                    <td style="width:70px;text-align:right;">员工状态：</td>
+                    <td style="width:70px;text-align:right;">状态：</td>
                     <td style="width:15%">
                         <input id="flag" name="flag" class="mini-combobox" showNullItem="true" textField="text" valueField="id" style="width:100%;"/>
                     </td>
@@ -50,16 +51,13 @@
             url="<%=request.getContextPath()%>/ajax/user_getUsers.do" allowResize="true" idField="dah" pageSize="50">
                 <div property="columns">
                     <div type="indexcolumn" headerAlign="center">序号</div>
-                    <div field="dah" width="60" allowSort="true" align="center" headerAlign="center">员工号</div>
-                    <div field="ygxm" width="80" allowSort="true" align="center" headerAlign="center">员工姓名</div>
-                    <div field="mjkkh" width="100" allowSort="true" align="center" headerAlign="center">门禁卡卡号</div>
-                    <div field="jgmc" width="120" allowSort="false" align="center" headerAlign="center">机构</div>
+                    <div field="dah" width="60" allowSort="true" align="center" headerAlign="center">工号</div>
+                    <div field="ygxm" width="80" allowSort="true" align="center" headerAlign="center">姓名</div>
+                    <div field="jgmc" width="120" allowSort="false" align="center" headerAlign="center">部门</div>
                     <div field="sexName" width="40" allowSort="false" align="center" headerAlign="center">性别</div>
                     <div field="email" width="120" allowSort="true" align="center" headerAlign="center">邮箱</div>
                     <div field="mobile" width="100" allowSort="true" align="center" headerAlign="center">电话号码</div>
-                    <div field="sfzh" width="140" allowSort="true" align="center" headerAlign="center">身份证号</div>
-                    <div field="gwdjName" width="80" allowSort="false" align="center" headerAlign="center">岗位</div>
-                    <div field="flagName" width="60" allowSort="false" align="center" headerAlign="center">员工状态</div>
+                    <div field="flagName" width="60" allowSort="false" align="center" headerAlign="center">状态</div>
                     <div name="active" width="120" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
                 </div>
             </div>

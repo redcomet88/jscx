@@ -135,6 +135,7 @@
                 var record = e.record;
                 var user = record.applyUser;
                 var status = record.applyStatus;
+                var status2 = record.status;
                 var uid = record._uid;
                 var s = "";
                 if(status != 'processEnd' && status != "suggestionApplyEnd" && user == userNo){
@@ -142,8 +143,11 @@
                 }else{
 	               	s = s + '<a class="Edit_Button" style="width:80px;" href="javascript:detailRow(\'' + uid + '\')">查看</a>';
                 }
-                if(status == "adminAccept" && userNo == user){
-	               	s = s + '<a class="Edit_Button" style="width:80px;" href="javascript:recallRow(\'' + uid + '\')">撤回</a>';
+                if(status == "departmentHandle" && userNo == user){
+	               	s = s + '<a class="Edit_Button" style="width:80px;" href="#">撤回</a>';
+                }
+                if(status == "departmentHandle" && status2 == "refuse"){
+                    s = s + '<a class="Edit_Button" style="width:80px;" href="javascript:detailRow(\'' + uid + '\')">重新编辑</a>';
                 }
                 return s;
             }

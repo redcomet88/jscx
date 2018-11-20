@@ -18,19 +18,19 @@
     </head>
     <body id="userBody" style="display: none">
         <div id="userDiv" style="height:100%;border:0px solid #e0e0e0;">
-            <div style="height:26px;width:100%;text-indent:5px;font-weight:bold;font-family:Simsun;font-size:14px;line-height:26px;">员工基本信息
+            <div style="height:26px;width:100%;text-indent:5px;font-weight:bold;font-family:Simsun;font-size:14px;line-height:26px;">老师基本信息
             </div>
             <form id="userForm">
             <table id="userTbl" border="0" cellpadding="10" cellspacing="2" style="width:85%;height:95%;" align="right">
                 <tr>
-                    <td style="text-align:right;width:90px;">档案号：</td>
+                    <td style="text-align:right;width:90px;">工号：</td>
                     <td style="width:80%;">
                         <input id="dah" name="dah" class="mini-textbox" style="width:250px;" required="true" vtype="rangeChar:1,10;" value="${userInfo.dah}"/>
                         <input id="action" name="action" class="mini-hidden" value="${action}" />
                     </td>
                 </tr>
                 <tr>
-                    <td style="text-align:right;">员工姓名：</td>
+                    <td style="text-align:right;">姓名：</td>
                     <td>
                         <input id="ygxm" name="ygxm" class="mini-textbox" style="width:250px;" required="true" vtype="rangeChar:1,120" value="${userInfo.ygxm}"/>
                     </td>
@@ -42,7 +42,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="text-align:right;">机构：</td>
+                    <td style="text-align:right;">部门：</td>
                     <td>
                         <input id="jgh" name="jgh" class="mini-treeselect" style="width:250px;" multiSelect="true" value="${jgxx}"
                         textField="jgmc" valueField="jgh" parentField="sjjg" url="<%=request.getContextPath()%>/ajax/user_getJgList.do"

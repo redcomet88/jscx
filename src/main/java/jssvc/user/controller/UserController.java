@@ -329,6 +329,79 @@ public class UserController extends BaseController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping("ajax/user_initUserList.do")
+    private void initUserList(String id) throws BusinessException {
+        try {
+            // 取得机构列表
+            List<InstitutionInfo> jgxx = getJgxxList();
+            // 取得员工状态列表
+            List<HashMap<String, String>> maps = UserStatus.getUserStatusList();
+            // 取得功能权限列表
+            List<MenuFunction> menuFunctions = getMenuFunction(id);
+            // 查询员工权限
+            Boolean searchFlag = false;
+            // 创建员工权限
+            Boolean addFlag = false;
+            // 更新/启用员工权限
+            Boolean editFlag = false;
+            // 停用员工权限
+            Boolean delFlag = false;
+            // 密码重置权限
+            Boolean pwdFlag = false;
+            // 批量添加拼音权限
+            Boolean batchPinyinFlag = false;
+            // 单独添加拼音权限
+            Boolean pinyinFlag = false;
+            // 判断登录者是否具有创建员工、更新/启用员工、停用员工、密码重置权限
+            for (int i = 0; i < menuFunctions.size(); i++) {
+                switch (ActionType.valueOf(menuFunctions.get(i).getFunctionAction())) {
+                    case user_getUsers:
+                        searchFlag = true;
+                        break;
+                    case user_addUser:
+                        addFlag = true;
+                        break;
+                    case user_updateUser:
+                        editFlag = true;
+                        break;
+                    case user_deleteUser:
+                        delFlag = true;
+                        break;
+                    case user_resetPwd:
+                        pwdFlag = true;
+                        break;
+                    case user_batchAddPinyin:
+                        batchPinyinFlag = true;
+                        break;
+                    case user_addPinyin:
+                        pinyinFlag = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_JGH_LIST, jgxx);
+            hashmap.put(ConstantKey.KEY_YGZT, maps);
+            hashmap.put(ConstantKey.SEARCH_FLAG, searchFlag);
+            hashmap.put(ConstantKey.ADD_FLAG, addFlag);
+            hashmap.put(ConstantKey.EDIT_FLAG, editFlag);
+            hashmap.put(ConstantKey.DEL_FLAG, delFlag);
+            hashmap.put(ConstantKey.PWD_FLAG, pwdFlag);
+            hashmap.put("batchPinyinFlag", batchPinyinFlag);
+            hashmap.put("pinyinFlag", pinyinFlag);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
     /**
      * @description:获取用户
      *

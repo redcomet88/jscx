@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>机构管理</title>
+        <title>部门管理</title>
         <script src="<%=request.getContextPath()%>/resources/scripts/boot.js" type="text/javascript"></script>
         <link href="<%=request.getContextPath()%>/resources/css/miniui_style.css" type="text/css" rel="stylesheet" />
     </head>
@@ -34,16 +34,16 @@
                 </tr>
             </table>
         </div>
-        <div style="display:none;width:350px;" id="jgDiv" title="机构信息" class="mini-window">
+        <div style="display:none;width:350px;" id="jgDiv" title="部门信息" class="mini-window">
             <table border="0" cellpadding="8" style="width:100%;table-layout:fixed;">
                 <tr>
-                    <td style="width:60px;">机构号：</td>
+                    <td style="width:60px;">部门号：</td>
                     <td style="width:90%;">
                         <input id="jgh" name="jgh" class="mini-textbox" style="width:90%;"/>
                     </td>
                 </tr>
                 <tr>
-                    <td>机构名：</td>
+                    <td>部门名：</td>
                     <td>
                         <input id="jgmc" name="jgmc" class="mini-textbox" style="width:90%;"/>
                         <input id="action" name="action" class="mini-hidden"/>

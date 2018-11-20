@@ -18,7 +18,7 @@
             <table style="width:100%;table-layout:fixed;">
                 <tr>
                     <td style="width:30%"></td>
-                    <td style="width:50px;">机构：</td>
+                    <td style="width:50px;">部门：</td>
                     <td style="width:20%">
                         <input id="jgh" name="jgh" class="mini-treeselect" style="width:100%;" textField="jgmc"
                         valueField="jgh" parentField="sjjg" expandOnLoad="0" allowInput="true">

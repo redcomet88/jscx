@@ -21,7 +21,7 @@
                         <a class="mini-button" id="roleSet" onclick="roleSet()">角色分配</a>
                         <a class="mini-button" id="dataAuthoritySet" onclick="dataAuthoritySet()">数据权限分配</a>
                     </td>
-                    <td style="width:90px;text-align:right;"">机构：</td>
+                    <td style="width:90px;text-align:right;"">部门：</td>
                     <td style="width:20%;">
                         <input id="jgh" class="mini-treeselect" style="width:100%;"
                             textField="jgmc" valueField="jgh" parentField="sjjg" showClose="true" 
@@ -31,7 +31,7 @@
                     <td style="width:15%;">
                         <input id="roleName" class="mini-textbox" emptyText="请输入角色名称" style="width:100%;" onenter="onKeyEnter"/>
                     </td>
-                    <td style="width:90px;text-align:right;"">员工姓名：</td>
+                    <td style="width:90px;text-align:right;"">老师姓名：</td>
                     <td style="width:15%;">
                         <input id="ygxm" class="mini-textbox" emptyText="请输入员工姓名" style="width:100%;" onenter="onKeyEnter"/>
                     </td>
@@ -47,8 +47,8 @@
                 <div property="columns">
                     <div type="indexcolumn" headerAlign="center">序号</div>
                     <div field="dah" width="16%" allowSort=true>档案号</div>
-                    <div field="ygxm" width="28%" allowSort="false">员工姓名</div>
-                    <div field="jgmc" width="28%" allowSort="false">机构</div>
+                    <div field="ygxm" width="28%" allowSort="false">老师姓名</div>
+                    <div field="jgmc" width="28%" allowSort="false">部门</div>
                     <div field="roleName" width="28%" allowSort="false">角色名称</div>
                 </div>
             </div>
