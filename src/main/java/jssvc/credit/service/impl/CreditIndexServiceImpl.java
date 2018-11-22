@@ -1,5 +1,8 @@
 package jssvc.credit.service.impl;
 
+import jssvc.base.constant.ConstantMessage;
+import jssvc.base.exception.BusinessException;
+import jssvc.base.util.JSON;
 import jssvc.credit.dao.CreditIndexMapper;
 import jssvc.credit.model.CreditIndex;
 import jssvc.credit.service.CreditIndexService;
@@ -9,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 
@@ -55,5 +60,19 @@ public class CreditIndexServiceImpl implements CreditIndexService {
         CreditIndexVo index  = creditIndexDao.selectVoByPrimaryKey(id);
         logger.info("getCreditIndex end");
         return index;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateCreditIndex(CreditIndex index) throws BusinessException {
+        boolean flag = true;
+        try {
+            // 更新指标信息
+            creditIndexDao.updateByPrimaryKeySelective(index);
+        } catch (RuntimeException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new BusinessException(ConstantMessage.ERR00010, e);
+        }
+        return flag;
     }
 }

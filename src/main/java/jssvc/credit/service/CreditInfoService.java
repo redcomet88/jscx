@@ -110,6 +110,16 @@ public interface CreditInfoService {
     List<CreditProcessVo> getCreditInfoList(CreditProcessSearchFilter filter);
 
     /**
+     * @description:根据编号获取诚信事件信息
+     *
+     * @author: redcomet
+     * @param: [code]
+     * @return: jssvc.credit.model.CreditProcess
+     * @create: 2018/11/20
+     **/
+    CreditProcess getSuggestParticularsByCode(String code);
+
+    /**
      * @description:获取诚信事件流程列表计数
      *
      * @author: redcomet
@@ -128,4 +138,25 @@ public interface CreditInfoService {
      * @create: 2018/11/15 
      **/
     CreditResult getCreditResult(String code);
+
+    /**
+     * @description:获取附件列表
+     *
+     * @author: redcomet
+     * @param: [suggestbh]
+     * @return: java.util.List<SuggestAttachment>        
+     * @create: 2018/11/20 
+     **/
+    List<CreditAttachment> getSuggestbhAttachments(String suggestbh) throws SQLException;
+
+    /**
+     * @description:删除事件附件
+     *
+     * @author: redcomet
+     * @param: [valueOf]
+     * @return: boolean        
+     * @create: 2018/11/20 
+     **/
+    boolean deleteSuggestAttachment(Long valueOf) throws SQLException;
+
 }

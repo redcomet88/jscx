@@ -79,7 +79,7 @@ public enum ActionType {
     zcwx_applyZcWx("申请维修"), zcbf_applyZcBf("申请报废"), zcwx_approveWx("审批/授权（资产维修）"), zcwx_confirmBfResult("审批/授权（资产报废）"), zcwx_confirmWxResult("确认维修结果"),
 
     cg_addCgInfo("新增采购申请"),addZcWpTypeInfo("采购物品类型新增"),updZcWpTypeInfo("采购物品类型修改"),delZcWpTypeInfo("采购物品类型管理删除"),
-
+    credit_addIndex("增加诚信指标"), credit_editIndex("编辑诚信指标"),credit_delIndex("删除诚信指标"),
     addBxdProcessConfigInfo("添加费用报销流程配置"),updBxdProcessConfigInfo("修改费用报销流程配置"),delBxdProcessConfigInfo("删除费用报销流程配置"),
     rkInfo_getRkInfoList(""),
 

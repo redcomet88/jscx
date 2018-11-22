@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -102,7 +103,14 @@ public class CreditInfoController extends BaseController {
         mv.addObject("userNo", userNo);
         return mv;
     }
-    
+
+    @RequestMapping("showCreditReport.do")
+    public ModelAndView showCreditRport() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("credit/creditReport");
+        return mv;
+    }
+
     /**
      * @description:转入信用指标管理页面
      *
@@ -112,18 +120,44 @@ public class CreditInfoController extends BaseController {
      * @create: 2018/10/22 
      **/
     @RequestMapping("showCreditIndex.do")
-    public ModelAndView showCreditIndex() {
+    public ModelAndView showCreditIndex(String id) {
         ModelAndView mv = new ModelAndView();
+        logger.info("showCreditIndex menuid=" + id);
         mv.setViewName("credit/creditIndexList");
         return mv;
     }
 
-
-    @RequestMapping("addCreditInfoApply.do.do")
-    public ModelAndView showCreditReport() {
+    @RequestMapping("showIndexUpdPop.do")
+    public ModelAndView showIndexUpdPop(String id) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("credit/creditReport");
+        mv.setViewName("credit/creditIndexPop");
         return mv;
+    }
+
+    /**
+     * @description:获取诚信指标信息
+     *
+     * @author: redcomet
+     * @param: [filter]
+     * @return: void        
+     * @create: 2018/11/22 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/credit_getCreditIndex.do")
+    private void getCreditIndex(String id) throws BusinessException {
+        try {
+            User user = getSessionUser();
+
+            CreditIndexVo index = creditIndexService.getCreditIndex(id);
+            //返回数据
+            Map<String, Object> result = new HashMap<>();
+            result.put("data", index);
+            response.getWriter().write(JSON.Encode(result));
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -156,6 +190,60 @@ public class CreditInfoController extends BaseController {
             throw new BusinessException(ConstantMessage.ERR00004, e);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * @description:初始化Index列表菜单内的一些权限操作
+     *
+     * @author: redcomet
+     * @param: [id]
+     * @return: void        
+     * @create: 2018/11/21 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/credit_initIndexList.do")
+    private void initIndexList(String id) throws BusinessException {
+        try {
+            // 取得机构列表
+            List<InstitutionInfo> jgxx = getJgxxList();
+            // 取得功能权限列表
+            List<MenuFunction> menuFunctions = getMenuFunction(id);
+            // 编辑指标权限
+            Boolean editFlag = false;
+            // 创建指标权限
+            Boolean addFlag = false;
+            // 停用指标权限
+            Boolean delFlag = false;
+            // 判断登录者是否具有创建员工、更新/启用员工、停用员工、密码重置权限
+            for (int i = 0; i < menuFunctions.size(); i++) {
+                switch (ActionType.valueOf(menuFunctions.get(i).getFunctionAction())) {
+                    case credit_addIndex:
+                        addFlag = true;
+                        break;
+                    case credit_editIndex:
+                        editFlag = true;
+                        break;
+                    case credit_delIndex:
+                        delFlag = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            HashMap<String, Object> hashmap = new HashMap<String, Object>();
+            hashmap.put(ConstantKey.KEY_JGH_LIST, jgxx);
+            hashmap.put(ConstantKey.ADD_FLAG, addFlag);
+            hashmap.put(ConstantKey.EDIT_FLAG, editFlag);
+            hashmap.put(ConstantKey.DEL_FLAG, delFlag);
+            String json = JSON.Encode(hashmap);
+            response.getWriter().write(json);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
         }
     }
 
@@ -216,6 +304,29 @@ public class CreditInfoController extends BaseController {
             return mv;
         } catch (NullPointerException e) {
             throw new BusinessException(ConstantMessage.ERR00004, e);
+        }
+    }
+
+    /**
+     * @description:更新诚信指标
+     *
+     * @author: redcomet
+     * @param: [index]
+     * @return: void        
+     * @create: 2018/11/22 
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/credit_updateCreditIndex.do")
+    private void updateCreditIndex(CreditIndex index) throws BusinessException {
+        try {
+            // 更新指标信息
+            creditIndexService.updateCreditIndex(index);
+
+            response.getWriter().write(ConstantKey.SUCCESS);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
         }
     }
 
@@ -619,6 +730,39 @@ public class CreditInfoController extends BaseController {
         return "credit/creditAttachmentList";
     }
 
+    @RequestMapping("listSuggestAttachment.do")
+    @ResponseBody
+    public void listSuggestAttachment(String suggestbh, String area) throws BusinessException {
+        response.setCharacterEncoding("UTF-8");
+        try {
+            User currentUser = getSessionUser();
+
+            List<CreditAttachment> creditAttachments = creditInfoService.getSuggestbhAttachments(suggestbh);
+            CreditProcess suggestInfo = creditInfoService.getSuggestParticularsByCode(suggestbh);
+            List<Role> roles = userService.getRolesByDah(currentUser.getDah());
+
+            List<CreditAttachment> advicerAttachment = new ArrayList<>();
+            //List<CreditAttachment> officerAttachment = new ArrayList<>();
+            //List<CreditAttachment> governerAttachment = new ArrayList<>();
+
+            for (CreditAttachment attachment : creditAttachments) {
+                advicerAttachment.add(attachment);
+            }
+
+            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+            hashMap.put("data", advicerAttachment);
+
+            String json = JSON.Encode(hashMap);
+            response.getWriter().write(json);
+        } catch (FileNotFoundException e) {
+            throw new BusinessException(ConstantMessage.ERR00007, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        }
+    }
+
     /**
      * @description:显示诚信事件编辑/显示 页面
      *
@@ -848,4 +992,53 @@ public class CreditInfoController extends BaseController {
             throw new BusinessException(ConstantMessage.ERR00005, e);
         }
     }
+
+    /**
+     * 下载附件
+     * @return SUCCESS 成功 FAIL 失败
+     */
+    @RequestMapping(value = "fileDownloadCg.do", method = RequestMethod.POST)
+    public void fileDownloadCg(String fileName, String path) {
+        response.setCharacterEncoding("UTF-8");
+        // 下载附件
+        path = request.getSession().getServletContext().getRealPath(path);
+        FileUtil.downloadFile(request, response, new File(path), fileName);
+    }
+    
+    /**
+     * @description:删除附件
+     *
+     * @author: redcomet
+     * @param: []
+     * @return: void        
+     * @create: 2018/11/20 
+     **/
+    @RequestMapping("delSuggestAttachment.do")
+    @ResponseBody
+    public void delSuggestAttachment() throws BusinessException {
+        response.setCharacterEncoding("UTF-8");
+        try {
+            String id = request.getParameter("id");
+            String filePath = request.getParameter("filePath");
+            String webFileName = request.getParameter("webFileName");
+            boolean blnFlag = creditInfoService.deleteSuggestAttachment(Long.valueOf(id));
+            if (blnFlag) {
+                // 删除附件文件
+                String rootPath = request.getSession().getServletContext().getRealPath(filePath);
+                String path = rootPath + "/" + webFileName;
+                FileUtil.deleteFile(path);
+                response.getWriter().write("SUCCESS");
+            } else {
+                response.getWriter().write("FAIL");
+            }
+        } catch (FileNotFoundException e) {
+            throw new BusinessException(ConstantMessage.ERR00007, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        } catch (SQLException e) {
+            throw new BusinessException(ConstantMessage.ERR00003, e);
+        }
+    }
+
+
 }

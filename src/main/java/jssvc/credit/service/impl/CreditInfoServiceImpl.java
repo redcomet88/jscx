@@ -121,6 +121,21 @@ public class CreditInfoServiceImpl implements CreditInfoService {
         return true;
     }
 
+    /**
+     * 根据编号查询附件信息
+     */
+    @Override
+    public List<CreditAttachment> getSuggestbhAttachments(String suggestbh) {
+        List<CreditAttachment> suggestAttachments = creditAttachmentDao.selectSuggestbhAttachmentsBySuggestbh(suggestbh);
+        return suggestAttachments;
+    }
+
+    @Override
+    public boolean deleteSuggestAttachment(Long valueOf) {
+        creditAttachmentDao.deleteSuggestAttachmentById(valueOf);
+        return true;
+    }
+
     @Override
     public List<CreditProcessVo> getCreditInfoList(CreditProcessSearchFilter filter) {
         logger.info("getSuggestInfoList begin");
@@ -130,6 +145,14 @@ public class CreditInfoServiceImpl implements CreditInfoService {
         }
         logger.info("getSuggestInfoList end");
         return list;
+    }
+
+    @Override
+    public CreditProcess getSuggestParticularsByCode(String code) {
+        logger.info("getSuggestParticularsByCode begin");
+        CreditProcess suggestInfo = creditProcessDao.selectBySuggestCode(code);
+        logger.info("getSuggestParticularsByCode end");
+        return suggestInfo;
     }
 
     @Override

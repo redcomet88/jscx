@@ -18,49 +18,49 @@
             <table style="width:100%;table-layout:fixed;">
                 <tr>
                     <td style="width:30%"></td>
-                    <td style="width:70px;">一级指标：</td>
-                    <td style="width:15%">
+                    <td style="width:120px">
+                        <a class="mini-button" style="width:120px" iconCls="icon-add" id="add" onclick="add()">创建指标</a>
+                    </td>
+                    <td style="width:50px;">一级指标：</td>
+                    <td style="width:80px">
                         <input id="topCombo" name="topCombo" class="mini-combobox" style="width:100%;" url="<%=request.getContextPath()%>/ajax/credit_creditIndexOption.do"
                                emptyText="----快速选择----" textField="name" valueField="id"  />
                     </td>
                     <td style="width:1%"></td>
-                    <td style="width:70px;">指标名称：</td>
-                    <td style="width:10%">
-                        <input id="ygxm" name="ygxm" class="mini-textbox" style="width:100%;"/>
+                    <td style="width:50px;">指标名称：</td>
+                    <td style="width:80px">
+                        <input id="name" name="name" class="mini-textbox" style="width:100%;"/>
                     </td>
                     <td style="width:1%"></td>
 
-                    <td style="width:70px;">创建时间：</td>
-                    <td style="width:10%">
-                        <input id="fromDate" name="fromDate" class="mini-datepicker" style="width:100%;"/>
-                    </td>
-                    <td style="width:4%">
-                        &nbsp;～&nbsp;
-                    </td>
-                    <td style="width:10%">
-                        <input id="toDate" name="toDate" class="mini-datepicker" style="width:100%;"/>
-                    </td>
+
                     <td style="width:70px"><a class="mini-button" id="search" onclick="search()" style="width:100%;">查询</a></td>
                 </tr>
+
             </table>
         </div>
         <div class="mini-fit">  
             <div id="datagrid1" class="mini-datagrid"  allowAlternating="true" style="width:100%;height:100%;"
             url="<%=request.getContextPath()%>/ajax/credit_creditIndexList.do" allowResize="true" idField="id" pageSize="50">
                 <div property="columns">
-                    <div type="indexcolumn" width="5%" headerAlign="center">序号</div>
-                    <div field="topIndexName" width="8%" allowSort="true" align="center" headerAlign="center">一级指标</div>
-                    <div field="name" width="42%" allowSort="false" align="left" headerAlign="center">二级指标</div>
-                    <div field="creditAction" width="45%" allowSort="false" align="left" headerAlign="center">失信行为</div>
+                    <div type="indexcolumn" width="40" headerAlign="center">序号</div>
+                    <div name="active" width="120" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
+                    <div field="topIndexName" width="150" allowSort="true" align="center" headerAlign="center">一级指标</div>
+                    <div field="name" width="600" allowSort="false" align="left" headerAlign="center">二级指标</div>
+                    <div field="weight" width="50" allowSort="false" align="right" headerAlign="center">权重</div>
+                    <div field="creditAction" width="600" allowSort="false" align="left" headerAlign="center">失信行为</div>
                 </div>
             </div>
         </div>
         <script type="text/javascript">
             mini.parse();
             $("#logBody").fadeTo("slow", 1);
+            var editFlag = true;
+            var delFlag = true;
+
             $(document).ready(function() {
                 $.ajax({
-                    url: "<%=request.getContextPath()%>/ajax/log_initLogList.do",
+                    url: "<%=request.getContextPath()%>/ajax/credit_initIndexList.do",
                     data:{id: "<%=request.getParameter("id")%>"},
                     type: "post",
                     dataType: 'text',
@@ -69,9 +69,9 @@
                         // 绑定机构列表
                         var tree = mini.get("jgh");
                         tree.loadList(data.jgxx);
-                        if (!data.searchFlag) {
-                            mini.get("search").setEnabled(false);
-                        }
+
+                        editFlag = data.editFlag;
+                        delFlag = data.delFlag;
                     }
                 });
             });
@@ -80,16 +80,50 @@
             grid.load();
             grid.sortBy("datetime", "desc");
 
+            // 操作列的生成
+            function onActionRenderer(e) {
+                var grid = e.sender;
+                var record = e.record;
+                var uid = record._uid;
+                var rowIndex = e.rowIndex;
+
+                var s = '';
+
+                // 编辑权限设定
+                if (editFlag) {
+                    s = s + '<a class="Edit_Button" href="javascript:editRow(\'' + uid + '\')">编辑</a>';
+                } else {
+                    s = s + '<a class="Edit_Button" style="color:gray" href="#">编辑</a>';
+                }
+                return s;
+            }
+
+            // 编辑操作按下的事件
+            function editRow(row_uid) {
+                var row = grid.getRowByUID(row_uid);
+                if (row) {
+                    mini.open({
+                        url: "<%=request.getContextPath()%>/showIndexUpdPop.do",
+                        title: "编辑诚信指标信息", width: 800, height: 640,
+                        onload: function () {
+                            var iframe = this.getIFrameEl();
+                            var data = { actionFlag: "edit", id: row.id };
+                            iframe.contentWindow.SetData(data);
+                        },
+                        ondestroy: function (action) {
+                            if (action == "ok") {
+                                grid.reload();
+                            }
+                        }
+                    });
+                }
+            }
+
             // 查询按钮按下的事件
             function search() {
-                var jgh = mini.get("jgh").getValue();
-                var type = mini.get("type").getValue();
-                var ygxm = mini.get("ygxm").getValue();
-                var object = mini.get("object").getValue();
-                var fromDate = mini.get("fromDate").getFormValue();
-                var toDate = mini.get("toDate").getFormValue();
-                grid.load({ 'jgh': jgh, 'type': type,
-                     'ygxm': ygxm,'object' : object ,'fromDate': fromDate, 'toDate':toDate});
+                var topIndexName = mini.get("topCombo").getText();
+                var name = mini.get("name").getValue();
+                grid.load({ 'topIndexName': topIndexName, 'name': name});
             }
 
         </script>

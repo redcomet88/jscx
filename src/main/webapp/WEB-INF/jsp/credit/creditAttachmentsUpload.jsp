@@ -38,7 +38,7 @@
                             <label for="textbox1$text">上传附件：</label>
                         </td>
                         <td id="file">
-                            <input class="mini-htmlfile" name="Fdata" id="file1" style="width:100%;" limitType="*.doc;*.docx;*.xls;*.xlsx;*.ppt;*.htm;*.html;*.txt;*.zip;*.rar;*.pdf"/>
+                            <input class="mini-htmlfile" name="Fdata" id="file1" style="width:100%;" limitType="*.doc;*.docx;*.xls;*.xlsx;*.ppt;*.htm;*.html;*.txt;*.zip;*.rar;*.pdf;*.jgp;*.png"/>
                         </td>
                         <td></td>
                     </tr>
@@ -49,7 +49,7 @@
                 <a class="mini-button" onclick="close">取消</a>
             </div>
             <div style="margin-top:1px;margin-left:30px;font-size:14px;color:red">
-              <span>※1 上传文件支持以下类型：doc,docx,xls,xlsx,ppt,xml,html,txt,zip,rar,pdf</span>
+              <span>※1 上传文件支持以下类型：doc,docx,xls,xlsx,ppt,xml,html,txt,zip,rar,pdf,jpg,png</span>
               <br />
               <span>※2 上传文件大小限制在10M以内</span>
             </div>

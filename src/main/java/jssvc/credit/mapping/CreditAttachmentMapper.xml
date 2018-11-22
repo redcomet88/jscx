@@ -273,4 +273,10 @@
       uploadname = #{uploadname,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectSuggestbhAttachmentsBySuggestbh" parameterType="java.lang.String" resultType="jssvc.credit.model.CreditAttachment">
+      select * from t_credit_attachment where suggestbh = #{suggestbh}
+  </select>
+  <delete id="deleteSuggestAttachmentById" parameterType="java.lang.Long">
+    delete from t_credit_attachment where id = #{0}
+  </delete>
 </mapper>

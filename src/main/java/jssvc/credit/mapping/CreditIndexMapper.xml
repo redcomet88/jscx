@@ -16,6 +16,27 @@
   <resultMap id="creditInfoVoMap" type="jssvc.credit.vo.CreditIndexVo" extends="BaseResultMap">
       <result column="topIndexName" property="topIndexName" jdbcType="VARCHAR"/>
   </resultMap>
+  <select id="getCreditIndexVo" resultMap="creditInfoVoMap" parameterType="jssvc.credit.vo.filter.CreditIndexSearchFilter">
+    select
+    a.*, b.name as topIndexName from  t_credit_index a ,t_credit_index b
+    where 1=1
+    and a.parrent_id = b.id
+    and a.level = #{level,jdbcType=INTEGER}
+    <if test="id != 0">
+      and a.id  = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="name != null and '' != name">
+      and a.name like  concat('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="topIndexName != null and '' != topIndexName">
+      and b.name like  concat('%',#{topIndexName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="dah != null and '' != dah and dah != 'admin' ">
+      and  a.column1 IN
+      ( select da.jgh  from  jscx.t_data_authority da ,jscx.t_user u
+      where  da.dah = u.dah and u.dah =  #{dah,jdbcType=VARCHAR})
+    </if>
+  </select>
   <select id="getCreditIndexList" resultMap="creditInfoVoMap" parameterType="jssvc.credit.vo.filter.CreditIndexSearchFilter">
       select
           a.*, b.name as topIndexName from  t_credit_index a ,t_credit_index b
@@ -323,7 +344,7 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="weight != null" >
+      <if test="weight != 0" >
         weight = #{weight,jdbcType=DOUBLE},
       </if>
       <if test="creditAction != null" >

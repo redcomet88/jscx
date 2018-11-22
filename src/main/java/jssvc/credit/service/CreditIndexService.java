@@ -1,5 +1,6 @@
 package jssvc.credit.service;
 
+import jssvc.base.exception.BusinessException;
 import jssvc.credit.model.CreditIndex;
 import jssvc.credit.vo.CreditIndexVo;
 import jssvc.credit.vo.filter.CreditIndexSearchFilter;
@@ -46,4 +47,7 @@ public interface CreditIndexService {
 
 
     CreditIndexVo getCreditIndex(String id);
+
+    boolean updateCreditIndex(CreditIndex index) throws BusinessException;
+
 }

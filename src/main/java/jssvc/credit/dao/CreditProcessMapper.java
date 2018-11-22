@@ -28,4 +28,7 @@ public interface CreditProcessMapper {
 
     int getCreditProcessListCount(CreditProcessSearchFilter filter);
 
+    CreditProcess selectBySuggestCode(String code);
+
+
 }

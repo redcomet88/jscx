@@ -27,4 +27,9 @@ public interface CreditAttachmentMapper {
     int updateByPrimaryKeySelective(CreditAttachment record);
 
     int updateByPrimaryKey(CreditAttachment record);
+
+    List<CreditAttachment> selectSuggestbhAttachmentsBySuggestbh(String suggestbh);
+
+    int deleteSuggestAttachmentById(Long valueOf);
+
 }

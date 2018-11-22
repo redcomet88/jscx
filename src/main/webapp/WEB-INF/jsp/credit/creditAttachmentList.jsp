@@ -31,11 +31,11 @@
 
             <div id="datagrid1" class="mini-datagrid"  allowAlternating="true" style="width:100%;height:30%;display: none" allowResize="true" idField="zh" pageSize="10" showPager="false"
                 url="<%=request.getContextPath()%>/listSuggestAttachment.do" >
-                <font size="3" style="height: 50px">&nbsp;&nbsp;建议人</font>
+                <font size="3" style="height: 50px">&nbsp;&nbsp;申请人</font>
                 <div property="columns">
                     <div type="indexcolumn" headerAlign="center">序号</div>
                     <div name="active" width="100" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
-                    <div field="suggestbh" width="100" headerAlign="center" align="center">合理化建议编号</div>
+                    <div field="suggestbh" width="100" headerAlign="center" align="center">事件编号</div>
                     <div field="uploadName" name="uploadName" style="display: none" width="100" headerAlign="center" align="center">上传者</div>
                     <div field="description" width="100" headerAlign="center" align="center">文件描述</div>
                     <div field="fileName" width="140" align="center" headerAlign="center">文件名</div>
@@ -43,35 +43,9 @@
                 </div>
             </div>
 
-            <font id="officer" style="display: none" size="3" >&nbsp;&nbsp;经办部门</font>
 
-            <div id="datagrid2" class="mini-datagrid"  allowAlternating="true" style="width:100%;height:30%;display: none" allowResize="true" idField="zh" pageSize="10" showPager="false"
-                 url="<%=request.getContextPath()%>/listSuggestAttachment.do" >
-                <div property="columns">
-                    <div type="indexcolumn" headerAlign="center">序号</div>
-                    <div name="active" width="100" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
-                    <div field="suggestbh" width="100" headerAlign="center" align="center">合理化建议编号</div>
-                    <div field="uploadName" name="uploadName" style="display: none" width="100" headerAlign="center" align="center">上传者</div>
-                    <div field="description" width="100" headerAlign="center" align="center">文件描述</div>
-                    <div field="fileName" width="140" align="center" headerAlign="center">文件名</div>
-                    <div field="uploadTime" width="140" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss">上传时间</div>
-                </div>
-            </div>
 
-            <font size="3" id="governor" style="display:none">&nbsp;&nbsp;行政管理部</font>
 
-            <div id="datagrid3" class="mini-datagrid"  allowAlternating="true" style="width:100%;height:30%;display: none" allowResize="true" idField="zh" pageSize="10" showPager="false"
-                 url="<%=request.getContextPath()%>/listSuggestAttachment.do" >
-                <div property="columns">
-                    <div type="indexcolumn" headerAlign="center">序号</div>
-                    <div name="active" width="100" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
-                    <div field="suggestbh" width="100" headerAlign="center" align="center">合理化建议编号</div>
-                    <div field="uploadName" name="uploadName" style="display: none" width="100" headerAlign="center" align="center">上传者</div>
-                    <div field="description" width="100" headerAlign="center" align="center">文件描述</div>
-                    <div field="fileName" width="140" align="center" headerAlign="center">文件名</div>
-                    <div field="uploadTime" width="140" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss">上传时间</div>
-                </div>
-            </div>
         </div>
         <script type="text/javascript">
             mini.parse();
@@ -154,10 +128,7 @@
 
                 var s = '';
                 s += '<a class="Edit_Button" href="javascript:downloadRow(\'' + path + '\',\'' + fileName + '\')">下载</a>';
-                if(path.endsWith(".rar") || path.endsWith(".zip"))
-                	s += '<a class="Edit_Button" style="color:grey;" href="javascript:void(0)">预览</a>';
-                else
-                	s += '<a class="Edit_Button" href="javascript:previewRow(\''+ path + '\')">预览</a>';
+
 
                 //if (deletePermission == "0") {
                 if(record.uploadName == "${user.ygxm}"){

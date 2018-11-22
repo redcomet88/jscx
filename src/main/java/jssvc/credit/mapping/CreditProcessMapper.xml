@@ -255,4 +255,10 @@
       column3 = #{column3,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectBySuggestCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_credit_process
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
 </mapper>
