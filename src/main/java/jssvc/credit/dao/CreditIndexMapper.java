@@ -38,4 +38,5 @@ public interface CreditIndexMapper {
 
     List<CreditIndex> getCreditIndexOption(CreditIndexSearchFilter filter);
 
+    int getMaxSortOfIndex(String parrent_id);
 }

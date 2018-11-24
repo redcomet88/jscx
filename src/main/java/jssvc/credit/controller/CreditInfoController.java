@@ -134,6 +134,49 @@ public class CreditInfoController extends BaseController {
         return mv;
     }
 
+
+    @LogFace
+    @ResponseBody
+    @RequestMapping("ajax/credit_createCreditIndex.do")
+    private void addCreditIndex(CreditIndex index) throws BusinessException {
+        try {
+            //TODO 创建的指标级别需要指定，由级别来确定去常量表中查找当前的序列号
+            //TODO 这个工作应该放在创建INDEX中作为一个事务来处理
+            //TODO 我感觉创建的页面还是克隆一个新的页面出来吧
+            boolean result = creditIndexService.createCreditIndex(index);
+            if(result)
+                response.getWriter().write(ConstantKey.SUCCESS);
+            else
+                response.getWriter().write(ConstantKey.FAIL);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("ajax/credit_getIndexLevelList.do")
+    private void getIndexLevelList() throws BusinessException {
+        try {
+            List<HashMap<String, String>> maps = new ArrayList<HashMap<String, String>>();
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("id", "1");
+            map.put("text", "一级指标");
+            maps.add(map);
+            map = new HashMap<String, String>();
+            map.put("id", "2");
+            map.put("text", "二级指标");
+            maps.add(map);
+
+            String json = JSON.Encode(maps);
+            response.getWriter().write(json);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+
     /**
      * @description:获取诚信指标信息
      *

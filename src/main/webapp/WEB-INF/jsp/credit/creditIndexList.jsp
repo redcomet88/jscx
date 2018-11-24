@@ -126,6 +126,24 @@
                 grid.load({ 'topIndexName': topIndexName, 'name': name});
             }
 
+            // 创建员工操作按下的事件
+            function add() {
+                mini.open({
+                    url: "<%=request.getContextPath()%>/showIndexUpdPop.do",
+                    title: "诚信指标创建", width: 800, height: 640,
+                    onload: function () {
+                        var iframe = this.getIFrameEl();
+                        var data = { actionFlag: "add" };
+                        iframe.contentWindow.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                        if (action == "ok") {
+                            grid.reload();
+                        }
+                    }
+                });
+            }
+
         </script>
     </body>  
 </html>  

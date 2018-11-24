@@ -2,6 +2,7 @@ package jssvc.base.constant;
 
 public class ConstantKey {
     // 对象的key
+
     /** 用户的key **/
     public final static String KEY_USER = "user";
     /** 机构号的key **/

@@ -1,7 +1,9 @@
 package jssvc.credit.service.impl;
 
 import jssvc.base.constant.ConstantMessage;
+import jssvc.base.dao.ConstantMapper;
 import jssvc.base.exception.BusinessException;
+import jssvc.base.model.Constant;
 import jssvc.base.util.JSON;
 import jssvc.credit.dao.CreditIndexMapper;
 import jssvc.credit.model.CreditIndex;
@@ -17,6 +19,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 
+
 /**
  * @Description:
  * @Author: redcomet
@@ -27,6 +30,9 @@ import java.util.List;
 public class CreditIndexServiceImpl implements CreditIndexService {
     @Autowired
     private CreditIndexMapper creditIndexDao;
+
+    @Autowired
+    private ConstantMapper constantDao;
 
     private static Logger  logger = LoggerFactory.getLogger(CreditIndexServiceImpl.class);
 
@@ -74,5 +80,37 @@ public class CreditIndexServiceImpl implements CreditIndexService {
             throw new BusinessException(ConstantMessage.ERR00010, e);
         }
         return flag;
+    }
+
+    @Override
+    @Transactional
+    public boolean createCreditIndex(CreditIndex index) throws BusinessException {
+        boolean flag = true;
+        try {
+            // TODO 根据传入的指标等级，去常量表找到对应的id值
+            // TODO 设置index.id的值
+            // TODO
+            int level = index.getLevel();
+            if(level == 1){     //如果是一级指标，则sort就是目前的最大序号 * 1000
+            }
+            else if(level == 2) {       // 如果是二级指标则根据指标中的一级指标把目前的最大sort取出来
+                Constant newId = constantDao.selectByPrimaryKey((long) 3);
+                index.setId(newId.getName());
+                int sort = creditIndexDao.getMaxSortOfIndex(index.getParrentId());
+                index.setSort(sort + 1);     //sort增1
+                int nIdNew = Integer.parseInt(newId.getName())  + 1;
+                String sIdNew = String.valueOf(nIdNew);
+                newId.setName(sIdNew);
+                constantDao.updateByPrimaryKey(newId);
+            }
+            else
+                return false;
+            // 更新指标信息
+            creditIndexDao.insertSelective(index);
+            return true;
+        } catch (RuntimeException e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new BusinessException(ConstantMessage.ERR00010, e);
+        }
     }
 }

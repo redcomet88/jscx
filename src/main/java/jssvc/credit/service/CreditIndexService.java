@@ -50,4 +50,5 @@ public interface CreditIndexService {
 
     boolean updateCreditIndex(CreditIndex index) throws BusinessException;
 
+    boolean createCreditIndex(CreditIndex index) throws BusinessException;
 }

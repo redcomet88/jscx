@@ -378,4 +378,11 @@
       column3 = #{column3,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="getMaxSortOfIndex" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select max(sort) from  t_credit_index
+    where 1=1
+    <if test="_parameter  != null and '' != _parameter ">
+    and parrent_id = #{_parameter ,jdbcType=VARCHAR}
+    </if>
+  </select>
 </mapper>

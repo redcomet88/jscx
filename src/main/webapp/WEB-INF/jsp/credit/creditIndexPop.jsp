@@ -23,6 +23,13 @@
             <form id="userForm">
             <table id="userTbl" border="0" cellpadding="10" cellspacing="2" style="width:85%;height:95%;" align="right">
                 <tr>
+                    <td style="text-align:right;width:90px;">指标级别：</td>
+                    <td style="width:80%;">
+                        <input id="level" name="level" class="mini-radiobuttonlist" style="width:250px;" required="f"
+                               url="<%=request.getContextPath()%>/ajax/credit_getIndexLevelList.do" value="${userInfo.level}"/>
+                    </td>
+                </tr>
+                <tr>
                     <td style="text-align:right;width:90px;">一级指标：</td>
                     <td style="width:80%;">
                         <input id="parrentId" name="parrentId" class="mini-combobox"  url="<%=request.getContextPath()%>/ajax/credit_creditIndexOption.do"
@@ -94,6 +101,8 @@
             function SetData(data) {
                 paramAction = data.actionFlag;
                 if (data.actionFlag == "add") {
+                    mini.get("level").setValue("2");
+                    mini.get("level").setEnabled(false);
                 } else if (data.actionFlag == "edit" || data.actionFlag == "start") {
                     var form = new mini.Form("#userTbl");
                     // 跨页面传递的数据对象，克隆后才可以安全使用
@@ -109,6 +118,7 @@
                             form.setData(o.data);
                             form.setChanged(false);
                             //mini.get("ygxm").setEnabled(false);
+                            mini.get("level").setEnabled(false);
                             //mini.get("jgh").setEnabled(false);
                             //mini.get("sex").setEnabled(false);
                             //mini.get("sex").setEnabled(false);
@@ -125,7 +135,7 @@
             function onWeightValidation(e) {
                 var weight = mini.get("weight").getValue();
                 if(weight != "") {
-                    if (parseFloat(weight)<0||parseFloat(weight)>0) {
+                    if (parseFloat(weight)<0||parseFloat(weight)>100) {
                             e.errorText = "权重必须在0~100之间";
                             e.isValid = false;
                     }
@@ -141,7 +151,7 @@
                         mini.confirm("是否确定创建该二级指标？", "确定？",function(action) {
                             if (action == "ok") {
                                 $.ajax({
-                                    url: "<%=request.getContextPath()%>/ajax/do",
+                                    url: "<%=request.getContextPath()%>/ajax/credit_createCreditIndex.do",
                                     type: "post",
                                     dataType: 'text',
                                     data: $("#userForm").serializeArray(),
