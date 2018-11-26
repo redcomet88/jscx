@@ -23,6 +23,7 @@
       <result column="applybankName" property = "applybankName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <result column="applyuserName" property = "applyuserName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <result column="approveStatusName" property = "approveStatusName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <result column="currentUserName" property="currentUserName" jdbcType="VARCHAR" javaType="java.lang.String" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, code, credit_Title, credit_Content, currentUser, status, apply_Dept, apply_User,
@@ -163,9 +164,10 @@
 
   <select id="getCreditProcessList" resultMap="CreditProcessVoMap" parameterType="jssvc.credit.vo.filter.CreditProcessSearchFilter" >
     select
-    suggest.*,ii.jgmc as applybankName,u.ygxm as applyuserName from t_credit_process suggest
+    suggest.*,ii.jgmc as applybankName,u.ygxm as applyuserName, v.ygxm as currentUserName from t_credit_process suggest
     left join t_dept_info ii on (suggest.apply_Dept=ii.jgh)
     left join t_user u     on (suggest.apply_User=u.dah)
+    left join t_user v     on (suggest.currentUser = v.dah)
     where 1=1
     <if test="code != null and '' != code" >
       and suggest.code = #{code, jdbcType=VARCHAR}

@@ -419,7 +419,9 @@ public class CreditInfoController extends BaseController {
                         else if (CreditStatusResult.pass.getId().equals(result)) {
 
                             if (suggest.get("handleResult") != null) { // 领导意见
-                                suggestInfo.setHandleResult(suggest.get("handleResult").toString());
+                                String sTempResult = suggest.get("handleResult").toString();
+                                suggestInfo.setHandleResult(
+                                        sTempResult + "&nbsp;&nbsp;&nbsp;&nbsp;" + user.getYgxm() + " | " + DateUtil.getSimpleDateString(new Date()));
                             }
                             if (suggest.get("specificInfo") != null) {
                                 suggestInfo.setSpecificInfo(suggest.get("specificInfo").toString());
@@ -433,9 +435,10 @@ public class CreditInfoController extends BaseController {
                         suggestInfo.setUpdateTime(new Date());
 
                         String nextStatus = SuggestProcessUtil.getNextProcessStatus(currentStatus, result, step);
-
                         suggestInfo.setApplyStatus(nextStatus);
-                        String currentUser = creditInfoService.getNextUser(suggestInfo);
+
+                        String currentUser = creditInfoService.getNextUser(suggestInfo, getSessionJgh());
+
                         suggestInfo.setCurrentuser(currentUser);
                         creditInfoService.updateSuggestInfo(suggestInfo);
                     }
@@ -524,7 +527,7 @@ public class CreditInfoController extends BaseController {
                 suggestInfo.setUpdateTime(new Date());
                 suggestInfo.setApplyStatus(status);
                 // 找出所有下一步处理人员的名单，放到current user中
-                List<User> users = userService.getUsersByRole("82");
+                /*List<User> users = userService.getUsersByRole("82");
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < users.size(); i++) {
                     String flag = i == users.size() - 1 ? "" : ",";
@@ -535,8 +538,11 @@ public class CreditInfoController extends BaseController {
                     currentUser = "admin";
                 } else {
                     currentUser = sb.toString();
-                }
-               //suggestInfo.setManagerUser(currentUser);
+                }*/
+
+                String currentUser = creditInfoService.getNextUser(suggestInfo, getSessionJgh());
+                suggestInfo.setCurrentuser(currentUser);
+
                 suggestInfo.setCurrentuser(currentUser);
                 creditInfoService.createCreditInfo(suggestInfo);
 

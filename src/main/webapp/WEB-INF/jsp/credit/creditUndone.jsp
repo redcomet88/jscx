@@ -59,7 +59,7 @@
                     <div field="creditTitle" width="140" align="center" headerAlign="center" >诚信事件标题</div>
                     <div field="applybankName" width="100" align="center" headerAlign="center" >申请部门</div>
                     <div field="applyTime" width="100" align="center" headerAlign="center" dateFormat="yyyy-MM-dd HH:mm:ss">申请时间</div>
-                    <div field="deadline" style="display:none" width="100" align="center" headerAlign="center"  dateFormat="yyyy-MM-dd HH:mm:ss">办结时限</div>
+                    <div field="currentUserName" width="100" align="center" headerAlign="center" >当前处理人</div>
                     <div field="approveStatusName" width="130" align="center" headerAlign="center" >审批状态</div>
                 </div>
             </div>

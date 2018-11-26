@@ -101,6 +101,17 @@
     from t_user
     where dah = #{dah,jdbcType=VARCHAR}
   </select>
+  <select id="selectUsersByRoleJg" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select  c.*  from  t_dept_user a, t_user_role b, t_user c
+    where a.dah = b.dah
+    and a.dah = c.dah
+    <if test="roleId != null and roleId != ''" >
+    and b.role_id = #{roleId,jdbcType=VARCHAR}
+    </if>
+    <if test="jgh != null and jgh != ''" >
+    and a.jgh = #{jgh,jdbcType=VARCHAR}
+    </if>
+  </select>
   <select id="selectUsersByJgh" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select distinct
     a.dah, a.ygxm

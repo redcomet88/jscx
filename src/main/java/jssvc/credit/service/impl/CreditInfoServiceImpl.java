@@ -1,11 +1,13 @@
 package jssvc.credit.service.impl;
 
+import jssvc.base.service.BaseService;
 import jssvc.base.util.DateUtil;
 import jssvc.credit.dao.CreditAttachmentMapper;
 import jssvc.credit.dao.CreditProcessLogMapper;
 import jssvc.credit.dao.CreditProcessMapper;
 import jssvc.credit.dao.CreditResultMapper;
 import jssvc.credit.enums.CreditProcessStatus;
+import jssvc.credit.enums.SuggestRoles;
 import jssvc.credit.model.CreditAttachment;
 import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessLog;
@@ -13,6 +15,8 @@ import jssvc.credit.model.CreditResult;
 import jssvc.credit.service.CreditInfoService;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
+import jssvc.user.model.User;
+import jssvc.user.service.UserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +45,10 @@ public class CreditInfoServiceImpl implements CreditInfoService {
     private CreditProcessLogMapper creditProcessLogDao;
     @Autowired
     private CreditAttachmentMapper creditAttachmentDao;
+    @Autowired
+    private BaseService baseService;
+    @Autowired
+    private UserService userService;
 
     private static Logger logger = LoggerFactory.getLogger(CreditInfoServiceImpl.class);
 
@@ -98,8 +106,36 @@ public class CreditInfoServiceImpl implements CreditInfoService {
     }
 
     @Override
-    public String getNextUser(CreditProcess suggestInfo) {
-        String userId = "admin";
+    public String getNextUser(CreditProcess suggestInfo, String jgh) throws SQLException {
+        String userId = "";
+        if (CreditProcessStatus.processEnd.getId().equals(suggestInfo.getApplyStatus())) {
+            return suggestInfo.getApplyUser();
+        }
+        String roleName = baseService.getConstant("suggestStatus", suggestInfo.getApplyStatus());
+        SuggestRoles suggestRole = SuggestRoles.valueOf(roleName);
+        switch (suggestRole) {
+            case manager:
+                List<User> managerList = userService.getUsersByRole("86");
+                if (CollectionUtils.isNotEmpty(managerList)) {
+                    userId = managerList.get(0).getDah();
+                } else {
+                    userId = "admin";
+                }
+                break;
+            case handleMember:
+                // 需要根据权限和申请者的机构号来查出审批者的列表
+                List<User> memberList = userService.getUsersByRoleJg("84",jgh);
+                if (CollectionUtils.isNotEmpty(memberList)) {
+                    userId = memberList.get(0).getDah();
+                } else {
+                    userId = "admin";
+                }
+                break;
+            default:
+                //其他一些流程退回原来的提交用户
+                userId = suggestInfo.getApplyUser();
+                break;
+        }
         return userId;
     }
 

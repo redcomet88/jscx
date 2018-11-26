@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public enum CreditProcessStatus {
-    suggestionApplyStart("suggestionApplyStart", "提交诚信事件开始"),suggestionRecall("suggestionRecall", "撤回成功"), departmentHandle("departmentHandle", "经办人员办理"),
-    managerReview("managerReview", "主管领导复审"), processEnd("processEnd", "流程结束");
+    suggestionApplyStart("suggestionApplyStart", "提交诚信事件开始"),suggestionRecall("suggestionRecall", "撤回成功"), departmentHandle("departmentHandle", "院部领导审核"),
+    managerReview("managerReview", "诚信管理员复审"), processEnd("processEnd", "流程结束");
 
     private String id;
     private String name;

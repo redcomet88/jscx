@@ -33,6 +33,9 @@ public interface UserMapper {
 
     List<HashMap<String, String>> selectUsersByPosition(@Param("jgh") String jgh, @Param("roles") String[] roles);
 
+    List<User> selectUsersByRoleJg(@Param("roleId") String roleId, @Param("jgh") String jgh);
+
+
     List<User> selectByYgxm(String ygxm);
 
     List<User> selectByJghAndYgxm(UserSearchFilter filter);

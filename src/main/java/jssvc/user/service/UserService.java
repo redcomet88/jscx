@@ -280,6 +280,7 @@ public interface UserService {
      **/
     List<User> getUsersByRole(String roleId) throws SQLException;
 
+    List<User> getUsersByRoleJg(String roleId, String jgh) throws SQLException;
 
     /**
      * @description:取得机构列表

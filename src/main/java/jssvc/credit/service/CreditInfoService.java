@@ -76,7 +76,7 @@ public interface CreditInfoService {
      * @return: java.lang.String
      * @create: 2018/11/18
      **/
-    String getNextUser(CreditProcess suggestInfo) throws SQLException;
+    String getNextUser(CreditProcess suggestInfo ,String jgh) throws SQLException;
 
 
     /**

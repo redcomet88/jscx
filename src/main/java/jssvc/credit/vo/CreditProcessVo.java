@@ -15,6 +15,16 @@ public class CreditProcessVo extends CreditProcess {
 
     private String approveStatusName;// 审批状态名称
 
+    private String currentUserName; //当前用户姓名
+
+    public String getCurrentUserName() {
+        return currentUserName;
+    }
+
+    public void setCurrentUserName(String currentUserName) {
+        this.currentUserName = currentUserName;
+    }
+
     public String getApplybankName() {
         return applybankName;
     }

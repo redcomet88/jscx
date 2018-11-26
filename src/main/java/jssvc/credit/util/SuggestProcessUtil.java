@@ -67,7 +67,7 @@ public class SuggestProcessUtil {
             result = CreditProcessStatus.departmentHandle.getId();
             break;
         case departmentHandle:
-            result = CreditProcessStatus.processEnd.getId();
+            result = CreditProcessStatus.managerReview.getId();
             break;
         case managerReview:
             result = CreditProcessStatus.processEnd.getId();

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 /**
  * @Description:
  * @Author: redcomet
@@ -25,7 +26,7 @@ public class BaseServiceImpl implements BaseService {
 
     @Override
     public String getConstant(String type, String enKey) {
-        return null;
+        return constantDao.selectValueByTypeAndKey(type, enKey);
     }
 
     @Override

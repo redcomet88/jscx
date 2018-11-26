@@ -621,9 +621,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersByRole(String roleId) {
+    public List<User> getUsersByRole(String roleId) throws SQLException {
         logger.info(String.valueOf(new StringBuffer("根据角色获取用户getUsersByRole  角色Id：").append(roleId)));
         List<User> userList = userDao.selectUsersByRole(roleId);
+        logger.info(String.valueOf(new StringBuffer("根据角色获取用户getUsersByRole  获取到的用户：").append(JSON.Encode(userList))));
+
+        return userList;
+    }
+
+    @Override
+    public List<User> getUsersByRoleJg(String roleId, String jgh) throws SQLException {
+        logger.info(String.valueOf(new StringBuffer("根据角色获取用户getUsersByRole  角色Id： ").append(roleId).append("机构号: ").append(jgh)));
+        List<User> userList = userDao.selectUsersByRoleJg(roleId, jgh);
         logger.info(String.valueOf(new StringBuffer("根据角色获取用户getUsersByRole  获取到的用户：").append(JSON.Encode(userList))));
 
         return userList;

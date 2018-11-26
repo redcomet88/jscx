@@ -128,6 +128,16 @@ public class UserController extends BaseController {
          }
     }
 
+    @LogFace
+    @ResponseBody
+    @RequestMapping("reLogin.do")
+    private ModelAndView reLogin() {
+        logger.info("重新登录");
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName(ConstantKey.INDEX);
+        return mv;
+    }
+
     /**
      * @description: 用户注销
      *
