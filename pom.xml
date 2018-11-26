@@ -176,7 +176,23 @@
       </dependency>
 
   </dependencies>
-
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <package.environment>dev</package.environment>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <package.environment>prod</package.environment>
+            </properties>
+        </profile>
+    </profiles>
   <build>
     <finalName>jscx</finalName>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
@@ -206,6 +222,16 @@
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
           <version>3.2.0</version>
+            <configuration>
+                <webResources>
+                    <!--动态指定文件-->
+                    <resource>
+                        <directory>src/main/resources/${package.environment}</directory>
+                        <targetPath>WEB-INF/classes</targetPath>
+                        <filtering>true</filtering>
+                    </resource>
+                </webResources>
+            </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -225,7 +251,7 @@
       <!--若不配置，可能会发送打包不全-->
       <resources>
           <resource>
-              <!--需要打包的目录-->
+              <!--需要打包的目录,这里面有xml需要打包-->
               <directory>src/main/java</directory>
               <!--目录中的文件类型-->
               <includes>
@@ -236,11 +262,15 @@
           <resource>
               <!--需要打包的目录-->
               <directory>src/main/resources</directory>
-              <!--目录中的文件类型-->
+              <filtering>true</filtering>
               <includes>
                   <include>**/*.xml</include>
                   <include>**/*.properties</include>
               </includes>
+              <excludes>
+                  <exclude>prod/*</exclude>
+                  <exclude>dev/*</exclude>
+              </excludes>
           </resource>
       </resources>
   </build>
