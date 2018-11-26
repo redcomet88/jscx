@@ -9,7 +9,9 @@
         <link href="<%=request.getContextPath()%>/resources/css/miniui_style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
-         &nbsp;&nbsp; <h2 align="center">报表功能建设中……</h2>
 
+         &nbsp;&nbsp; <h2 align="center">报表功能建设中……</h2>
+     <div align="center">    <img src="<%=request.getContextPath()%>/resources/images/pages/working.png"  />
+     </div>
     </body>
 </html>

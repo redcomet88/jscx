@@ -43,10 +43,10 @@ public class SuggestProcessUtil {
         case suggestionApplyStart:
             break;
         case departmentHandle:
-            result = CreditProcessStatus.departmentHandle.getId();
+            result = CreditProcessStatus.suggestionApplyStart.getId();
             break;
         case managerReview:
-            //result = CreditProcessStatus.adminView.getId();
+            result = CreditProcessStatus.departmentHandle.getId();
             break;
         default:
             break;
