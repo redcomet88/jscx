@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>申请原始材料列表</title>
+        <title>申请原始材料列表kk</title>
         <script src="<%=request.getContextPath()%>/resources/scripts/boot.js" type="text/javascript"></script>
         <link href="<%=request.getContextPath()%>/resources/css/miniui_style.css" type=text/css rel=stylesheet />
         <style type="text/css">

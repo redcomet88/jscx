@@ -60,7 +60,7 @@
             var form = new mini.Form("#uploadAttachForm");
             // 标准方法接口定义
             function SetData(data) {
-            	// 跨页面传递的数据对象，克隆后才可以安全使用
+            	// 跨页面传递的数据对象，克隆后才可以安全使用kkk
                 var data = mini.clone(data);
             	mini.get("suggestbh").setValue(data);
             }
