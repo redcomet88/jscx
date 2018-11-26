@@ -175,7 +175,9 @@
     <if test="title != null and '' != title" >
       and suggest.credit_Title like concat('%', #{title,jdbcType=VARCHAR}, '%')
     </if>
-
+    <if test="loginDah != null and '' != loginDah and loginDah !='admin' "  >
+      and suggest.currentUser = #{loginDah, jdbcType=VARCHAR}
+    </if>
     <if test="sortField != null and '' != sortField" >
       order by suggest.${sortField} ${sortOrder}
     </if>
@@ -186,13 +188,16 @@
   <select id="getCreditProcessListCount" resultType="java.lang.Integer" parameterType="jssvc.credit.vo.filter.CreditProcessSearchFilter" >
   select count(*) from t_credit_process suggest
   left join t_dept_info ii on (suggest.apply_Dept=ii.jgh)
-  left join t_user u              on (suggest.apply_User=u.dah)
+  left join t_user u       on (suggest.apply_User=u.dah)
   where 1=1
   <if test="code != null and '' != code" >
     and suggest.code = #{code, jdbcType=VARCHAR}
   </if>
   <if test="title != null and '' != title" >
     and suggest.credit_Title like concat('%', #{title,jdbcType=VARCHAR}, '%')
+  </if>
+  <if test="loginDah != null and '' != loginDah and loginDah !='admin' "  >
+      and suggest.currentUser = #{loginDah, jdbcType=VARCHAR}
   </if>
 </select>
 

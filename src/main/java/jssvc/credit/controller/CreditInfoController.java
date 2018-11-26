@@ -715,7 +715,7 @@ public class CreditInfoController extends BaseController {
             //filter.setSuggestStart(true);
             //filter.setSuggestApply(true);
             filter.setCurrentuser(user.getDah());
-            filter.setLoginDah(user.getDah());
+            filter.setLoginDah(user.getDah());                  // 根据loginDah来过滤
             filter.setSortField("update_Time");
             filter.setSortOrder(SortOrder.DESC.toString());
             List<CreditProcessVo> list = creditInfoService.getCreditInfoList(filter);
