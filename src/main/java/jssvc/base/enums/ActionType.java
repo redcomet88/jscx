@@ -14,7 +14,7 @@ public enum ActionType {
 
     gysInfo_addGysInfo("供应商新增"), gysInfo_updateGysInfo("供应商修改"), gysInfo_deleteGysInfo("供应商删除"), gysWp_saveGysWp("供应商物品型号关联保存"),
 
-    showCgInfoApply("新增采购申请"), cg_exportApplyRecord("导出采购申请"), cg_getCgBanks("采购后评价"), cg_exportCgApplyRecordUndoneApprove("导出未审批的采购"),
+    showCreditIndex("显示诚信指标"), cg_exportApplyRecord("导出采购申请"), cg_getCgBanks("采购后评价"), cg_exportCgApplyRecordUndoneApprove("导出未审批的采购"),
 
     cg_cgInfoList(""), user_getUsers(""), wpType_getWpTypeList(""), wpType_getWpTypeListNew(""),
 

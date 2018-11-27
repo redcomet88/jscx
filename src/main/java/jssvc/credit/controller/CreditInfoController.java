@@ -19,6 +19,7 @@ import jssvc.credit.service.CreditInfoService;
 import jssvc.credit.service.CreditReportService;
 import jssvc.credit.util.SuggestProcessUtil;
 import jssvc.credit.vo.CreditIndexVo;
+import jssvc.credit.vo.CreditProcessLogVo;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditIndexSearchFilter;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
@@ -395,55 +396,82 @@ public class CreditInfoController extends BaseController {
             if (suggest != null && !suggest.isEmpty()) {
                 CreditProcess suggestInfo = creditInfoService.selectByPrimaryKey(id);
                 if (suggestInfo != null) {
-                    if (!dah.equals(suggestInfo.getApplyUser())) {
-                        response.getWriter().write("done");
-                    } else {
-                        //正常的流程从这里开始
-                        String approveOpinion = null;
-                        String currentStatus = suggestInfo.getApplyStatus();
-                        //1如果状态是流转
-                        if (CreditStatusResult.transfer.getId().equals(result)) {
-                            String transferUser = null;
-                            if (suggest.get("transferUser") != null) {
-                                transferUser = suggest.get("transferUser").toString();
-                                suggestInfo.setCurrentuser(transferUser);
-                            }
-                            //creditInfoService.updateSuggestInfo(suggestInfo);
-
-                            insertProcessLog(suggestInfo.getCode(), dah, transferUser, new Date(), currentStatus, "任务内部人员流转",
-                                    CreditStatusResult.valueOf(result).getName());
-                            response.getWriter().write("success");
-                            return;
+                    //正常的流程从这里开始
+                    String approveOpinion = null;
+                    String currentStatus = suggestInfo.getApplyStatus();
+                    //1如果状态是流转
+                    if (CreditStatusResult.transfer.getId().equals(result)) {
+                        String transferUser = null;
+                        if (suggest.get("transferUser") != null) {
+                            transferUser = suggest.get("transferUser").toString();
+                            suggestInfo.setCurrentuser(transferUser);
                         }
-                        //如果状态是审批通过
-                        else if (CreditStatusResult.pass.getId().equals(result)) {
+                        //creditInfoService.updateSuggestInfo(suggestInfo);
 
-                            if (suggest.get("handleResult") != null) { // 领导意见
-                                String sTempResult = suggest.get("handleResult").toString();
-                                suggestInfo.setHandleResult(
-                                        sTempResult + "&nbsp;&nbsp;&nbsp;&nbsp;" + user.getYgxm() + " | " + DateUtil.getSimpleDateString(new Date()));
-                            }
-                            if (suggest.get("specificInfo") != null) {
-                                suggestInfo.setSpecificInfo(suggest.get("specificInfo").toString());
-                            }
-                            if (suggest.get("column2") != null) {// 部门负责人上班意见，退回时必填
-                                suggestInfo.setColumn2(suggest.get("column2").toString());
-                            }
-
-                        }
-                        suggestInfo.setStatus(result);
-                        suggestInfo.setUpdateTime(new Date());
-
-                        String nextStatus = SuggestProcessUtil.getNextProcessStatus(currentStatus, result, step);
-                        suggestInfo.setApplyStatus(nextStatus);
-
-                        String currentUser = creditInfoService.getNextUser(suggestInfo, getSessionJgh());
-
-                        suggestInfo.setCurrentuser(currentUser);
-                        creditInfoService.updateSuggestInfo(suggestInfo);
+                        insertProcessLog(suggestInfo.getCode(), dah, transferUser, new Date(), currentStatus, "任务内部人员流转",
+                                CreditStatusResult.valueOf(result).getName());
+                        response.getWriter().write("success");
+                        return;
                     }
-                    response.getWriter().write("success");
+                    //如果状态是审批通过
+                    else if (CreditStatusResult.pass.getId().equals(result)) {
+
+                        if (suggest.get("handleResult") != null) { // 领导意见
+                            String sTempResult = suggest.get("handleResult").toString();
+                            suggestInfo.setHandleResult(
+                                    sTempResult + "&nbsp;&nbsp;&nbsp;&nbsp;" + user.getYgxm() + " | " + DateUtil.getSimpleDateString(new Date()));
+                        }
+                        if (suggest.get("specificInfo") != null) {
+                            suggestInfo.setSpecificInfo(suggest.get("specificInfo").toString());
+                        }
+                        if (suggest.get("column2") != null) {// 部门负责人上班意见，退回时必填
+                            suggestInfo.setColumn2(suggest.get("column2").toString());
+                        }
+
+                    }
+                    suggestInfo.setStatus(result);
+                    suggestInfo.setUpdateTime(new Date());
+
+                    String nextStatus = SuggestProcessUtil.getNextProcessStatus(currentStatus, result, step);
+                    suggestInfo.setApplyStatus(nextStatus);
+
+                    String currentUser = creditInfoService.getNextUser(suggestInfo, getSessionJgh());
+
+                    suggestInfo.setCurrentuser(currentUser);
+                    creditInfoService.updateSuggestInfo(suggestInfo);
+
+                    //处理流转日志
+                    String logNextUser = currentUser;
+                    String logProcessingUser = dah;
+
+                    String current = baseService.getConstant(SUGGEST_CONSTANT, currentStatus);
+                    String next = baseService.getConstant(SUGGEST_CONSTANT, nextStatus);
+                    if ("handleMember".equals(current)) {
+                        logProcessingUser = ADMIN_EN;
+                        approveOpinion = "院部领导审核";
+                    }
+                    if ("manager".equals(current)) {
+                        logProcessingUser = MANAGER_EN;
+                        approveOpinion = "诚信管理员复审";
+                    }
+                    if ("handleMember".equals(next)) {
+                        logNextUser = ADMIN_EN;
+                        approveOpinion = "院部领导审核";
+                    }
+                    if ("manager".equals(next)) {
+                        logNextUser = MANAGER_EN;
+                        approveOpinion = "诚信管理员复审";
+                    }
+                    if ("user".equals(next)) {
+                        logNextUser = "无";
+                        approveOpinion = "诚信管理员复审";
+                    }
+
+                    insertProcessLog(suggestInfo.getCode(), logProcessingUser, logNextUser, new Date(), currentStatus, approveOpinion,
+                            CreditStatusResult.valueOf(result).getName());
                 }
+                response.getWriter().write("success");
+
 
             }
 
@@ -779,6 +807,14 @@ public class CreditInfoController extends BaseController {
         return "credit/creditAttachmentList";
     }
 
+    /**
+     * 查询流转日志页面
+     */
+    @RequestMapping("showSuggestLzrz.do")
+    private String showSuggestLzrz() {
+        return "credit/creditLzRecord";
+    }
+
     @RequestMapping("listSuggestAttachment.do")
     @ResponseBody
     public void listSuggestAttachment(String suggestbh, String area) throws BusinessException {
@@ -1039,6 +1075,23 @@ public class CreditInfoController extends BaseController {
             response.getWriter().write(JSON.Encode(options));
         } catch (IOException e) {
             throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
+
+    /**
+     * 根据诚信时间id获取流转日志
+     */
+    @RequestMapping("ajax/suggest_processLogList.do")
+    @ResponseBody
+    public void getProcessLogList(String suggestid) {
+        try {
+            List<CreditProcessLogVo> list = creditInfoService.getProcessLogList(suggestid);
+            response.getWriter().write(JSON.Encode(list));
+        } catch (IOException e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw, true));
+            String strs = sw.toString();
+            logger.error(strs);
         }
     }
 

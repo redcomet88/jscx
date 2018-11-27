@@ -3,6 +3,7 @@ package jssvc.credit.dao;
 import java.util.List;
 import jssvc.credit.model.CreditProcessLog;
 import jssvc.credit.model.CreditProcessLogExample;
+import jssvc.credit.vo.CreditProcessLogVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface CreditProcessLogMapper {
@@ -27,4 +28,7 @@ public interface CreditProcessLogMapper {
     int updateByPrimaryKeySelective(CreditProcessLog record);
 
     int updateByPrimaryKey(CreditProcessLog record);
+
+    List<CreditProcessLogVo> getProcessLogList(String suggestid);
+
 }

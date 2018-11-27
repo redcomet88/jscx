@@ -4,6 +4,7 @@ import jssvc.credit.model.CreditAttachment;
 import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessLog;
 import jssvc.credit.model.CreditResult;
+import jssvc.credit.vo.CreditProcessLogVo;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
 import org.springframework.stereotype.Service;
@@ -108,6 +109,13 @@ public interface CreditInfoService {
      * @create: 2018/10/24 
      **/
     List<CreditProcessVo> getCreditInfoList(CreditProcessSearchFilter filter);
+
+    /**
+     * 获取Process流转日志
+     * @param suggestid
+     * @return
+     */
+    List<CreditProcessLogVo> getProcessLogList(String suggestid);
 
     /**
      * @description:根据编号获取诚信事件信息

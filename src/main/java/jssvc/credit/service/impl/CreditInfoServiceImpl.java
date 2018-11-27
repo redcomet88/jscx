@@ -13,6 +13,7 @@ import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessLog;
 import jssvc.credit.model.CreditResult;
 import jssvc.credit.service.CreditInfoService;
+import jssvc.credit.vo.CreditProcessLogVo;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
 import jssvc.user.model.User;
@@ -49,6 +50,17 @@ public class CreditInfoServiceImpl implements CreditInfoService {
     private BaseService baseService;
     @Autowired
     private UserService userService;
+
+    // 院部管理员
+    private final String ADMIN_EN = "administrator";
+    private final String ADMIN_NAME = "院部管理员";
+    // 申请人
+    private final String PROPOUNDER = "propounder";
+    private final String PROPOUNDER_NAME = "申请人";
+    // 诚信平台管理员
+    private final String MANAGER_EN = "manager";
+    private final String MANAGER_NAME = "诚信平台管理员";
+    private final String SUGGEST_CONSTANT = "suggestStatus";
 
     private static Logger logger = LoggerFactory.getLogger(CreditInfoServiceImpl.class);
 
@@ -180,6 +192,41 @@ public class CreditInfoServiceImpl implements CreditInfoService {
             creditProcessVo.setApproveStatusName(CreditProcessStatus.valueOf(creditProcessVo.getApplyStatus()).getName());
         }
         logger.info("getSuggestInfoList end");
+        return list;
+    }
+
+    /**
+     * 根据事件编号查询流转日志
+     */
+    @Override
+    public List<CreditProcessLogVo> getProcessLogList(String suggestid) {
+        logger.info("getProcessLogList begin 开始查询流转日志信息");
+        List<CreditProcessLogVo> list = creditProcessLogDao.getProcessLogList(suggestid);
+        for (CreditProcessLogVo processLogVo : list) {
+            if (PROPOUNDER.equals(processLogVo.getProcessingUser())) {
+                processLogVo.setCurrentUserName(PROPOUNDER_NAME);
+            }
+            if (ADMIN_EN.equals(processLogVo.getProcessingUser())) {
+                processLogVo.setCurrentUserName(ADMIN_NAME);
+            }
+            if (MANAGER_EN.equals(processLogVo.getProcessingUser())) {
+                processLogVo.setCurrentUserName(MANAGER_NAME);
+            }
+            if (PROPOUNDER.equals(processLogVo.getNextUser())) {
+                processLogVo.setNextUserName(PROPOUNDER_NAME);
+            }
+            if (ADMIN_EN.equals(processLogVo.getNextUser())) {
+                processLogVo.setNextUserName(ADMIN_NAME);
+            }
+            if (MANAGER_EN.equals(processLogVo.getNextUser())) {
+                processLogVo.setNextUserName(MANAGER_NAME);
+            }
+            if ("无".equals(processLogVo.getNextUser())) {
+                processLogVo.setNextUserName("申请人");
+            }
+            processLogVo.setApproveStatusName(CreditProcessStatus.valueOf(processLogVo.getApproveStatus()).getName());
+        }
+        logger.info("getProcessLogList end");
         return list;
     }
 
