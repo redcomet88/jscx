@@ -1,5 +1,6 @@
 package jssvc.credit.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessExample;
@@ -30,5 +31,6 @@ public interface CreditProcessMapper {
 
     CreditProcess selectBySuggestCode(String code);
 
+    HashMap<String,Object> selectTotalCreditCaseSummary ();
 
 }

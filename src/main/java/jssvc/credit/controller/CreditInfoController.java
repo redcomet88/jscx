@@ -16,7 +16,6 @@ import jssvc.credit.enums.CreditStatusResult;
 import jssvc.credit.model.*;
 import jssvc.credit.service.CreditIndexService;
 import jssvc.credit.service.CreditInfoService;
-import jssvc.credit.service.CreditReportService;
 import jssvc.credit.util.SuggestProcessUtil;
 import jssvc.credit.vo.CreditIndexVo;
 import jssvc.credit.vo.CreditProcessLogVo;
@@ -24,9 +23,7 @@ import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditIndexSearchFilter;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
 import jssvc.user.model.*;
-import jssvc.user.model.filter.UserSearchFilter;
 import jssvc.user.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +58,6 @@ public class CreditInfoController extends BaseController {
     private final String SUGGEST_CONSTANT = "suggestStatus";
     @Autowired
     private CreditIndexService creditIndexService;
-    @Autowired
-    private CreditReportService creditReportService;
     @Autowired
     private CreditInfoService creditInfoService;
     @Autowired
@@ -102,13 +97,6 @@ public class CreditInfoController extends BaseController {
         mv.setViewName("credit/creditInfoSercher");
         mv.addObject("role", role);
         mv.addObject("userNo", userNo);
-        return mv;
-    }
-
-    @RequestMapping("showCreditReport.do")
-    public ModelAndView showCreditRport() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("credit/creditReport");
         return mv;
     }
 

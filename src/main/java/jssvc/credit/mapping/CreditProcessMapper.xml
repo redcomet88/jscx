@@ -25,6 +25,11 @@
       <result column="approveStatusName" property = "approveStatusName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <result column="currentUserName" property="currentUserName" jdbcType="VARCHAR" javaType="java.lang.String" />
   </resultMap>
+  <resultMap id="CreditReportMap" type="jssvc.credit.vo.CreditReportVo">
+    <result column="totalNum" property="totalNum" jdbcType="INTEGER" />
+    <result column="finishNum" property="totalAmount" jdbcType="DECIMAL" />
+    <result column="processNum" property="createDate" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, code, credit_Title, credit_Content, currentUser, status, apply_Dept, apply_User,
     apply_Time, apply_Status, handle_Result, specific_Info,update_Time, column1, column2, column3
@@ -268,4 +273,12 @@
     from t_credit_process
     where code = #{code,jdbcType=VARCHAR}
   </select>
+  <select id="selectTotalCreditCaseSummary" resultType="java.util.HashMap" >
+     select count(1) as totalNum ,
+             sum(if(apply_Status!='processEnd',1,0)) as processNum ,
+             sum(if(apply_Status='processEnd',1,0)) as finishNum,
+             sum(if(apply_Status='processEnd',1,0)) as unCreditNum,
+             0 as conflictNum
+     from  t_credit_process
+   </select>
 </mapper>

@@ -1,5 +1,7 @@
 package jssvc.credit.service;
 
+import java.util.HashMap;
+
 /**
  * @Description: 信用报表服务接口
  * @Author: redcomet
@@ -7,4 +9,9 @@ package jssvc.credit.service;
  */
 
 public interface CreditReportService {
+    /**
+     * 获得失信事件统计信息
+     * @return
+     */
+    public HashMap<String,Object> getTotalCreditCaseSummary();
 }
