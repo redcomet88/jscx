@@ -123,15 +123,19 @@ public class CreditInfoController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("showIndexOneUpdPop.do")
+    public ModelAndView showIndexOneUpdPop(String id) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("credit/creditIndexOnePop");
+        return mv;
+    }
 
     @LogFace
     @ResponseBody
     @RequestMapping("ajax/credit_createCreditIndex.do")
     private void addCreditIndex(CreditIndex index) throws BusinessException {
         try {
-            //TODO 创建的指标级别需要指定，由级别来确定去常量表中查找当前的序列号
-            //TODO 这个工作应该放在创建INDEX中作为一个事务来处理
-            //TODO 我感觉创建的页面还是克隆一个新的页面出来吧
+            //后续，根据传入的level不同，来判断进一步的操作
             boolean result = creditIndexService.createCreditIndex(index);
             if(result)
                 response.getWriter().write(ConstantKey.SUCCESS);
@@ -351,9 +355,8 @@ public class CreditInfoController extends BaseController {
     @RequestMapping("ajax/credit_updateCreditIndex.do")
     private void updateCreditIndex(CreditIndex index) throws BusinessException {
         try {
-            // 更新指标信息
+            // 更新指标信息 （根据level来）
             creditIndexService.updateCreditIndex(index);
-
             response.getWriter().write(ConstantKey.SUCCESS);
         } catch (NullPointerException e) {
             throw new BusinessException(ConstantMessage.ERR00004, e);

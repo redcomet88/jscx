@@ -19,7 +19,10 @@
                 <tr>
                     <td style="width:30%"></td>
                     <td style="width:120px">
-                        <a class="mini-button" style="width:120px" iconCls="icon-add" id="add" onclick="add()">创建指标</a>
+                        <a class="mini-button" style="width:140px" iconCls="icon-add" id="addOne" onclick="addOne()">管理一级指标</a>
+                    </td>
+                    <td style="width:120px">
+                        <a class="mini-button" style="width:140px" iconCls="icon-add" id="add" onclick="add()">创建二级指标</a>
                     </td>
                     <td style="width:50px;">一级指标：</td>
                     <td style="width:80px">
@@ -126,7 +129,7 @@
                 grid.load({ 'topIndexName': topIndexName, 'name': name});
             }
 
-            // 创建员工操作按下的事件
+            // 创建操作按下的事件
             function add() {
                 mini.open({
                     url: "<%=request.getContextPath()%>/showIndexUpdPop.do",
@@ -144,6 +147,22 @@
                 });
             }
 
+            function addOne() {
+                mini.open({
+                    url: "<%=request.getContextPath()%>/showIndexOneUpdPop.do",
+                    title: "诚信一级指标管理", width: 800, height: 640,
+                    onload: function () {
+                        var iframe = this.getIFrameEl();
+                        var data = { actionFlag: "add" };
+                        iframe.contentWindow.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                        if (action == "ok") {
+                            grid.reload();
+                        }
+                    }
+                });
+            }
         </script>
     </body>  
 </html>  

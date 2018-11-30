@@ -87,18 +87,30 @@ public class CreditIndexServiceImpl implements CreditIndexService {
     public boolean createCreditIndex(CreditIndex index) throws BusinessException {
         boolean flag = true;
         try {
-            // TODO 根据传入的指标等级，去常量表找到对应的id值
-            // TODO 设置index.id的值
-            // TODO
+            // 根据传入的指标等级，去常量表找到对应的id值
+            // 设置index.id的值
+            // 最后更新序列的值
             int level = index.getLevel();
-            if(level == 1){     //如果是一级指标，则sort就是目前的最大序号 * 1000
+            if(level == 1){
+                Constant newId = constantDao.selectByPrimaryKey((long) 4);
+                index.setId("X" + newId.getName().trim());       //一级指标的规则是X + 数字
+                int sort = Integer.parseInt(newId.getName()) * 1000;   //sort是序号 * 1000
+                index.setSort(sort);
+                index.setParrentId("-1");
+                index.setWeight(0.0);
+                index.setCreditAction(" ");
+
+                int nIdNew = Integer.parseInt(newId.getName())  + 1; //更新序列号的新值
+                String sIdNew = String.valueOf(nIdNew);
+                newId.setName(sIdNew);
+                constantDao.updateByPrimaryKey(newId);
             }
             else if(level == 2) {       // 如果是二级指标则根据指标中的一级指标把目前的最大sort取出来
                 Constant newId = constantDao.selectByPrimaryKey((long) 3);
-                index.setId(newId.getName());
+                index.setId(newId.getName().trim());
                 int sort = creditIndexDao.getMaxSortOfIndex(index.getParrentId());
                 index.setSort(sort + 1);     //sort增1
-                int nIdNew = Integer.parseInt(newId.getName())  + 1;
+                int nIdNew = Integer.parseInt(newId.getName())  + 1; //更新序列号的新值
                 String sIdNew = String.valueOf(nIdNew);
                 newId.setName(sIdNew);
                 constantDao.updateByPrimaryKey(newId);
