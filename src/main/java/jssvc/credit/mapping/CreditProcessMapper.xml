@@ -28,7 +28,14 @@
   <resultMap id="CreditReportMap" type="jssvc.credit.vo.CreditReportVo">
     <result column="totalNum" property="totalNum" jdbcType="INTEGER" />
     <result column="finishNum" property="totalAmount" jdbcType="DECIMAL" />
-    <result column="processNum" property="createDate" jdbcType="VARCHAR" />
+    <result column="processNum" property="createDate" jdbcType="VARCHAR"  />
+  </resultMap>
+  <resultMap id="CreditPeopleMap" type="jssvc.credit.model.CreditPeople">
+    <result column="ygxm" property="ygxm" jdbcType="VARCHAR"  javaType="java.lang.String"/>
+    <result column="deptId" property="deptId" jdbcType="VARCHAR"  javaType="java.lang.String"/>
+    <result column="deptName" property="deptName" jdbcType="VARCHAR"  javaType="java.lang.String"/>
+    <result column="creditCount" property="creditCount" jdbcType="DECIMAL" />
+    <result column="creditScore" property="creditScore" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, code, credit_Title, credit_Content, currentUser, status, apply_Dept, apply_User,
@@ -166,7 +173,6 @@
       </if>
     </trim>
   </insert>
-
   <select id="getCreditProcessList" resultMap="CreditProcessVoMap" parameterType="jssvc.credit.vo.filter.CreditProcessSearchFilter" >
     select
     suggest.*,ii.jgmc as applybankName,u.ygxm as applyuserName, v.ygxm as currentUserName from t_credit_process suggest
@@ -205,7 +211,43 @@
       and suggest.currentUser = #{loginDah, jdbcType=VARCHAR}
   </if>
 </select>
-
+  <select id="getCreditPeopleList" resultMap="CreditPeopleMap" parameterType="jssvc.credit.vo.filter.CreditPeopleSearchFilter" >
+    select  b.column1 as ygxm,b.column2 as deptId,d.jgmc as deptName ,count(1) as creditCount,100 - sum(weight) as creditScore
+    from  t_credit_process a,t_credit_result b,t_credit_index c,  t_dept_info d
+    where 1=1
+    and a.code = b.code
+    and a.column1 = c.id
+    and b.column2 = d.jgh
+    and apply_Status='processEnd'
+    <if test="dah != null and '' != dah " >
+    and b.dah = #{dah,jdbcType=VARCHAR}
+    </if>
+    <if test="dept != null and '' != dept " >
+    and b.column2 = #{dept,jdbcType=VARCHAR}
+    </if>
+    group by b.column1,b.column2,d.jgmc
+    <if test="limit != 0" >
+      limit #{offset},#{limit}
+    </if>
+  </select>
+  <select id="getCreditPeopleListCount" resultType="java.lang.Integer" parameterType="jssvc.credit.vo.filter.CreditPeopleSearchFilter" >
+    select  count(*) from  (
+          select  b.column1,b.column2,d.jgmc as deptName,count(1) as credit_count
+          from  t_credit_process a,t_credit_result b,t_credit_index c, t_dept_info d
+          where 1=1
+            and a.code = b.code
+            and a.column1 = c.id
+            and b.column2 = d.jgh
+            and apply_Status='processEnd'
+            <if test="dah != null and '' != dah " >
+            and b.dah = #{dah,jdbcType=VARCHAR}
+            </if>
+            <if test="dept != null and '' != dept " >
+            and b.column2 = #{dept,jdbcType=VARCHAR}
+            </if>
+            group by b.column1,b.column2,d.jgmc
+    ) as X
+  </select>
   <update id="updateByPrimaryKeySelective" parameterType="jssvc.credit.model.CreditProcess" >
     update t_credit_process
     <set >

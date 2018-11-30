@@ -2,9 +2,12 @@ package jssvc.credit.dao;
 
 import java.util.HashMap;
 import java.util.List;
+
+import jssvc.credit.model.CreditPeople;
 import jssvc.credit.model.CreditProcess;
 import jssvc.credit.model.CreditProcessExample;
 import jssvc.credit.vo.CreditProcessVo;
+import jssvc.credit.vo.filter.CreditPeopleSearchFilter;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,4 +36,7 @@ public interface CreditProcessMapper {
 
     HashMap<String,Object> selectTotalCreditCaseSummary ();
 
+    List<CreditPeople> getCreditPeopleList(CreditPeopleSearchFilter filter);
+
+    int getCreditPeopleListCount(CreditPeopleSearchFilter filter);
 }

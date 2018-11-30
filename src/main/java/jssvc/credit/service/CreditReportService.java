@@ -1,6 +1,10 @@
 package jssvc.credit.service;
 
+import jssvc.credit.model.CreditPeople;
+import jssvc.credit.vo.filter.CreditPeopleSearchFilter;
+
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Description: 信用报表服务接口
@@ -14,4 +18,10 @@ public interface CreditReportService {
      * @return
      */
     public HashMap<String,Object> getTotalCreditCaseSummary();
+
+
+    List<CreditPeople> getCreditPeopleList(CreditPeopleSearchFilter filter);
+
+
+    int getCreditPeopleListCount(CreditPeopleSearchFilter filter);
 }

@@ -16,11 +16,13 @@ import jssvc.credit.enums.CreditStatusResult;
 import jssvc.credit.model.*;
 import jssvc.credit.service.CreditIndexService;
 import jssvc.credit.service.CreditInfoService;
+import jssvc.credit.service.CreditReportService;
 import jssvc.credit.util.SuggestProcessUtil;
 import jssvc.credit.vo.CreditIndexVo;
 import jssvc.credit.vo.CreditProcessLogVo;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditIndexSearchFilter;
+import jssvc.credit.vo.filter.CreditPeopleSearchFilter;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
 import jssvc.user.model.*;
 import jssvc.user.service.UserService;
@@ -60,6 +62,8 @@ public class CreditInfoController extends BaseController {
     private CreditIndexService creditIndexService;
     @Autowired
     private CreditInfoService creditInfoService;
+    @Autowired
+    private CreditReportService creditReportService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -217,6 +221,29 @@ public class CreditInfoController extends BaseController {
             filter.setSortOrder(SortOrder.ASC.toString());
             List<CreditIndexVo> list = creditIndexService.getCreditIndexList(filter);
             int count = creditIndexService.getCreditIndexListCount(filter);
+            //返回数据
+            Map<String, Object> result = new HashMap<>();
+            result.put("data", list);
+            result.put("total", count);
+            response.getWriter().write(JSON.Encode(result));
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("ajax/credit_creditPeopleList.do")
+    private void creditPeopleList(CreditPeopleSearchFilter filter) throws BusinessException {
+        try {
+            filter.setOffset();
+            filter.setLimit();
+           // filter.setDah(user.getDah());
+            filter.setSortField("sort");
+            filter.setSortOrder(SortOrder.ASC.toString());
+            List<CreditPeople> list = creditReportService.getCreditPeopleList(filter);
+            int count = creditReportService.getCreditPeopleListCount(filter);
             //返回数据
             Map<String, Object> result = new HashMap<>();
             result.put("data", list);
