@@ -1,5 +1,11 @@
 ## 中层干部民主评测
 
+### 代码编写
+
+- [x] 新建t_evaluate_record 表，增加t_menu表数据
+- [ ] 
+
+
 ### 数据库设计
 #### 1.评测表
 + ID
@@ -47,3 +53,6 @@ CREATE TABLE
         CONSTRAINT code UNIQUE (dah,eva_dah,eva_year，finished)
     )
     ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='中层干部民主评测记录表';
+    
+INSERT INTO t_menu (id, sort, level, p_id, name, url, action, icon) VALUES ('menu008000', 8000, 1, '-1', '中层干部评测', '#', '#', 'fa fa-desktop');
+INSERT INTO t_menu (id, sort, level, p_id, name, url, action, icon) VALUES ('menu008001', 8001, 2, 'menu008000', '评测页面', 'showEnluateInfo.do', 'showEnluateInfo', 'fab fa-telegram');
