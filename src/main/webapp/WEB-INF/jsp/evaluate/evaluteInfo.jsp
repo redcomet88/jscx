@@ -64,7 +64,12 @@
 
             var s = '';
 
-            s = s + '<a class="Edit_Button" href="javascript:editRow(\'' + uid + '\')">编辑</a>';
+            //s = s + '<div name="countrys" class="mini-checkboxlist" repeatItems="3" repeatLayout="flow" url="../../../resources/data/eva.txt"  textField="text" valueField="id" ></div>';
+
+            s = s + '<input name="Married" class="checkbox" text="婚否" value="Y" trueValue="Y" falseValue="N" />';
+
+            //s = s + '<a class="Edit_Button" href="javascript:editRow(\'' + uid + '\')">编辑</a>';
+
 
             return s;
         }
