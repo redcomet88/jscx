@@ -17,12 +17,12 @@
     <body>
     <div class="mini-fit">
         <div id="datagrid1" class="mini-datagrid"  allowAlternating="true" style="width:100%;height:100%;"
-             url="<%=request.getContextPath()%>/ajax/credit_creditIndexList.do"
+             url="<%=request.getContextPath()%>/ajax/evaluate_evaluateRecordList.do"
              allowResize="true" idField="id" pageSize="50"
              allowCellEdit="true" allowCellSelect="true" >
             <div property="columns">
                 <div type="indexcolumn" width="40" headerAlign="center">序号</div>
-                <div field="eva_dah" name="eva_dah" id = "applyuserName" width="120" align="center" headerAlign="center" allowSort="false">姓名</div>
+                <div field="evaUserName" name="eva_dah" id = "applyuserName" width="120" align="center" headerAlign="center" allowSort="false">姓名</div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="zzsx" width="100" allowSort="true"  align="center" headerAlign="center">政治思想
                    <input property="editor" class="mini-combobox" style="width:100%;" data="eva_option"/>
                 </div>
@@ -48,8 +48,8 @@
         </div>
     </div>
     <script type="text/javascript">
-        var eva_option = [{ id: 1, text: '优秀' }, { id: 2, text: '称职'},{id: 3, text:'基本称职'},{id: 4, text:'不称职'}];
-        var job_option = [{ id: 1, text: '提拔' }, { id: 2, text: '留任'},{id: 3, text:'调整'}];
+        var eva_option = [{id: 0, text:'未填写' }, { id: 1, text: '优秀' }, { id: 2, text: '称职'},{id: 3, text:'基本称职'},{id: 4, text:'不称职'}];
+        var job_option = [{id: 0, text:'未填写' },{ id: 1, text: '提拔' }, { id: 2, text: '留任'},{id: 3, text:'调整'}];
 
         mini.parse();
 

@@ -21,6 +21,9 @@
     <result column="column2" property="column2" jdbcType="VARCHAR" />
     <result column="column3" property="column3" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="evaluateRecordVoMap" type="jssvc.evaluate.vo.EvaluateRecordVo" extends="BaseResultMap">
+    <result column="evaUserName" property="evaUserName" jdbcType="VARCHAR"/>
+  </resultMap>
   <sql id="Base_Column_List" >
     id, dah, eva_dah, zzsx, ywzs, gztd, wcgz, zjsf, zhpj, rzjy, finished, eva_year, flag1, 
     flag2, flag3, column1, column2, column3
@@ -30,6 +33,27 @@
     <include refid="Base_Column_List" />
     from t_evaluate_record
     where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getEvluateRecordList" resultMap="evaluateRecordVoMap" parameterType="jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter">
+    select  a.*,b.ygxm as evaUserName  from  t_evaluate_record a, t_user b
+    where a.eva_dah = b.dah
+    <if test="dah != null and '' != dah">
+    and a.dah = #{dah,jdbcType=VARCHAR}
+    </if>
+    <if test="sortField != null and '' != sortField">
+      order by a.${sortField} ${sortOrder}
+    </if>
+    <if test="limit != 0">
+      limit #{offset},#{limit}
+    </if>
+  </select>
+  <select id="getEvluateRecordListCount" resultType="java.lang.Integer" parameterType="jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter" >
+    select count(*) from t_evaluate_record a, t_user b
+    where a.eva_dah = b.dah
+    <if test="dah != null and '' != dah">
+    and a.dah = #{dah,jdbcType=VARCHAR}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_evaluate_record
