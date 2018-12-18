@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="jssvc.evaluate.dao.EvaluateRecordMapper" >
+  <resultMap id="BaseResultMap" type="jssvc.evaluate.model.EvaluateRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dah" property="dah" jdbcType="VARCHAR" />
+    <result column="eva_dah" property="evaDah" jdbcType="VARCHAR" />
+    <result column="zzsx" property="zzsx" jdbcType="DOUBLE" />
+    <result column="ywzs" property="ywzs" jdbcType="DOUBLE" />
+    <result column="gztd" property="gztd" jdbcType="DOUBLE" />
+    <result column="wcgz" property="wcgz" jdbcType="DOUBLE" />
+    <result column="zjsf" property="zjsf" jdbcType="DOUBLE" />
+    <result column="zhpj" property="zhpj" jdbcType="DOUBLE" />
+    <result column="rzjy" property="rzjy" jdbcType="DOUBLE" />
+    <result column="finished" property="finished" jdbcType="VARCHAR" />
+    <result column="eva_year" property="evaYear" jdbcType="VARCHAR" />
+    <result column="flag1" property="flag1" jdbcType="VARCHAR" />
+    <result column="flag2" property="flag2" jdbcType="VARCHAR" />
+    <result column="flag3" property="flag3" jdbcType="VARCHAR" />
+    <result column="column1" property="column1" jdbcType="VARCHAR" />
+    <result column="column2" property="column2" jdbcType="VARCHAR" />
+    <result column="column3" property="column3" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, dah, eva_dah, zzsx, ywzs, gztd, wcgz, zjsf, zhpj, rzjy, finished, eva_year, flag1, 
+    flag2, flag3, column1, column2, column3
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_evaluate_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_evaluate_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="jssvc.evaluate.model.EvaluateRecord" >
+    insert into t_evaluate_record (id, dah, eva_dah, 
+      zzsx, ywzs, gztd, wcgz, 
+      zjsf, zhpj, rzjy, finished, 
+      eva_year, flag1, flag2, 
+      flag3, column1, column2, 
+      column3)
+    values (#{id,jdbcType=INTEGER}, #{dah,jdbcType=VARCHAR}, #{evaDah,jdbcType=VARCHAR}, 
+      #{zzsx,jdbcType=DOUBLE}, #{ywzs,jdbcType=DOUBLE}, #{gztd,jdbcType=DOUBLE}, #{wcgz,jdbcType=DOUBLE}, 
+      #{zjsf,jdbcType=DOUBLE}, #{zhpj,jdbcType=DOUBLE}, #{rzjy,jdbcType=DOUBLE}, #{finished,jdbcType=VARCHAR}, 
+      #{evaYear,jdbcType=VARCHAR}, #{flag1,jdbcType=VARCHAR}, #{flag2,jdbcType=VARCHAR}, 
+      #{flag3,jdbcType=VARCHAR}, #{column1,jdbcType=VARCHAR}, #{column2,jdbcType=VARCHAR}, 
+      #{column3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jssvc.evaluate.model.EvaluateRecord" >
+    insert into t_evaluate_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dah != null" >
+        dah,
+      </if>
+      <if test="evaDah != null" >
+        eva_dah,
+      </if>
+      <if test="zzsx != null" >
+        zzsx,
+      </if>
+      <if test="ywzs != null" >
+        ywzs,
+      </if>
+      <if test="gztd != null" >
+        gztd,
+      </if>
+      <if test="wcgz != null" >
+        wcgz,
+      </if>
+      <if test="zjsf != null" >
+        zjsf,
+      </if>
+      <if test="zhpj != null" >
+        zhpj,
+      </if>
+      <if test="rzjy != null" >
+        rzjy,
+      </if>
+      <if test="finished != null" >
+        finished,
+      </if>
+      <if test="evaYear != null" >
+        eva_year,
+      </if>
+      <if test="flag1 != null" >
+        flag1,
+      </if>
+      <if test="flag2 != null" >
+        flag2,
+      </if>
+      <if test="flag3 != null" >
+        flag3,
+      </if>
+      <if test="column1 != null" >
+        column1,
+      </if>
+      <if test="column2 != null" >
+        column2,
+      </if>
+      <if test="column3 != null" >
+        column3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="dah != null" >
+        #{dah,jdbcType=VARCHAR},
+      </if>
+      <if test="evaDah != null" >
+        #{evaDah,jdbcType=VARCHAR},
+      </if>
+      <if test="zzsx != null" >
+        #{zzsx,jdbcType=DOUBLE},
+      </if>
+      <if test="ywzs != null" >
+        #{ywzs,jdbcType=DOUBLE},
+      </if>
+      <if test="gztd != null" >
+        #{gztd,jdbcType=DOUBLE},
+      </if>
+      <if test="wcgz != null" >
+        #{wcgz,jdbcType=DOUBLE},
+      </if>
+      <if test="zjsf != null" >
+        #{zjsf,jdbcType=DOUBLE},
+      </if>
+      <if test="zhpj != null" >
+        #{zhpj,jdbcType=DOUBLE},
+      </if>
+      <if test="rzjy != null" >
+        #{rzjy,jdbcType=DOUBLE},
+      </if>
+      <if test="finished != null" >
+        #{finished,jdbcType=VARCHAR},
+      </if>
+      <if test="evaYear != null" >
+        #{evaYear,jdbcType=VARCHAR},
+      </if>
+      <if test="flag1 != null" >
+        #{flag1,jdbcType=VARCHAR},
+      </if>
+      <if test="flag2 != null" >
+        #{flag2,jdbcType=VARCHAR},
+      </if>
+      <if test="flag3 != null" >
+        #{flag3,jdbcType=VARCHAR},
+      </if>
+      <if test="column1 != null" >
+        #{column1,jdbcType=VARCHAR},
+      </if>
+      <if test="column2 != null" >
+        #{column2,jdbcType=VARCHAR},
+      </if>
+      <if test="column3 != null" >
+        #{column3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="jssvc.evaluate.model.EvaluateRecord" >
+    update t_evaluate_record
+    <set >
+      <if test="dah != null" >
+        dah = #{dah,jdbcType=VARCHAR},
+      </if>
+      <if test="evaDah != null" >
+        eva_dah = #{evaDah,jdbcType=VARCHAR},
+      </if>
+      <if test="zzsx != null" >
+        zzsx = #{zzsx,jdbcType=DOUBLE},
+      </if>
+      <if test="ywzs != null" >
+        ywzs = #{ywzs,jdbcType=DOUBLE},
+      </if>
+      <if test="gztd != null" >
+        gztd = #{gztd,jdbcType=DOUBLE},
+      </if>
+      <if test="wcgz != null" >
+        wcgz = #{wcgz,jdbcType=DOUBLE},
+      </if>
+      <if test="zjsf != null" >
+        zjsf = #{zjsf,jdbcType=DOUBLE},
+      </if>
+      <if test="zhpj != null" >
+        zhpj = #{zhpj,jdbcType=DOUBLE},
+      </if>
+      <if test="rzjy != null" >
+        rzjy = #{rzjy,jdbcType=DOUBLE},
+      </if>
+      <if test="finished != null" >
+        finished = #{finished,jdbcType=VARCHAR},
+      </if>
+      <if test="evaYear != null" >
+        eva_year = #{evaYear,jdbcType=VARCHAR},
+      </if>
+      <if test="flag1 != null" >
+        flag1 = #{flag1,jdbcType=VARCHAR},
+      </if>
+      <if test="flag2 != null" >
+        flag2 = #{flag2,jdbcType=VARCHAR},
+      </if>
+      <if test="flag3 != null" >
+        flag3 = #{flag3,jdbcType=VARCHAR},
+      </if>
+      <if test="column1 != null" >
+        column1 = #{column1,jdbcType=VARCHAR},
+      </if>
+      <if test="column2 != null" >
+        column2 = #{column2,jdbcType=VARCHAR},
+      </if>
+      <if test="column3 != null" >
+        column3 = #{column3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jssvc.evaluate.model.EvaluateRecord" >
+    update t_evaluate_record
+    set dah = #{dah,jdbcType=VARCHAR},
+      eva_dah = #{evaDah,jdbcType=VARCHAR},
+      zzsx = #{zzsx,jdbcType=DOUBLE},
+      ywzs = #{ywzs,jdbcType=DOUBLE},
+      gztd = #{gztd,jdbcType=DOUBLE},
+      wcgz = #{wcgz,jdbcType=DOUBLE},
+      zjsf = #{zjsf,jdbcType=DOUBLE},
+      zhpj = #{zhpj,jdbcType=DOUBLE},
+      rzjy = #{rzjy,jdbcType=DOUBLE},
+      finished = #{finished,jdbcType=VARCHAR},
+      eva_year = #{evaYear,jdbcType=VARCHAR},
+      flag1 = #{flag1,jdbcType=VARCHAR},
+      flag2 = #{flag2,jdbcType=VARCHAR},
+      flag3 = #{flag3,jdbcType=VARCHAR},
+      column1 = #{column1,jdbcType=VARCHAR},
+      column2 = #{column2,jdbcType=VARCHAR},
+      column3 = #{column3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
