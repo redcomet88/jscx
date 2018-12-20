@@ -50,10 +50,7 @@ home.jsp<%@page language="java" contentType="text/html; charset=utf-8" pageEncod
     var searchFlag = true;
     var grid = mini.get("ckSummaryDataGrid");
     
-    var lcsqFlag = ${lcsqFlag};
-    if(lcsqFlag){
-        $("#lcsq").show();
-    }
+
 
     //处理ajax异常
     $(document).ajaxComplete(function(evt, request, settings) {

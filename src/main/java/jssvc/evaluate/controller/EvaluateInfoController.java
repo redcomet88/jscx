@@ -5,6 +5,7 @@ import jssvc.base.controller.BaseController;
 import jssvc.base.enums.SortOrder;
 import jssvc.base.exception.BusinessException;
 import jssvc.base.service.BaseService;
+import jssvc.base.util.DocConverter;
 import jssvc.base.util.JSON;
 import jssvc.evaluate.model.EvaluateRecord;
 import jssvc.evaluate.service.EvaluateInfoService;
@@ -91,5 +92,27 @@ public class EvaluateInfoController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 述职报告预览
+     * @param path
+     * @return
+     */
+    @RequestMapping("previewJobReport.do")
+    public ModelAndView previewJobReport(String path) {
+        ModelAndView mv = new ModelAndView();
+        String[] gs = { ".doc", ".docx", ".xls", ".xlsx", ".pptx", ".ppt" };
+        String rootPath = request.getSession().getServletContext().getRealPath(path);
+        for (String str : gs)
+            if (path.endsWith(str)) {
+                DocConverter doc = new DocConverter(rootPath);
+                doc.conver();
+                path = path.substring(0, path.lastIndexOf(".")) + ".pdf";
+            }
+        System.out.println("path:" + path);
+        mv.addObject("path", path);
+        mv.setViewName("base/previewAttach");
+        return mv;
     }
 }
