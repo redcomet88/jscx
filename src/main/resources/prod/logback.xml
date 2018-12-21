@@ -6,7 +6,7 @@
         </encoder>
     </appender>
     <appender name="FILEOUT" class="ch.qos.logback.core.FileAppender">
-        <file>/logs/jscx.log</file>
+        <file>/opt/tomcat/jscxlog/jscx.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -14,7 +14,7 @@
         <prudent>false</prudent>
     </appender>
     <appender name="rollingAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/logs/jscxx.log</file>
+        <file>/opt/tomcat/jscxlog/jscx.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/logs/jscx-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>

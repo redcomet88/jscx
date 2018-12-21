@@ -188,13 +188,13 @@
       </dependency>
       <!-- 在线预览PDF、DOCX等  BEGIN -->
       <!-- jodconverter-->
-      <dependency>
-          <groupId>com.artofsolving</groupId>
-          <artifactId>jodconverter</artifactId>
-          <version>2.2.1</version>
-      </dependency>
-      <!-- openoffice -->
-      <dependency>
+      <!--  <dependency>
+           <groupId>com.artofsolving</groupId>
+           <artifactId>jodconverter</artifactId>
+           <version>2.2.1</version>
+       </dependency>-->
+       <!-- openoffice -->
+      <!--<dependency>
           <groupId>org.openoffice</groupId>
           <artifactId>ridl</artifactId>
           <version>3.0.1</version>
@@ -203,8 +203,7 @@
           <groupId>com.lowagie</groupId>
           <artifactId>itext</artifactId>
           <version>2.1.7</version>
-      </dependency>
-
+      </dependency>-->
       <!-- 在线预览PDF、DOCX等  END -->
   </dependencies>
     <profiles>
