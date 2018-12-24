@@ -6,7 +6,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv = "X-UA-Compatible" content = "IE=edge,chrome=1" />
-    <title>教师诚信系统</title>
+    <title>苏州市职业大学</title>
     <link href="<%=request.getContextPath()%>/resources/css/common/base.css" rel="stylesheet" />
     <link href="<%=request.getContextPath()%>/resources/css/login/login.css" rel="stylesheet" />
     <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/common/jquery.js"></script>

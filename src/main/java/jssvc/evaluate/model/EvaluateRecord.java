@@ -7,6 +7,8 @@ public class EvaluateRecord {
 
     private String evaDah;
 
+    private String evaZw;
+
     private Double zzsx;
 
     private Double ywzs;
@@ -55,6 +57,14 @@ public class EvaluateRecord {
 
     public String getEvaDah() {
         return evaDah;
+    }
+
+    public String getEvaZw() {
+        return evaZw;
+    }
+
+    public void setEvaZw(String evaZw) {
+        this.evaZw = evaZw;
     }
 
     public void setEvaDah(String evaDah) {

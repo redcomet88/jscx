@@ -77,7 +77,7 @@ public class EvaluateInfoController extends BaseController {
             filter.setOffset();
             filter.setLimit();
             filter.setDah(user.getDah());
-            filter.setSortField("dah");
+            filter.setSortField("id");
             filter.setSortOrder(SortOrder.ASC.toString());
             List<EvaluateRecordVo> list = evaluateService.getEvaluateRecordList(filter);
             int count = evaluateService.getEvaluateRecordListCount(filter);
@@ -101,10 +101,9 @@ public class EvaluateInfoController extends BaseController {
     @RequestMapping("previewJobReport.do")
     public ModelAndView previewJobReport(String path) {
         ModelAndView mv = new ModelAndView();
-        String[] gs = { ".doc", ".docx", ".xls", ".xlsx", ".pptx", ".ppt" };
         String rootPath = request.getSession().getServletContext().getRealPath(path);
 
-        path = path.substring(0, path.lastIndexOf(".")) + ".pdf";
+        path = path.substring(0, path.lastIndexOf(".")) + ".swf";
 
         System.out.println("path:" + path);
         mv.addObject("path", path);

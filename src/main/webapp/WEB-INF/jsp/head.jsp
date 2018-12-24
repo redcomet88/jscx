@@ -8,7 +8,7 @@
     </div>
     <ul class="nav navbar-nav">
      <li><a id="toggle"><span class="fa fa-bars" ></span></a></li>
-         <li class=""><span style="line-height:50px;font-size: 23px;  font-weight: bold;" >教师诚信</span></li>
+         <li class=""><span style="line-height:50px;font-size: 23px;  font-weight: bold;" ></span></li>
         <%--    <li class="icontop"><a href="#"><i class="fa fa-puzzle-piece"></i><span >开发文档</span></a></li>
      <li class="icontop"><a href="#"><i class="fa fa-sort-amount-asc"></i><span >人力资源</span></a></li>
      <li class="icontop"><a href="#"><i class="fa  fa-cog"></i><span >系统设置</span></a></li>--%>

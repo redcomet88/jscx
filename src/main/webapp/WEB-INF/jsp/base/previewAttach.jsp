@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>PDF预览</title>
+<title>预览</title>
 </head>
 <body>
-    <div style="width:100%;height:100%">
-        <iframe width="100%" height="800px;" src="<%=request.getContextPath()%>${path}"></iframe>
+    <div  align="center" style="margin:0 auto ;">
+        <embed  align="center" width="1024px" height="800px;" src="<%=request.getContextPath()%>${path}" wmode="opaque"></embed>
     </div>
 </body>
 </html>

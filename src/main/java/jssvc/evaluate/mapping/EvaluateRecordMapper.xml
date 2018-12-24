@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="dah" property="dah" jdbcType="VARCHAR" />
     <result column="eva_dah" property="evaDah" jdbcType="VARCHAR" />
+    <result column="eva_zw" property ="evaZw" jdbcType="VARCHAR" />
     <result column="zzsx" property="zzsx" jdbcType="DOUBLE" />
     <result column="ywzs" property="ywzs" jdbcType="DOUBLE" />
     <result column="gztd" property="gztd" jdbcType="DOUBLE" />
@@ -25,7 +26,7 @@
     <result column="evaUserName" property="evaUserName" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, dah, eva_dah, zzsx, ywzs, gztd, wcgz, zjsf, zhpj, rzjy, finished, eva_year, flag1, 
+    id, dah, eva_dah, eva_zw, zzsx, ywzs, gztd, wcgz, zjsf, zhpj, rzjy, finished, eva_year, flag1,
     flag2, flag3, column1, column2, column3
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -38,9 +39,9 @@
   <select id="getEvluateRecordList" resultMap="evaluateRecordVoMap" parameterType="jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter">
     select  a.*,b.ygxm as evaUserName  from  t_evaluate_record a, t_user b
     where a.eva_dah = b.dah
-    <if test="dah != null and '' != dah">
+   <!-- <if test="dah != null and '' != dah">
     and a.dah = #{dah,jdbcType=VARCHAR}
-    </if>
+    </if> -->
     <if test="sortField != null and '' != sortField">
       order by a.${sortField} ${sortOrder}
     </if>
@@ -51,22 +52,22 @@
   <select id="getEvluateRecordListCount" resultType="java.lang.Integer" parameterType="jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter" >
     select count(*) from t_evaluate_record a, t_user b
     where a.eva_dah = b.dah
-    <if test="dah != null and '' != dah">
+ <!-- <if test="dah != null and '' != dah">
     and a.dah = #{dah,jdbcType=VARCHAR}
-    </if>
+    </if>-->
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_evaluate_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="jssvc.evaluate.model.EvaluateRecord" >
-    insert into t_evaluate_record (id, dah, eva_dah, 
+    insert into t_evaluate_record (id, dah, eva_dah, eva_zw
       zzsx, ywzs, gztd, wcgz, 
       zjsf, zhpj, rzjy, finished, 
       eva_year, flag1, flag2, 
       flag3, column1, column2, 
       column3)
-    values (#{id,jdbcType=INTEGER}, #{dah,jdbcType=VARCHAR}, #{evaDah,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{dah,jdbcType=VARCHAR}, #{evaDah,jdbcType=VARCHAR}, #{evaZw,jdbcType=VARCHAR},
       #{zzsx,jdbcType=DOUBLE}, #{ywzs,jdbcType=DOUBLE}, #{gztd,jdbcType=DOUBLE}, #{wcgz,jdbcType=DOUBLE}, 
       #{zjsf,jdbcType=DOUBLE}, #{zhpj,jdbcType=DOUBLE}, #{rzjy,jdbcType=DOUBLE}, #{finished,jdbcType=VARCHAR}, 
       #{evaYear,jdbcType=VARCHAR}, #{flag1,jdbcType=VARCHAR}, #{flag2,jdbcType=VARCHAR}, 

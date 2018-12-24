@@ -7,7 +7,7 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>教师诚信-首页</title>
+        <title>苏州市职业大学-首页</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta http-equiv = "X-UA-Compatible" content = "IE=10" />
         <!-- 如果小于IE7 -->
