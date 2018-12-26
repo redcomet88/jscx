@@ -30,6 +30,13 @@ public interface EvaluateInfoService {
     List<EvaluateRecordVo> getEvaluateRecordList(EvaluateRecordSearchFilter filter);
 
     /**
+     * 评测记录全选优秀
+     * @param filter
+     * @return
+     */
+    List<EvaluateRecordVo> getEvaluateRecordListForAllChosen(EvaluateRecordSearchFilter filter);
+
+    /**
      * 获取评测记录列表计数
      * @param filter
      * @return

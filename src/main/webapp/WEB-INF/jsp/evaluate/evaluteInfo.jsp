@@ -17,18 +17,23 @@
     <body>
     <div class="mini-fit">
         <!-- 内联的详细信息框 -->
-
             <div id="editForm1" style="display:none;padding:5px;">
+
                 <input class="mini-hidden" name="id"/>
-                <table style="width:70%;">
-                    <tr>
+                <table style="width:100%;">
+                    <!--<tr>
                         <td style="width:180px;" rowspan="3"> <img id="teacher_img" style="width:100px;height:140px" src=""/></td>
                         <td style="width:120px;text-align:center;">工号：</td>
-                        <td style="width:150px;"><input name="user.dah" class="mini-textbox" /></td>
+                        <td style="width:150px;"><input name="user.dah" class="mini-textbox" style="border: 0px;outline:none;"/></td>
+                    </tr>-->
+                    <tr>
+                        <td style="width:105px;" rowspan="3"> <img id="teacher_img" style="width:100px;height:140px" src=""/></td>
+                        <td style="width:120px;text-align:center;">工号：</td>
+                    <td><span class="mini-textbox-border" style="border: 0px;background-color: transparent"><input id="dah1" type="text" class="mini-textbox-input" autocomplete="off" placeholder=""  name="user.dah" disabled="true"></span></td>
                     </tr>
                     <tr>
                         <td style="width:120px;text-align:center;">职务：</td>
-                        <td style="width:500px;"><input name="jgh" style="width:500px;" class="mini-textbox" /></td>
+                        <td style="width:720px;"><span class="mini-textbox-border" style="width:720px;border: 0px;background-color: transparent"><input id="jgh1" type="text" class="mini-textbox-input" autocomplete="off" placeholder="" disabled="true"></span></td>
                     </tr>
                     <tr>
                         <td style="width:150px;text-align:center;">述职报告：</td>
@@ -36,6 +41,18 @@
                     </tr>
                 </table>
             </div>
+
+        <div class="mini-toolbar" style="padding:2px;border-bottom:0;">
+            <table style="width:100%;table-layout:fixed;">
+                <tr>
+                    <td style="width:30%"></td>
+                    <td style="width:120px">
+                        <a class="mini-button" style="width:140px"  id="addOne" onclick="chooseAll()">全选优秀</a>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
 
         <div id="datagrid1" class="mini-datagrid"  allowAlternating="true" style="width:100%;height:100%;"
              url="<%=request.getContextPath()%>/ajax/evaluate_evaluateRecordList.do"
@@ -47,25 +64,25 @@
                 <div type="indexcolumn" width="40" headerAlign="center">序号</div>
                 <div  width="120" align="center" headerAlign="center" allowSort="false" renderer="onNameRenderer">姓名</div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="zzsx" width="100" allowSort="true"  align="center" headerAlign="center">政治思想
-                 <!--  <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/> -->
+                   <input property="editor" class="mini-combobox"  id="combo_eva" style="width:100%;" data="eva_option"/>
                 </div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="ywzs" width="100" allowSort="true"  align="center" headerAlign="center">业务知识
-                    <!--  <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/> -->
+                      <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/>
                 </div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="gztd" width="100" allowSort="true"  align="center" headerAlign="center">工作态度
-                    <!--  <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/> -->
+                      <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/>
                 </div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="wcgz" width="100" allowSort="true"  align="center" headerAlign="center">完成工作
-                    <!--  <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/> -->
+                      <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/>
                 </div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="zjsf" width="100" allowSort="true"  align="center" headerAlign="center">遵纪守法
-                    <!--  <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/> -->
+                      <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/>
                 </div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="zhpj" width="100" allowSort="true"  align="center" headerAlign="center">综合评价
-                    <!--  <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/> -->
+                      <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/>
                 </div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="rzjy" width="100" allowSort="true"  align="center" headerAlign="center">任职建议
-                    <!--  <input property="editor" class="mini-combobox"  style="width:100%;" data="job_option"/> -->
+                      <input property="editor" class="mini-combobox"  style="width:100%;" data="job_option"/>
                 </div>
             </div>
         </div>
@@ -141,6 +158,11 @@
                         var o = mini.decode(text);
                         o.jgh = row.evaZw;
                         form.setData(o);
+                       // $("#dah").innerText = o.user.dah;
+                       // $("#dah").attr("innerHTML",o.user.dah);
+                        $("#dah1").attr("value",o.user.dah);
+                        $("#jgh1").attr("value",o.jgh);
+
 
                         $("#teacher_img").attr("src","<%=request.getContextPath()%>/resources/images/teacher/" + o.user.dah  + ".jpg");
                         //teacher_img.src = "<%=request.getContextPath()%>/resources/images/teacher/" + o.user.dah + ".jpg";
@@ -182,6 +204,13 @@
                 grid.doLayout();
             }
         }
+
+        //全部选择优秀
+       function chooseAll() {
+           var obj = mini.get("combo_eva");
+           obj.setValue("1");
+           grid.reload();
+       }
 
     </script>
     </body>

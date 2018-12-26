@@ -60,6 +60,18 @@ public class EvaluateInfoServiceImpl implements EvaluateInfoService {
         return list;
     }
 
+    @Override
+    public List<EvaluateRecordVo> getEvaluateRecordListForAllChosen(EvaluateRecordSearchFilter filter) {
+        logger.info("getEvaluateRecordListForAllChosen begin");
+        List<EvaluateRecordVo> list = evluateDao.getEvluateRecordList(filter);
+        //对表中的数据进行处理
+        for(int i=0; i<list.size(); i++)
+        {
+            list.get(i).setWcgz(1.0);
+        }
+        logger.info("getEvaluateRecordListForAllChosen end");
+        return list;
+    }
 
     @Override
     public int getEvaluateRecordListCount(EvaluateRecordSearchFilter filter) {

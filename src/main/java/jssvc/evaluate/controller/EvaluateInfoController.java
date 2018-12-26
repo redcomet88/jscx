@@ -94,6 +94,38 @@ public class EvaluateInfoController extends BaseController {
     }
 
     /**
+     * @description:评测数据列表查询
+     *
+     * @author: redcomet
+     * @param: [filter]
+     * @return: void
+     * @create: 2018/10/22
+     **/
+    @ResponseBody
+    @RequestMapping("ajax/evaluate_evaluateRecordListForAllChosen.do")
+    private void evaluateRecordListForAllChosen(EvaluateRecordSearchFilter filter) throws BusinessException {
+        try {
+            User user = getSessionUser();
+            filter.setOffset();
+            filter.setLimit();
+            filter.setDah(user.getDah());
+            filter.setSortField("id");
+            filter.setSortOrder(SortOrder.ASC.toString());
+            List<EvaluateRecordVo> list = evaluateService.getEvaluateRecordListForAllChosen(filter);
+            int count = evaluateService.getEvaluateRecordListCount(filter);
+            //返回数据
+            Map<String, Object> result = new HashMap<>();
+            result.put("data", list);
+            result.put("total", count);
+            response.getWriter().write(JSON.Encode(result));
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 述职报告预览
      * @param path
      * @return
