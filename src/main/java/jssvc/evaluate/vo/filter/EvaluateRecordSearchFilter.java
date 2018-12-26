@@ -20,6 +20,8 @@ public class EvaluateRecordSearchFilter extends Pagination {
 
     private String finished; //是否完成
 
+    private String choose;  //1. 全部选择优秀和好的
+
     public String getId() {
         return id;
     }
@@ -60,10 +62,18 @@ public class EvaluateRecordSearchFilter extends Pagination {
         this.finished = finished;
     }
 
+    public String getChoose() {
+        return choose;
+    }
+
+    public void setChoose(String choose) {
+        this.choose = choose;
+    }
+
     @Override
     public String toString() {
         return "CreditIndexSearchFilter [id=" + id + ", dah=" + dah + ", eva_dah=" + eva_dah +
-                ",eva_year=" + eva_year + ",finished=" + finished + "]";
+                ",eva_year=" + eva_year + ",finished=" + finished + ",choose=" + choose + "]";
     }
 
 }

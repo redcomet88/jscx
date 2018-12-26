@@ -64,10 +64,17 @@ public class EvaluateInfoServiceImpl implements EvaluateInfoService {
     public List<EvaluateRecordVo> getEvaluateRecordListForAllChosen(EvaluateRecordSearchFilter filter) {
         logger.info("getEvaluateRecordListForAllChosen begin");
         List<EvaluateRecordVo> list = evluateDao.getEvluateRecordList(filter);
-        //对表中的数据进行处理
+        //全部设置为优秀
         for(int i=0; i<list.size(); i++)
         {
+            list.get(i).setZzsx(1.0);
             list.get(i).setWcgz(1.0);
+            list.get(i).setYwzs(1.0);
+            list.get(i).setGztd(1.0);
+            list.get(i).setWcgz(1.0);
+            list.get(i).setZjsf(1.0);
+            list.get(i).setZhpj(1.0);
+            list.get(i).setRzjy(1.0);
         }
         logger.info("getEvaluateRecordListForAllChosen end");
         return list;

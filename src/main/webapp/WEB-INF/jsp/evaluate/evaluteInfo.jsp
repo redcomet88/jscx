@@ -45,9 +45,12 @@
         <div class="mini-toolbar" style="padding:2px;border-bottom:0;">
             <table style="width:100%;table-layout:fixed;">
                 <tr>
-                    <td style="width:30%"></td>
+                    <td style="width:70%"></td>
                     <td style="width:120px">
-                        <a class="mini-button" style="width:140px"  id="addOne" onclick="chooseAll()">全选优秀</a>
+                        <a class="mini-button" style="width:140px"  id="choose" onclick="chooseAll()">全选优秀</a>
+                    </td>
+                    <td style="width:120px">
+                        <a class="mini-button" style="width:140px"  id="subm" onclick="submitTen()">提交评测</a>
                     </td>
                 </tr>
 
@@ -56,7 +59,7 @@
 
         <div id="datagrid1" class="mini-datagrid"  allowAlternating="true" style="width:100%;height:100%;"
              url="<%=request.getContextPath()%>/ajax/evaluate_evaluateRecordList.do"
-             allowResize="true" idField="id" pageSize="10"
+             allowResize="true" idField="id" pageSize="10" showPager="false"
              allowCellEdit="true" allowCellSelect="true"
              onshowrowdetail="onShowRowDetail" >
             <div property="columns">
@@ -207,9 +210,13 @@
 
         //全部选择优秀
        function chooseAll() {
-           var obj = mini.get("combo_eva");
-           obj.setValue("1");
-           grid.reload();
+           grid.load({ 'choose': '1'});
+       }
+
+       //提交
+       function submitTen(){
+           var data = grid.data[1];
+           console.log(data);
        }
 
     </script>
