@@ -1,9 +1,11 @@
 package jssvc.evaluate.controller;
 
+import jssvc.base.constant.ConstantKey;
 import jssvc.base.constant.ConstantMessage;
 import jssvc.base.controller.BaseController;
 import jssvc.base.enums.SortOrder;
 import jssvc.base.exception.BusinessException;
+import jssvc.base.interceptor.LogFace;
 import jssvc.base.service.BaseService;
 import jssvc.base.util.JSON;
 import jssvc.evaluate.model.EvaluateRecord;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +101,20 @@ public class EvaluateInfoController extends BaseController {
         }
     }
 
+    @LogFace
+    @ResponseBody
+    @RequestMapping("ajax/evaluate_updateEvaRecord.do")
+    private void updateEvaRecord(EvaluateRecord record) throws BusinessException {
+        try {
+            evaluateService.updateEvaRecord(record);
+           // System.out.println(record.getDah() + "," + record.getEvaDah());
+            response.getWriter().write(ConstantKey.SUCCESS);
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            throw new BusinessException(ConstantMessage.ERR00005, e);
+        }
+    }
 
     /**
      * 述职报告预览

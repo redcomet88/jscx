@@ -42,4 +42,6 @@ public interface EvaluateInfoService {
      * @return
      */
     int getEvaluateRecordListCount(EvaluateRecordSearchFilter filter);
+
+    int updateEvaRecord(EvaluateRecord record);
 }

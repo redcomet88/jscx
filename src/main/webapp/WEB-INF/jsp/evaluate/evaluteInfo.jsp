@@ -215,10 +215,38 @@
 
        //提交
        function submitTen(){
-           var data = grid.data[1];
-           console.log(data);
+           grid.loading("数据检验中，请稍后......");
+           checkChosen();
+           grid.loading("数据提交中，请稍后......");
+           for (var i=0;i<grid.totalCount;i++){
+              var data = grid.data[i];
+              data.finished = 1;
+              console.log(data);
+              $.ajax({
+                   url: "<%=request.getContextPath()%>/ajax/evaluate_updateEvaRecord.do",
+                   type: "post",
+                   dataType: 'text',
+                   data: data,
+                   success: function (result) {
+                      if (result == "SUCCESS") {
+                          grid.reload();
+                      }
+                }
+              });
+           }
+           //这里应该 grid reload一下
        }
 
+       //检查是否有未选择的
+       function checkChosen() {
+           for (var i=0;i<grid.totalCount;i++) {
+               var data = grid.data[i];
+               if(data.zzsx == 0.0 || data.ywzs == 0.0 || data.gztd == 0.0 || data.wcgz == 0.0 || data.zjsf == 0.0 || data.zhpj == 0.0
+                   || data.rzjy == 0.0 )
+                   alert("第[" + (i+1) +"]行尚有未选择的选项，请您选择后提交");
+           }
+       }
+       
     </script>
     </body>
 </html>

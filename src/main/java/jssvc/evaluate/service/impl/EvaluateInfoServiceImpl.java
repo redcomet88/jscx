@@ -17,6 +17,7 @@ import jssvc.credit.vo.CreditProcessLogVo;
 import jssvc.credit.vo.CreditProcessVo;
 import jssvc.credit.vo.filter.CreditProcessSearchFilter;
 import jssvc.evaluate.dao.EvaluateRecordMapper;
+import jssvc.evaluate.model.EvaluateRecord;
 import jssvc.evaluate.service.EvaluateInfoService;
 import jssvc.evaluate.vo.EvaluateRecordVo;
 import jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter;
@@ -86,5 +87,12 @@ public class EvaluateInfoServiceImpl implements EvaluateInfoService {
         int count = evluateDao.getEvluateRecordListCount(filter);
         logger.info("getEvaluateRecordListCount end");
         return count;
+    }
+
+    public int updateEvaRecord(EvaluateRecord record){
+        logger.info("updateEvaRecord begin");
+        int res = evluateDao.updateByPrimaryKey(record);
+        logger.info("updateEvaRecord end");
+        return res;
     }
 }
