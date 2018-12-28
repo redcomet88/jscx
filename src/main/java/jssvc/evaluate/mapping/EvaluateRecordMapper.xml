@@ -39,9 +39,12 @@
   <select id="getEvluateRecordList" resultMap="evaluateRecordVoMap" parameterType="jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter">
     select  a.*,b.ygxm as evaUserName  from  t_evaluate_record a, t_user b
     where a.eva_dah = b.dah
-   <!-- <if test="dah != null and '' != dah">
+    <if test="dah != null and '' != dah">
     and a.dah = #{dah,jdbcType=VARCHAR}
-    </if> -->
+    </if>
+    <if test="finished != null and '' != finished">
+      and a.finished = #{finished,jdbcType=VARCHAR}
+    </if>
     <if test="sortField != null and '' != sortField">
       order by a.${sortField} ${sortOrder}
     </if>
@@ -52,9 +55,12 @@
   <select id="getEvluateRecordListCount" resultType="java.lang.Integer" parameterType="jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter" >
     select count(*) from t_evaluate_record a, t_user b
     where a.eva_dah = b.dah
- <!-- <if test="dah != null and '' != dah">
+    <if test="dah != null and '' != dah">
     and a.dah = #{dah,jdbcType=VARCHAR}
-    </if>-->
+    </if>
+    <if test="finished != null and '' != finished">
+      and a.finished = #{finished,jdbcType=VARCHAR}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_evaluate_record
@@ -267,4 +273,14 @@
       column3 = #{column3,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectTotalEvaluateCaseSummary" resultType="java.util.HashMap" >
+    select count(1) as totalNum ,
+    sum(if(d.T_SUM <![CDATA[ < ]]> 98,1,0)) as processNum ,
+    sum(if(d.T_SUM = 98,1,0)) as finishNum,
+    sum(if(d.T_SUM = 0,1,0)) as unCreditNum,
+    0 as conflictNum
+    from  (select  dah,sum(finished) as T_SUM  from   t_evaluate_record where dah like 'PC%' group by dah) d
+   </select>
+
 </mapper>

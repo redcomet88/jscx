@@ -47,7 +47,7 @@
                 <tr>
                     <td style="width:70%"></td>
                     <td style="width:120px">
-                        <a class="mini-button" style="width:140px"  id="choose" onclick="chooseAll()">全选优秀</a>
+                        <a class="mini-button" style="width:140px"  id="choose" onclick="chooseAll()">全选合格</a>
                     </td>
                     <td style="width:120px">
                         <a class="mini-button" style="width:140px"  id="subm" onclick="submitTen()">提交评测</a>
@@ -85,14 +85,14 @@
                       <input property="editor" class="mini-combobox"  style="width:100%;" data="eva_option"/>
                 </div>
                 <div type="comboboxcolumn" autoShowPopup="true" field="rzjy" width="100" allowSort="true"  align="center" headerAlign="center">任职建议
-                      <input property="editor" class="mini-combobox"  style="width:100%;" data="job_option"/>
+                      <input property="editor" class="mini-combobox"  style="width:100%;" data="job_option" />
                 </div>
             </div>
         </div>
 
     </div>
     <script type="text/javascript">
-       var eva_option = [{id: 0, text:'未填写' }, { id: 1, text: '优秀' }, { id: 2, text: '称职'},{id: 3, text:'基本称职'},{id: 4, text:'不称职'}];
+       var eva_option = [{id: 0, text:'未填写' }, { id: 1, text: '优秀' }, { id: 2, text: '合格'},{id: 3, text:'基本合格'},{id: 4, text:'不合格'}];
        var job_option = [{id: 0, text:'未填写' },{ id: 1, text: '提拔' }, { id: 2, text: '留任'},{id: 3, text:'调整'}];
 
        //var eva_option = [{id: 0, text:'未填写' }, { id: 1, text: '优秀' }, { id: 2, text: '称职'},{id: 3, text:'基本称职'},{id: 4, text:'不称职'}];
@@ -101,7 +101,6 @@
 
        mini.parse();
         var editForm = document.getElementById("editForm1");
-
         var grid = mini.get("datagrid1");
         grid.load();
 
@@ -185,6 +184,15 @@
                 window.open("<%=request.getContextPath()%>/previewJobReport.do?path="+path);
         }
 
+       function onComboValidation(e) {
+           var items = this.findItems(e.value);
+           console.log(e.value);
+           if (!items || items.length == 0 || e.value == 1.0 ) {
+               e.isValid = false;
+               e.errorText = "存在未填写的内容，请检查";
+           }
+       }
+
         function editRow(row_uid) {
             var row = grid.getRowByUID(row_uid);
             if (row) {
@@ -215,38 +223,65 @@
 
        //提交
        function submitTen(){
-           grid.loading("数据检验中，请稍后......");
-           checkChosen();
-           grid.loading("数据提交中，请稍后......");
-           for (var i=0;i<grid.totalCount;i++){
+          var numb = 0;
+          if(grid.pageSize > grid.totalCount)
+              numb = grid.totalCount;
+          else
+              numb = grid.pageSize;
+
+          for (var i=0;i<numb;i++) {
+               var x = new Object();
+               x = grid.data[i];
+               if(x.zzsx == 0.0 || x.ywzs == 0.0 || x.gztd == 0.0 || x.wcgz == 0.0 || x.zjsf == 0.0 || x.zhpj == 0.0
+                   || x.rzjy == 0.0 ){
+                   mini.alert("第[" + (i+1) +"]行尚有未选择的选项，请您选择后提交");
+                   //console.log(i);
+                   return;
+               }
+           }
+           //console.log("下来了");
+
+           for (var i=0;i<numb;i++){
               var data = grid.data[i];
               data.finished = 1;
-              console.log(data);
+              //console.log(data);
               $.ajax({
                    url: "<%=request.getContextPath()%>/ajax/evaluate_updateEvaRecord.do",
                    type: "post",
                    dataType: 'text',
                    data: data,
-                   success: function (result) {
-                      if (result == "SUCCESS") {
-                          grid.reload();
-                      }
+                  success: function (result) {
+
                 }
               });
+               //grid.load({ 'choose': '0'});
            }
            //这里应该 grid reload一下
+           grid.load({ 'choose': '0'});
        }
 
        //检查是否有未选择的
        function checkChosen() {
            for (var i=0;i<grid.totalCount;i++) {
-               var data = grid.data[i];
-               if(data.zzsx == 0.0 || data.ywzs == 0.0 || data.gztd == 0.0 || data.wcgz == 0.0 || data.zjsf == 0.0 || data.zhpj == 0.0
-                   || data.rzjy == 0.0 )
+               var x = new Object();
+               x = grid.data[i];
+               if(grid.data[i].zzsx == 0.0 || x.ywzs == 0.0 || x.gztd == 0.0 || x.wcgz == 0.0 || x.zjsf == 0.0 || x.zhpj == 0.0
+                   || x.rzjy == 0.0 ){
                    alert("第[" + (i+1) +"]行尚有未选择的选项，请您选择后提交");
+               }
            }
        }
-       
+
+       grid.on("load",function(e){
+           var  num=grid.getData().length;
+           console.log(num);
+           if(num == 0)
+               mini.alert("您已完成此次评测，谢谢！");
+           return true;
+
+       })
+
+
     </script>
     </body>
 </html>

@@ -62,3 +62,9 @@ CREATE TABLE
 INSERT INTO t_menu (id, sort, level, p_id, name, url, action, icon) VALUES ('menu008000', 8000, 1, '-1', '中层干部评测', '#', '#', 'fa fa-desktop');
 INSERT INTO t_menu (id, sort, level, p_id, name, url, action, icon) VALUES ('menu008001', 8001, 2, 'menu008000', '评测页面', 'showEnluateInfo.do', 'showEnluateInfo', 'fab fa-telegram');
 INSERT INTO t_dept_info (jgh, jgmc, sjjg, sfydzh, flag, num, jgjp) VALUES ('001', '苏州市职业大学', '000', null, '0', 1, null);
+
+INSERT INTO t_menu (id, sort, level, p_id, name, url, action, icon) VALUES ('menu008002', 8002, 2, 'menu008000', '中层干部述职查看', 'showReportInfo.do', 'showReportInfo.do', 'fa fa-comments');
+INSERT INTO t_menu (id, sort, level, p_id, name, url, action, icon) VALUES ('menu008003', 8003, 2, 'menu008000', '中层干部评测状态', 'showEvaStatus.do', 'showEvaStatus.do', 'fab fa-telegram');
+
+INSERT INTO t_menu_function (id, menu_id, function_name, function_action) VALUES ('func008003', 'menu008002', '中层干部评测', '#');
+INSERT INTO t_menu_function (id, menu_id, function_name, function_action) VALUES ('func008004', 'menu008003', '中层干部评测', '#');

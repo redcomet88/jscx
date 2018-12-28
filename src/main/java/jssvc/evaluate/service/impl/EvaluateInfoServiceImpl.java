@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -68,14 +69,14 @@ public class EvaluateInfoServiceImpl implements EvaluateInfoService {
         //全部设置为优秀
         for(int i=0; i<list.size(); i++)
         {
-            list.get(i).setZzsx(1.0);
-            list.get(i).setWcgz(1.0);
-            list.get(i).setYwzs(1.0);
-            list.get(i).setGztd(1.0);
-            list.get(i).setWcgz(1.0);
-            list.get(i).setZjsf(1.0);
-            list.get(i).setZhpj(1.0);
-            list.get(i).setRzjy(1.0);
+            list.get(i).setZzsx(2.0);
+            list.get(i).setWcgz(2.0);
+            list.get(i).setYwzs(2.0);
+            list.get(i).setGztd(2.0);
+            list.get(i).setWcgz(2.0);
+            list.get(i).setZjsf(2.0);
+            list.get(i).setZhpj(2.0);
+            list.get(i).setRzjy(2.0);
         }
         logger.info("getEvaluateRecordListForAllChosen end");
         return list;
@@ -94,5 +95,12 @@ public class EvaluateInfoServiceImpl implements EvaluateInfoService {
         int res = evluateDao.updateByPrimaryKey(record);
         logger.info("updateEvaRecord end");
         return res;
+    }
+
+    @Override
+    public HashMap<String, Object> getTotalEvaluateCaseSummary() {
+        logger.info("getTotalCreditCaseSummary");
+        HashMap<String,Object> resultMap =  evluateDao.selectTotalEvaluateCaseSummary();
+        return resultMap;
     }
 }

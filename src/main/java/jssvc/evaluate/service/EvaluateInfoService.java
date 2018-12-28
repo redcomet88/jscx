@@ -12,6 +12,7 @@ import jssvc.evaluate.vo.EvaluateRecordVo;
 import jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,4 +45,7 @@ public interface EvaluateInfoService {
     int getEvaluateRecordListCount(EvaluateRecordSearchFilter filter);
 
     int updateEvaRecord(EvaluateRecord record);
-}
+
+    public HashMap<String, Object> getTotalEvaluateCaseSummary();
+
+    }

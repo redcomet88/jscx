@@ -4,6 +4,7 @@ import jssvc.evaluate.model.EvaluateRecord;
 import jssvc.evaluate.vo.EvaluateRecordVo;
 import jssvc.evaluate.vo.filter.EvaluateRecordSearchFilter;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface EvaluateRecordMapper {
@@ -22,5 +23,7 @@ public interface EvaluateRecordMapper {
     List<EvaluateRecordVo> getEvluateRecordList(EvaluateRecordSearchFilter filter);
 
     int getEvluateRecordListCount(EvaluateRecordSearchFilter filter);
+
+    HashMap<String,Object> selectTotalEvaluateCaseSummary ();
 
 }

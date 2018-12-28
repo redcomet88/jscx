@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -64,6 +65,21 @@ public class EvaluateInfoController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("showReportInfo.do")
+    public ModelAndView showReportInfo() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("evaluate/reportInfo");
+        return mv;
+    }
+
+    @RequestMapping("showEvaStatus.do")
+    public String showEvaStatus(Model model) {
+        HashMap<String, Object> resultMap = evaluateService.getTotalEvaluateCaseSummary();
+        model.addAttribute("totalSummary", resultMap);
+
+        return "evaluate/evaStatus";
+    }
+
     /**
      * @description:评测数据列表查询
      *
@@ -80,6 +96,7 @@ public class EvaluateInfoController extends BaseController {
             filter.setOffset();
             filter.setLimit();
             filter.setDah(user.getDah());
+            filter.setFinished("0");              //未完成的才需要评测
             filter.setSortField("id");
             filter.setSortOrder(SortOrder.ASC.toString());
             List<EvaluateRecordVo> list = null;
@@ -88,6 +105,35 @@ public class EvaluateInfoController extends BaseController {
             }else{
                 list = evaluateService.getEvaluateRecordList(filter);
             }
+            int count = evaluateService.getEvaluateRecordListCount(filter);
+            //返回数据
+            Map<String, Object> result = new HashMap<>();
+            result.put("data", list);
+            result.put("total", count);
+            response.getWriter().write(JSON.Encode(result));
+        } catch (NullPointerException e) {
+            throw new BusinessException(ConstantMessage.ERR00004, e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("ajax/evaluate_evaluateReportList.do")
+    private void evaluateReportList(EvaluateRecordSearchFilter filter) throws BusinessException {
+        try {
+            User user = getSessionUser();
+            filter.setOffset();
+            filter.setLimit();
+            filter.setDah(user.getDah());
+            filter.setSortField("id");
+            filter.setSortOrder(SortOrder.ASC.toString());
+            List<EvaluateRecordVo> list = null;
+            filter.setDah("report");
+            filter.setFinished("1");
+
+            list = evaluateService.getEvaluateRecordList(filter);
+
             int count = evaluateService.getEvaluateRecordListCount(filter);
             //返回数据
             Map<String, Object> result = new HashMap<>();
